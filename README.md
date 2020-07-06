@@ -37,6 +37,6 @@ The app consumes APIs from a remote server.
 
 ## Copyright ##
 
-The App: Copyright 2020 LUCA LORUSSO - https://lukelorusso.com/
-The Architecture: Copyright 2020 MIKHAEL LOPEZ - https://mikhaellopez.com/
+The App: Copyright 2020 LUCA LORUSSO - https://lukelorusso.com/  
+The Architecture: Copyright 2020 MIKHAEL LOPEZ - https://mikhaellopez.com/  
 The Backend: Copyright 2016 SAVERIO CIOTOLI  
