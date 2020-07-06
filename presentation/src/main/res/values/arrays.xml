@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="info_adapter_items">
+        <item>"Web Page"</item>
+        <item>"Help"</item>
+        <item>"Luke Lorusso (about me)"</item>
+    </string-array>
+
+</resources>

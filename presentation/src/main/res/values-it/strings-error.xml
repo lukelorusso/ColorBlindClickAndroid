@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="error_generic">"Server irragiungibile…"</string>
+    <string name="error_web_service">Il servizio Web non ha risposto come previsto</string>
+    <string name="error_persistence">Errore di persistenza dati</string>
+    <string name="error_no_connection">"Sei offline"</string>
+    <string name="error_view_oops">Oops</string>
+    <string name="error_view_retry">RIPROVA</string>
+</resources>

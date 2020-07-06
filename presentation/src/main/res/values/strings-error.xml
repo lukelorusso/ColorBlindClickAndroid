@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="error_generic">"Can't process the request…"</string>
+    <string name="error_web_service">The web service did not respond as expected</string>
+    <string name="error_persistence">Persistence data error</string>
+    <string name="error_no_connection">You are offline!</string>
+    <string name="error_view_oops">Oops</string>
+    <string name="error_view_retry">RETRY</string>
+</resources>

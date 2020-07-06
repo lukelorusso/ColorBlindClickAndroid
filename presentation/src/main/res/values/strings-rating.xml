@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="rate_popup_title">Liking ColorBlindClick?</string>
+    <string name="rate_popup_message">What about rating it: it won\'t take more than a minute. Thanks for your support!</string>
+    <string name="rate_popup_ok">Rate it now</string>
+    <string name="rate_popup_later">Remind me later</string>
+    <string name="rate_popup_no">No, thanks</string>
+</resources>

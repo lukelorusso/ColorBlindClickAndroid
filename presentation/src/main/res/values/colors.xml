@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--System-->
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#1d2761</color> <!--notification bar color-->
+    <color name="colorAccent">#758bff</color> <!--progress bar color-->
+    <color name="textColor">#212121</color>
+    <color name="secondaryTextColor">#757575</color>
+
+    <!--App colors-->
+    <color name="white_FFFFFF">#FFFFFF</color>
+    <color name="white_50">#88FFFFFF</color>
+    <color name="gray_E5E5E5">#E5E5E5</color>
+    <color name="gray_CACACC">#CACACC</color>
+    <color name="black_000000">#000000</color>
+    <color name="black_50">#88000000</color>
+    <color name="transparent">#0000</color>
+    <color name="background_evens">#1FFF</color>
+    <color name="background_odds">#2FFF</color>
+    <color name="red_delete">#f44336</color>
+
+</resources>

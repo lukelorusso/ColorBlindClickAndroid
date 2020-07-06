@@ -1,0 +1,72 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'com.github.ben-manes.versions'
+
+android {
+    compileSdkVersion androidCompileSdkVersion
+    defaultConfig {
+        minSdkVersion androidMinSdkVersion
+        testInstrumentationRunner packageAndroidJUnitRunner
+    }
+    sourceSets {
+        androidTest.java.srcDirs += 'src/androidTest/kotlin'
+        main.java.srcDirs += 'src/main/kotlin'
+        test.java.srcDirs += 'src/test/kotlin'
+    }
+    buildTypes {
+        debug {
+            minifyEnabled true
+            consumerProguardFiles modelRules, supportRules, apacheRules, gsonRules, okhttp3Rules, retrofit2Rules, stethoRules
+        }
+        release {
+            minifyEnabled true
+            consumerProguardFiles modelRules, supportRules, apacheRules, gsonRules, okhttp3Rules, retrofit2Rules, stethoRules
+        }
+        // For Android Test
+        debugTest {
+            initWith(debug)
+            minifyEnabled false
+        }
+        testBuildType 'debugTest'
+    }
+}
+
+dependencies {
+    // MODULE
+    implementation project(':domain')
+
+    // KOTLIN
+    implementation kotlinStdlib
+
+    // SUPPORT
+    implementation androidXCore
+    implementation androidXPreference
+
+    // DAGGER
+    implementation dagger
+    kapt daggerCompiler
+
+    // RX
+    implementation rxAndroid
+    implementation rxJava
+    implementation rxKotlin
+
+    // WEBSERVICES
+    implementation retrofitConverterGson
+    implementation retrofitConverterScalars
+    implementation retrofitAdapterRxJava
+
+    // DATABASE
+    implementation paperDB
+
+    // DEBUG TOOLS
+    implementation timber
+    implementation stethoOkHttp
+    debugImplementation chuckDebug
+    debugTestImplementation chuckRelease
+    releaseImplementation chuckRelease
+
+    // DEPENDENCY CHECK STRATEGY
+    dependencyUpdates.resolutionStrategy = dependencyUpdatesStrategy
+}

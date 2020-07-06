@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?><!-- Activity's layout -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".scenes.main.MainActivity">
+
+    <!-- The view pager for fragments -->
+    <com.lukelorusso.presentation.view.MaybeScrollableViewPager
+        android:id="@+id/activityViewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- This is the activity content (to be seen in case of not given permissions ONLY) -->
+    <LinearLayout
+        android:id="@+id/activityBrokenView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/darker_gray"
+        android:fitsSystemWindows="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="25dp"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@null"
+            app:srcCompat="@drawable/broken_lens" />
+
+        <TextView
+            android:id="@+id/activityPermissionsLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="16sp"
+            tools:text="@string/permissions_label" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/splashScreen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
+        android:gravity="center"
+        tools:visibility="gone">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/splashScreenLogo"
+            android:layout_width="192dp"
+            android:layout_height="192dp"
+            android:contentDescription="@string/app_name"
+            app:srcCompat="@drawable/ic_launcher_splash" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>
