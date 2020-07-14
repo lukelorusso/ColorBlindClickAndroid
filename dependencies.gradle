@@ -72,7 +72,7 @@ ext {
     gson                        = "com.google.code.gson:gson:$gsonVersion"
     retrofitConverterGson       = "com.squareup.retrofit2:converter-gson:$retrofitVersion"
     retrofitConverterScalars    = "com.squareup.retrofit2:converter-scalars:$retrofitVersion"
-    retrofitAdapterRxJava       = "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
+    retrofitAdapterRxJava       = "com.squareup.retrofit2:adapter-rxjava3:$retrofitVersion"
 
     // DEBUG
     timberVersion               = '4.7.1'

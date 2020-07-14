@@ -63,13 +63,6 @@ class HistoryFragment : ABaseDataFragment(R.layout.fragment_history), HistoryVie
                 etToolbarSearch.hideKeyboard()
             }
         }
-    private var data: List<Color> = emptyList()
-    private var dataFilter = ""
-        set(value) {
-            TimberWrapper.d { "Filter: $value" }
-            field = value
-            adapter.data = getFilteredData()
-        }
     private val adapter = HistoryAdapter(withHeader = false, withFooter = false)
 
     fun backPressHandled(): Boolean {
@@ -147,8 +140,7 @@ class HistoryFragment : ABaseDataFragment(R.layout.fragment_history), HistoryVie
 
     private fun renderData(list: List<Color>?, deletedItem: Color?, deletedAllItems: Boolean?) {
         list?.also {
-            data = it
-            adapter.data = getFilteredData()
+            adapter.originalData = it
             rvHistoryList.scrollToPosition(0)
             renderNoItems()
             renderDeleteAll()
@@ -169,11 +161,13 @@ class HistoryFragment : ABaseDataFragment(R.layout.fragment_history), HistoryVie
     }
 
     private fun renderNoItems() {
-        tvHistoryNoItems.visibility = if (data.isEmpty()) View.VISIBLE else View.GONE
+        tvHistoryNoItems.visibility =
+            if (adapter.data.isEmpty()) View.VISIBLE else View.GONE
     }
 
     private fun renderDeleteAll() {
-        btnToolbarDeleteAll.visibility = if (data.isNotEmpty()) View.VISIBLE else View.GONE
+        btnToolbarDeleteAll.visibility =
+            if (adapter.data.isNotEmpty()) View.VISIBLE else View.GONE
     }
 
     private fun renderPersistenceException(isPersistenceException: Boolean?) {
@@ -229,7 +223,7 @@ class HistoryFragment : ABaseDataFragment(R.layout.fragment_history), HistoryVie
         }
         val itemTouchHelper = ItemTouchHelper(swipeHelper)
         itemTouchHelper.attachToRecyclerView(rvHistoryList)
-        etToolbarSearch.onTextChanged { filter -> dataFilter = filter }
+        etToolbarSearch.onTextChanged { filter -> adapter.nameFilter = filter }
     }
 
     private fun switchSearchingMode() {
@@ -261,7 +255,7 @@ class HistoryFragment : ABaseDataFragment(R.layout.fragment_history), HistoryVie
             .setOnClickListener { dialog.dismiss() }
         dialog.findViewById<View>(R.id.textDialogGenericConfirmationPositive).setOnClickListener {
             trackerHelper.track(activity, TrackerHelper.Actions.DELETED_ITEM)
-            (data as? MutableList)?.remove(color)
+            (adapter.originalData as? MutableList)?.remove(color)
             adapter.removeItem(color) // I assume, if you are removing it, it's in the adapter's data
             dialog.dismiss()
             intentDeleteItem.onNext(color)
@@ -292,7 +286,7 @@ class HistoryFragment : ABaseDataFragment(R.layout.fragment_history), HistoryVie
             .setOnClickListener { dialog.dismiss() }
         dialog.findViewById<View>(R.id.textDialogGenericConfirmationPositive).setOnClickListener {
             trackerHelper.track(activity, TrackerHelper.Actions.DELETED_ALL_ITEMS)
-            (data as? MutableList)?.clear()
+            (adapter.originalData as? MutableList)?.clear()
             adapter.removeAllItems()
             dialog.dismiss()
             intentDeleteAllItem.onNext(Unit)
@@ -302,16 +296,6 @@ class HistoryFragment : ABaseDataFragment(R.layout.fragment_history), HistoryVie
                 adapter.notifyItemRangeRemoved(0, originalDataSize)
         }
         dialog.show()
-    }
-
-    private fun getFilteredData(): List<Color> {
-        val filteredByName = mutableListOf<Color>()
-
-        if (dataFilter.isBlank()) filteredByName.addAll(data)
-        else for (item in data)
-            if (item.toString().containsWords(dataFilter)) filteredByName.add(item)
-
-        return filteredByName
     }
 
 }

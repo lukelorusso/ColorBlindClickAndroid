@@ -222,8 +222,8 @@ class CameraFragment : ABaseFragment(R.layout.fragment_camera), CameraView {
             renderHomeUrl(viewModel.homeUrl)
             renderInitCamera(viewModel.lastLensPosition)
             renderColorResult(viewModel.color)
-            showColorToast(viewModel.errorMessage)
-            showColorToast(viewModel.snackMessage)
+            showToolbarColor(viewModel.errorMessage)
+            showToolbarColor(viewModel.snackMessage)
             renderPersistenceException(viewModel.isPersistenceException)
         }
     }
@@ -266,7 +266,7 @@ class CameraFragment : ABaseFragment(R.layout.fragment_camera), CameraView {
     }
 
     private fun renderColorResult(color: Color?) {
-        color?.also { result -> showColorToast(result) }
+        color?.also { result -> showToolbarColor(result) }
     }
 
     private fun renderPersistenceException(isPersistenceException: Boolean?) {
@@ -275,7 +275,7 @@ class CameraFragment : ABaseFragment(R.layout.fragment_camera), CameraView {
     }
     // endregion
 
-    private fun showColorToast(color: Color) {
+    private fun showToolbarColor(color: Color) {
         toolbarColor.fadeInView()
 
         colorPreviewPanel.visibility = View.VISIBLE
@@ -295,7 +295,7 @@ class CameraFragment : ABaseFragment(R.layout.fragment_camera), CameraView {
         toolbarColor.setOnClickListener { intentOpenPreview.onNext(color) }
     }
 
-    private fun showColorToast(errorMessage: String?) {
+    private fun showToolbarColor(errorMessage: String?) {
         errorMessage?.also { msg ->
             toolbarColor.fadeInView()
 
