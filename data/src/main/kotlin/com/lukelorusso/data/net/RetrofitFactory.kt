@@ -5,7 +5,7 @@ import android.content.Context
 import androidx.annotation.RequiresPermission
 import com.google.gson.Gson
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
+import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 
@@ -21,6 +21,7 @@ object RetrofitFactory {
         "https://savedev.altervista.org/SD-Frontend/colorblindness/"
     private const val COLOR_BLIND_SITE =
         "http://www.savedev.altervista.org/" //"http://www.colorblindclick.com/"
+    const val COLOR_API_OS = "android"
     const val COLOR_API_VERSION = "1"
     const val COLOR_BLIND_SITE_HELP =
         COLOR_BLIND_SITE + "SD-Frontend/colorblindclick/help.php?lang=%s"
@@ -42,7 +43,7 @@ object RetrofitFactory {
             .baseUrl(COLOR_API_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .addConverterFactory(ScalarsConverterFactory.create())
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
             .client(okHttpClientFactory.createOkHttpClient(context))
             .build()
 

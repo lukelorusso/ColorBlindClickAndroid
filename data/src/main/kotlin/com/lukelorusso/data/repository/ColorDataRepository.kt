@@ -68,8 +68,7 @@ class ColorDataRepository(
         return api.getColor(
             colorHex.let { if (it.contains("#")) it.replace("#", "") else it },
             getDeviceLanguage(),
-            deviceUdid,
-            "android"
+            deviceUdid
         )
             .map { colorMapper.transform(it) }
             .doOnSuccess { persistenceProvider.saveColor(it) }
