@@ -12,6 +12,7 @@ import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.lukelorusso.domain.model.Color
 import com.lukelorusso.presentation.R
+import com.lukelorusso.presentation.extensions.containsWords
 import com.lukelorusso.presentation.extensions.getLocalizedDateTime
 import com.lukelorusso.presentation.extensions.hashColorToPixel
 import com.lukelorusso.presentation.view.DoubleGroundViewHolder
@@ -27,6 +28,26 @@ class HistoryAdapter(private val withHeader: Boolean, private val withFooter: Bo
     HFRecyclerView<Color>(withHeader, withFooter) {
 
     val intentItemClick: PublishSubject<Color> = PublishSubject.create<Color>()
+    internal var nameFilter = ""
+        set(value) {
+            field = value
+            applySorting()
+        }
+    internal var originalData: List<Color> = emptyList()
+        set(value) {
+            field = value
+            applySorting()
+        }
+
+    private fun applySorting() {
+        val filteredByName = mutableListOf<Color>()
+
+        if (nameFilter.isBlank()) filteredByName.addAll(originalData)
+        else for (item in originalData)
+            if (item.toString().containsWords(nameFilter)) filteredByName.add(item)
+
+        data = filteredByName
+    }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
