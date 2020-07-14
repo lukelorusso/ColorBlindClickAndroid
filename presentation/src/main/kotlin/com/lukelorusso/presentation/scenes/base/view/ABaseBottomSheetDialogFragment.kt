@@ -1,17 +1,21 @@
 package com.lukelorusso.presentation.scenes.base.view
 
+import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import android.widget.FrameLayout
 import androidx.annotation.LayoutRes
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.lukelorusso.presentation.AndroidApplication
 import com.lukelorusso.presentation.R
 import com.lukelorusso.presentation.di.components.ActivityComponent
 import com.lukelorusso.presentation.di.components.ApplicationComponent
+
 
 /**
  * Copyright (C) 2020 Luke Lorusso, based on ABaseDataFragment
@@ -70,6 +74,21 @@ abstract class ABaseBottomSheetDialogFragment(
             })
         }
 
+    }
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val bottomSheetDialog = super.onCreateDialog(savedInstanceState)
+        bottomSheetDialog.setOnShowListener {
+            (it as BottomSheetDialog).findViewById<FrameLayout>(R.id.design_bottom_sheet)
+                ?.also { frameLayout ->
+                    BottomSheetBehavior.from<FrameLayout?>(frameLayout).state =
+                        BottomSheetBehavior.STATE_EXPANDED
+                    BottomSheetBehavior.from<FrameLayout?>(frameLayout).skipCollapsed = true
+                    BottomSheetBehavior.from<FrameLayout?>(frameLayout).isHideable = true
+                }
+
+        }
+        return bottomSheetDialog
     }
 
 }
