@@ -6,7 +6,7 @@ This is the source code of the published Android application: `-=:[ ColorBlindCl
 
 > https://play.google.com/store/apps/details?id=com.lukelorusso.colorblindclick
 
-Here the objective is to help color blind people recognizing colors using a phone's camera.
+ColorBlindClick is designed to help all colorblind people to distinguish colors. It's very simple to use, just point an object and click to get the name, RGB and hash of the color.
 
 An iOS version is also available.
 
@@ -25,13 +25,13 @@ In this project you can find
 
 * [Retrofit + GSON to consume web services](https://square.github.io/retrofit/)
 
-* [Glide to show animated GIF](https://github.com/bumptech/glide)
+* [Fotoapparat API that provide a safe CameraView](https://github.com/RedApparat/Fotoapparat)
 
 * [Timber for debugging](https://github.com/JakeWharton/timber)
 
 - - -
 
-The app consumes APIs from a remote server.
+The app consumes APIs from a web service to retrieve colors' info.
 
 - - -
 
