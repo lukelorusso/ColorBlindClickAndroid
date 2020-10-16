@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/shape_border_top_with_black_content"
     android:orientation="vertical"
+    tools:background="@drawable/shape_bottom_sheet"
     tools:context=".scenes.preview.PreviewDialogFragment">
 
     <View
