@@ -68,5 +68,5 @@ dependencies {
     releaseImplementation chuckRelease
 
     // DEPENDENCY CHECK STRATEGY
-    dependencyUpdates.resolutionStrategy = dependencyUpdatesStrategy
+    dependencyUpdates.resolutionStrategy dependencyUpdatesStrategy
 }

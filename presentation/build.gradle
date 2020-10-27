@@ -103,5 +103,5 @@ dependencies {
     implementation firebaseAnalytics
 
     // DEPENDENCY CHECK STRATEGY
-    dependencyUpdates.resolutionStrategy = dependencyUpdatesStrategy
+    dependencyUpdates.resolutionStrategy dependencyUpdatesStrategy
 }
