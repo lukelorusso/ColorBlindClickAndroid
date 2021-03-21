@@ -1,0 +1,16 @@
+{
+  "data": {
+    "sourceColorHexCode": "#52851E",
+    "returnMsg": "Similar color found",
+    "numRowsColors": 1,
+    "rowsColors": [
+      {
+        "similarityPercentage": "Color matching 94%",
+        "colorHexCode": "#6B8E23",
+        "colorName": "Olive Green"
+      }
+    ],
+    "messageToUser": "",
+    "executionTimeSeconds": 0.002169132232666
+  }
+}

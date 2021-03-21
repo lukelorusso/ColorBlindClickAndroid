@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white_FFFFFF"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/textDialogGenericConfirmationMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="23dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="23dp"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:lineSpacingExtra="6dp"
+        android:textSize="15sp"
+        tools:text="😏?" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="13dp"
+        android:layout_gravity="end">
+
+        <TextView
+            android:id="@+id/textDialogGenericConfirmationNegative"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="23dp"
+            android:layout_marginEnd="23dp"
+            android:gravity="center"
+            android:padding="10dp"
+            android:textSize="15sp"
+            tools:text="No" />
+
+        <TextView
+            android:id="@+id/textDialogGenericConfirmationPositive"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="23dp"
+            android:gravity="center"
+            android:padding="10dp"
+            android:textColor="@color/red_delete"
+            android:textSize="15sp"
+            tools:text="Yes" />
+
+    </LinearLayout>
+
+</LinearLayout>
