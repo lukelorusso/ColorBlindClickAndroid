@@ -65,11 +65,10 @@ dependencies {
     // ANDROIDX
     implementation androidXAppCompat
     implementation androidXRecyclerView
+    implementation androidXArch
     implementation materialDesign
     implementation constraintLayout
-    implementation androidxArch
     implementation multidex
-    implementation hfRecyclerView
 
     // RX
     implementation rxAndroid
@@ -96,6 +95,7 @@ dependencies {
     implementation fotoapparat
     implementation verticalSeekBar
     implementation rateBottomSheet
+    implementation hfRecyclerView
 
     // CRASHLYTICS
     implementation firebaseCore
