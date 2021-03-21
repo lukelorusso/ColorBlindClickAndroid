@@ -15,7 +15,7 @@ ext {
     androidVersionName          = '2.2.2'
 
     // ANDROID VERSION
-    androidCompileSdkVersion    = 29
+    androidCompileSdkVersion    = 30
     androidMinSdkVersion        = 21
 
     // DEFAULT INFO
