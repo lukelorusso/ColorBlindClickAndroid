@@ -82,6 +82,11 @@ class CameraFragment : ABaseDataFragment<CameraViewModel, CameraData>(
         camera?.stop()
     }
 
+    override fun onStart() {
+        super.onStart()
+        camera?.start()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityComponent.inject(this)

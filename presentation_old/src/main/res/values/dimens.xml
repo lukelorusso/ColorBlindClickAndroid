@@ -1,8 +1,0 @@
-<resources>
-
-    <dimen name="progress_bar_dimens">40dp</dimen>
-    <dimen name="color_picker_dimens">54dp</dimen>
-    <dimen name="color_picker_dimens_big">320dp</dimen>
-    <dimen name="bottom_sheet_corner_radius">15dp</dimen>
-
-</resources>

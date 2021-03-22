@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="error_generic">"Impossible de traiter la demande…"</string>
-    <string name="error_web_service">Le service Web n\'a pas répondu comme prévu</string>
-    <string name="error_persistence">Erreur de persistance des données</string>
-    <string name="error_no_connection">"Internet déconnecté!"</string>
-    <string name="error_view_oops">Oops</string>
-    <string name="error_view_retry">RÉESSAYEZ</string>
-</resources>

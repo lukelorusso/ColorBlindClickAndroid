@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <integer name="splash_screen_duration">500</integer>
-    <integer name="fading_effect_duration_default">400</integer>
-    <integer name="fading_effect_duration_fast">150</integer>
-    <integer name="color_picker_dimens_share_in_px">800</integer>
-
-</resources>
