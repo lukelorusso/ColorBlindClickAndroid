@@ -11,28 +11,20 @@ import android.provider.Settings
 import android.text.format.DateFormat
 import android.util.DisplayMetrics
 import android.view.View
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import java.util.*
 
-private val WEBSITE_SUPPORTED_LANGUAGES = arrayListOf(
-    "en",
-    "it",
-    "fr",
-    "de",
-    "es"
-)
-
 @SuppressLint("ObsoleteSdkInt")
 fun Activity.enableImmersiveMode(
-    hideNavBar: Boolean,
-    hideStatusBar: Boolean,
-    resize: Boolean
+        hideNavBar: Boolean,
+        hideStatusBar: Boolean,
+        resize: Boolean
 ) {
     if (!hideNavBar && !hideStatusBar) {
         disableImmersiveMode()
         return
     }
+
     var uiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
     if (hideNavBar && resize) uiVisibility = (uiVisibility
             or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION)
@@ -45,28 +37,10 @@ fun Activity.enableImmersiveMode(
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) uiVisibility = (uiVisibility
             or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
     this.window.decorView.systemUiVisibility = uiVisibility
-
-    /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-        activity.window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION // hide nav bar
-                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN // hide status bar
-                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
-                or View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
-                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY // hide status bar and nav bar after a short delay, or if the user interacts with the middle of the screen
-                )
-    }*/
 }
 
 fun Activity.disableImmersiveMode() {
     this.window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
-}
-
-fun Activity.hideKeyboard() {
-    currentFocus?.also { it.hideKeyboard() }
-}
-
-fun Activity.showKeyboard() {
-    currentFocus?.also { it.showKeyboard() }
 }
 
 fun Context.startActivityWithFlagNewTask(intent: Intent) {
@@ -74,14 +48,10 @@ fun Context.startActivityWithFlagNewTask(intent: Intent) {
 }
 
 fun Context.dpToPixel(dp: Float): Float =
-    dp * (resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
+        dp * (resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
 
 fun Context.pixelToDp(px: Int): Float =
-    px / (resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
-
-fun Context.showToast(message: String, longDuration: Boolean = false) =
-    Toast.makeText(this, message, if (longDuration) Toast.LENGTH_LONG else Toast.LENGTH_SHORT)
-        .show()
+        px / (resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
 
 fun Context.isPermissionGranted(permission: String): Boolean {
     val rc = ActivityCompat.checkSelfPermission(this, permission)
@@ -90,8 +60,8 @@ fun Context.isPermissionGranted(permission: String): Boolean {
 
 fun Context.getDeviceUdid(): String {
     return Settings.System.getString(
-        this.contentResolver,
-        Settings.Secure.ANDROID_ID
+            this.contentResolver,
+            Settings.Secure.ANDROID_ID
     )
 }
 
@@ -108,7 +78,7 @@ fun Context.gotoAppDetailsSettings() {
 
 fun Context.getStatusBarHeight(): Int {
     return resources.getDimensionPixelSize(
-        resources.getIdentifier("status_bar_height", "dimen", "android")
+            resources.getIdentifier("status_bar_height", "dimen", "android")
     )
 }
 
@@ -148,12 +118,4 @@ fun Context.getLocalizedDateTime(timeInMillis: Long): String {
     val dateFormat = DateFormat.getMediumDateFormat(this)
     val timeFormat = DateFormat.getTimeFormat(this)
     return dateFormat.format(date) + " " + timeFormat.format(date)
-}
-
-fun getDeviceLanguage(): String {
-    val language = Locale.getDefault().language
-    if (!WEBSITE_SUPPORTED_LANGUAGES.contains(language)) {
-        return WEBSITE_SUPPORTED_LANGUAGES[0]
-    }
-    return language
 }

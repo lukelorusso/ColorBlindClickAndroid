@@ -18,15 +18,18 @@ android {
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "com.lukelorusso.presentation.TestRunner"
     }
+
     sourceSets {
         androidTest.java.srcDirs += 'src/androidTest/kotlin'
         main.java.srcDirs += 'src/main/kotlin'
         test.java.srcDirs += 'src/test/kotlin'
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
     buildTypes {
         def ENABLE_ANALYTICS = "ENABLE_ANALYTICS"
         debug {
@@ -49,6 +52,7 @@ android {
         }
         testBuildType 'debugTest'
     }
+
     lintOptions {
         disable 'ContentDescription'
     }
