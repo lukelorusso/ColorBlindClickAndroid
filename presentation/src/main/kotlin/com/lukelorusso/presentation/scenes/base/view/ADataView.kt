@@ -5,8 +5,8 @@ package com.lukelorusso.presentation.scenes.base.view
  * Licensed under the Apache License Version 2.0
  * Interface representing a View that will use to load data.
  */
-interface LoadDataView<in ViewModel> {
+interface ADataView<in Data> {
 
-    fun render(viewModel: ViewModel)
+    fun render(data: Data)
 
 }

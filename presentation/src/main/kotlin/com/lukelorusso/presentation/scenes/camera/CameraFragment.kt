@@ -5,13 +5,12 @@ import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
-import com.jakewharton.rxbinding4.view.clicks
 import com.lukelorusso.data.helper.TimberWrapper
 import com.lukelorusso.domain.model.Color
 import com.lukelorusso.presentation.R
 import com.lukelorusso.presentation.extensions.*
 import com.lukelorusso.presentation.helper.TrackerHelper
-import com.lukelorusso.presentation.scenes.base.view.ABaseFragment
+import com.lukelorusso.presentation.scenes.base.view.ABaseDataFragment
 import com.lukelorusso.presentation.scenes.base.view.LoadingState
 import com.lukelorusso.presentation.scenes.main.MainActivity
 import io.fotoapparat.Fotoapparat
@@ -28,7 +27,10 @@ import kotlinx.android.synthetic.main.layout_color_toolbar.*
 import timber.log.Timber
 import javax.inject.Inject
 
-class CameraFragment : ABaseFragment(R.layout.fragment_camera), CameraView {
+class CameraFragment : ABaseDataFragment<CameraViewModel, CameraData>(
+        R.layout.fragment_camera,
+        CameraViewModel::class.java
+) {
 
     companion object {
         val TAG: String = CameraFragment::class.java.simpleName
@@ -39,32 +41,28 @@ class CameraFragment : ABaseFragment(R.layout.fragment_camera), CameraView {
     }
 
     @Inject
-    lateinit var presenter: CameraPresenter
-
-    @Inject
     lateinit var trackerHelper: TrackerHelper
 
     // Intents
     private val intentGetColor = PublishSubject.create<Pair<String, String>>()
     private val intentSetLastLensPosition = PublishSubject.create<Int>()
-    private val intentOpenPreview = PublishSubject.create<Color>()
 
     // Properties
     private var homeUrl: String = ""
     private var isFrontCamera = false
     private val cameraConfiguration by lazy {
         CameraConfiguration(
-            previewResolution = firstAvailable(
-                wideRatio(highestResolution()),
-                standardRatio(highestResolution())
-            ),
-            flashMode = off(),
-            focusMode = firstAvailable(
-                continuousFocusPicture(),
-                autoFocus(),
-                fixed()
-            ),
-            pictureResolution = highestResolution()
+                previewResolution = firstAvailable(
+                        wideRatio(highestResolution()),
+                        standardRatio(highestResolution())
+                ),
+                flashMode = off(),
+                focusMode = firstAvailable(
+                        continuousFocusPicture(),
+                        autoFocus(),
+                        fixed()
+                ),
+                pictureResolution = highestResolution()
         )
     }
     private var camera: Fotoapparat? = null
@@ -84,16 +82,6 @@ class CameraFragment : ABaseFragment(R.layout.fragment_camera), CameraView {
         camera?.stop()
     }
 
-    override fun onResume() {
-        super.onResume()
-        presenter.attach(this)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        presenter.detach()
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityComponent.inject(this)
@@ -102,9 +90,76 @@ class CameraFragment : ABaseFragment(R.layout.fragment_camera), CameraView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
+
+        viewModel.observe(viewLifecycleOwner) {
+            if (it != null) render(it)
+        }
     }
 
+    // region RENDER
+    override fun render(data: CameraData) {
+        showProgress(
+                data.loadingState == LoadingState.LOADING ||
+                        data.loadingState == LoadingState.RETRY
+        )
+        renderHomeUrl(data.homeUrl)
+        renderInitCamera(data.lastLensPosition)
+        renderColorResult(data.color)
+        showToolbarColor(data.errorMessage)
+        showToolbarColor(data.snackMessage)
+        renderPersistenceException(data.isPersistenceException)
+    }
+
+    private fun renderHomeUrl(homeUrl: String?) {
+        homeUrl?.also { this.homeUrl = it }
+    }
+
+    private fun renderInitCamera(lastLensPosition: Int?) {
+        lastLensPosition?.also { position ->
+            camera = Fotoapparat(
+                    context = requireContext(),
+                    view = cameraView,
+                    focusView = focusView,
+                    logger = object : Logger {
+                        override fun log(message: String) {
+                            TimberWrapper.d { "Camera message: $message" }
+                        }
+                    },
+                    lensPosition = if (position == 0) back() else front(),
+                    cameraConfiguration = cameraConfiguration,
+                    cameraErrorCallback = { Timber.e("Camera error: $it") }
+            ).apply { start() }
+            isFrontCamera = position == 1
+            checkFrontCamera()
+            checkCameraCapabilities()
+
+            cameraZoomSeekBar?.maxValue = MAX_ZOOM_VALUE
+            cameraZoomSeekBar?.setOnProgressChangeListener { progressValue ->
+                camera?.setZoom(progressValue.toFloat().div(MAX_ZOOM_VALUE))
+            }
+            cameraZoomSeekBar?.progress = INIT_ZOOM_VALUE
+            cameraZoomSeekBar?.visibility = View.VISIBLE
+
+            val duration = resources.getInteger(R.integer.fading_effect_duration_default)
+            Handler().postDelayed({
+                (activity as? MainActivity)?.hideSplashScreen()
+            }, duration.toLong())
+        }
+    }
+
+    private fun renderColorResult(color: Color?) {
+        color?.also { result -> showToolbarColor(result) }
+    }
+
+    private fun renderPersistenceException(isPersistenceException: Boolean?) {
+        if (isPersistenceException == true)
+            trackerHelper.track(activity, TrackerHelper.Actions.PERSISTENCE_EXCEPTION)
+    }
+    // endregion
+
     private fun initView() {
+        subscribeIntents()
+
         toolbarCameraButton.setOnClickListener {
             showProgress(true)
             camera?.also { camera ->
@@ -113,14 +168,14 @@ class CameraFragment : ABaseFragment(R.layout.fragment_camera), CameraView {
                         Handler().post {
                             val bitmap = result.bitmap
                             val pixel = bitmap.getPixel(
-                                bitmap.width / 2,
-                                bitmap.height / 2
+                                    bitmap.width / 2,
+                                    bitmap.height / 2
                             )
                             intentGetColor.onNext(
-                                Pair(
-                                    pixel.pixelColorToHash(),
-                                    activity?.getDeviceUdid() ?: ""
-                                )
+                                    Pair(
+                                            pixel.pixelColorToHash(),
+                                            activity?.getDeviceUdid() ?: ""
+                                    )
                             )
                         }
                     }
@@ -131,8 +186,8 @@ class CameraFragment : ABaseFragment(R.layout.fragment_camera), CameraView {
         toolbarSwitchCameraButton.setOnClickListener {
             camera?.also { camera ->
                 camera.switchTo(
-                    lensPosition = if (isFrontCamera) back() else front(),
-                    cameraConfiguration = CameraConfiguration()
+                        lensPosition = if (isFrontCamera) back() else front(),
+                        cameraConfiguration = CameraConfiguration()
                 )
                 isFrontCamera = !isFrontCamera
                 intentSetLastLensPosition.onNext(if (isFrontCamera) 1 else 0)
@@ -147,24 +202,39 @@ class CameraFragment : ABaseFragment(R.layout.fragment_camera), CameraView {
                 camera.getCurrentParameters().whenAvailable { cameraParameters ->
                     val isFlashOn = cameraParameters?.flashMode == Flash.Torch
                     camera.updateConfiguration(
-                        cameraConfiguration.copy(
-                            flashMode = if (isFlashOn) off() else torch()
-                        )
+                            cameraConfiguration.copy(
+                                    flashMode = if (isFlashOn) off() else torch()
+                            )
                     )
                     initToolbarTop(!isFlashOn)
                 }
             }
         }
+
+        toolbarInfoButton.setOnClickListener { viewModel.gotoInfo() }
+
+        toolbarHistoryButton.setOnClickListener { viewModel.gotoHistory() }
+    }
+
+    private fun subscribeIntents() {
+        val loadData = Observable.just(Unit).flatMap { unit ->
+            Observable.merge(viewModel.intentGetHomeUrl(unit), viewModel.intentGetLastLensPosition(unit))
+        }
+        val getColor = intentGetColor.flatMap { viewModel.intentGetColor(it) }
+        val setLastLensPosition = intentSetLastLensPosition
+                .flatMap { viewModel.intentSetLastLensPosition(it) }
+
+        viewModel.subscribe(loadData, getColor, setLastLensPosition)
     }
 
     private fun initToolbarTop(isFlashOn: Boolean = false) {
         toolbarSwitchCameraButton.setImageResource(
-            if (isFrontCamera) R.drawable.camera_rear_white
-            else R.drawable.camera_front_white
+                if (isFrontCamera) R.drawable.camera_rear_white
+                else R.drawable.camera_front_white
         )
         toolbarFlashButton.setImageResource(
-            if (isFlashOn) R.drawable.flash_off_white
-            else R.drawable.flash_on_white
+                if (isFlashOn) R.drawable.flash_off_white
+                else R.drawable.flash_on_white
         )
     }
 
@@ -196,85 +266,6 @@ class CameraFragment : ABaseFragment(R.layout.fragment_camera), CameraView {
         }
     }
 
-    // region INTENTS
-    override fun intentLoadData(): Observable<Unit> = Observable.just(Unit)
-
-    override fun intentSetLastLensPosition(): Observable<Int> = intentSetLastLensPosition
-
-    override fun intentGotoInfo(): Observable<Unit> = toolbarInfoButton.clicks().map { Unit }
-
-    override fun intentGotoHistory(): Observable<Unit> = toolbarHistoryButton.clicks().map { Unit }
-
-    override fun intentGetColor(): Observable<Pair<String, String>> = intentGetColor
-
-    override fun intentOpenPreview(): Observable<Color> = intentOpenPreview
-    // endregion
-
-    // region RENDER
-    override fun render(viewModel: CameraViewModel) {
-        TimberWrapper.d { "render: $viewModel" }
-
-        activity?.runOnUiThread {
-            showProgress(
-                viewModel.loadingState == LoadingState.LOADING ||
-                        viewModel.loadingState == LoadingState.RETRY
-            )
-            renderHomeUrl(viewModel.homeUrl)
-            renderInitCamera(viewModel.lastLensPosition)
-            renderColorResult(viewModel.color)
-            showToolbarColor(viewModel.errorMessage)
-            showToolbarColor(viewModel.snackMessage)
-            renderPersistenceException(viewModel.isPersistenceException)
-        }
-    }
-
-    private fun renderHomeUrl(homeUrl: String?) {
-        homeUrl?.also { this.homeUrl = it }
-    }
-
-    private fun renderInitCamera(lastLensPosition: Int?) {
-        lastLensPosition?.also { position ->
-            camera = Fotoapparat(
-                context = requireContext(),
-                view = cameraView,
-                focusView = focusView,
-                logger = object : Logger {
-                    override fun log(message: String) {
-                        TimberWrapper.d { "Camera message: $message" }
-                    }
-                },
-                lensPosition = if (position == 0) back() else front(),
-                cameraConfiguration = cameraConfiguration,
-                cameraErrorCallback = { Timber.e("Camera error: $it") }
-            ).apply { start() }
-            isFrontCamera = position == 1
-            checkFrontCamera()
-            checkCameraCapabilities()
-
-            cameraZoomSeekBar?.maxValue = MAX_ZOOM_VALUE
-            cameraZoomSeekBar?.setOnProgressChangeListener { progressValue ->
-                camera?.setZoom(progressValue.toFloat().div(MAX_ZOOM_VALUE))
-            }
-            cameraZoomSeekBar?.progress = INIT_ZOOM_VALUE
-            cameraZoomSeekBar?.visibility = View.VISIBLE
-
-            val duration = resources.getInteger(R.integer.fading_effect_duration_default)
-            Handler().postDelayed({
-                (activity as? MainActivity)?.hideSplashScreen()
-            }, duration.toLong())
-        }
-    }
-
-    private fun renderColorResult(color: Color?) {
-        color?.also { result -> showToolbarColor(result) }
-    }
-
-    private fun renderPersistenceException(isPersistenceException: Boolean?) {
-        if (isPersistenceException == true)
-            trackerHelper.track(activity, TrackerHelper.Actions.PERSISTENCE_EXCEPTION)
-    }
-    // endregion
-
     private fun showToolbarColor(color: Color) {
         toolbarColor.fadeInView()
 
@@ -292,7 +283,7 @@ class CameraFragment : ABaseFragment(R.layout.fragment_camera), CameraView {
         colorBottomLine.visibility = View.VISIBLE
         colorBottomLine.text = color.toRGBString()
 
-        toolbarColor.setOnClickListener { intentOpenPreview.onNext(color) }
+        toolbarColor.setOnClickListener { viewModel.gotoPreview(color) }
     }
 
     private fun showToolbarColor(errorMessage: String?) {

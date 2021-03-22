@@ -1,43 +1,59 @@
 package com.lukelorusso.presentation.scenes.camera
 
+import com.lukelorusso.data.extensions.startWithSingle
+import com.lukelorusso.domain.exception.PersistenceException
 import com.lukelorusso.domain.model.Color
-import com.lukelorusso.presentation.scenes.base.view.ContentState
-import com.lukelorusso.presentation.scenes.base.view.LoadingState
+import com.lukelorusso.domain.usecases.GetColor
+import com.lukelorusso.domain.usecases.GetHomeUrl
+import com.lukelorusso.domain.usecases.GetLastLensPosition
+import com.lukelorusso.domain.usecases.SetLastLensPosition
+import com.lukelorusso.presentation.exception.ErrorMessageFactory
+import com.lukelorusso.presentation.scenes.base.viewmodel.AViewModel
+import io.reactivex.rxjava3.core.Observable
+import javax.inject.Inject
 
-data class CameraViewModel(
-    val loadingState: LoadingState = LoadingState.NONE,
-    val contentState: ContentState = ContentState.NONE,
-    val homeUrl: String? = null,
-    val lastLensPosition: Int? = null,
-    val color: Color? = null,
-    val errorMessage: String? = null,
-    val snackMessage: String? = null,
-    val isPersistenceException: Boolean? = true
-) {
+class CameraViewModel
+@Inject constructor(
+        private val getHomeUrl: GetHomeUrl,
+        private val getLastLensPosition: GetLastLensPosition,
+        private val setLastLensPosition: SetLastLensPosition,
+        private val getColor: GetColor,
+        private val router: CameraRouter,
+        errorMessageFactory: ErrorMessageFactory
+) : AViewModel<CameraData>(errorMessageFactory, router) {
 
-    companion object {
-        fun createContentOnly() = CameraViewModel(contentState = ContentState.CONTENT)
+    internal fun intentGetColor(param: Pair<String, String>): Observable<CameraData> =
+            getColor.execute(param)
+                    .toObservable()
+                    .map { CameraData.createColor(it) }
+                    .startWithSingle(CameraData.createLoading())
+                    .onErrorReturn { onSnack(it) }
 
-        fun createLoading() = CameraViewModel(
-            loadingState = LoadingState.LOADING,
-            contentState = ContentState.CONTENT
-        )
+    internal fun intentGetHomeUrl(param: Unit): Observable<CameraData> = getHomeUrl.execute(param)
+            .toObservable()
+            .map { CameraData.createHomeUrl(it) }
+            .onErrorReturn { onSnack(it) }
 
-        fun createHomeUrl(homeUrl: String) =
-            CameraViewModel(contentState = ContentState.CONTENT, homeUrl = homeUrl)
+    internal fun intentGetLastLensPosition(param: Unit): Observable<CameraData> =
+            getLastLensPosition.execute(param)
+                    .toObservable()
+                    .map { CameraData.createLastLensPosition(it) }
+                    .onErrorReturn { onSnack(it) }
 
-        fun createLastLensPosition(position: Int) =
-            CameraViewModel(contentState = ContentState.CONTENT, lastLensPosition = position)
+    internal fun intentSetLastLensPosition(param: Int): Observable<CameraData> =
+            setLastLensPosition.execute(param)
+                    .toSingleDefault(Unit)
+                    .toObservable()
+                    .map { CameraData.createContentOnly() }
+                    .onErrorReturn { onSnack(it) }
 
-        fun createColor(color: Color) =
-            CameraViewModel(contentState = ContentState.CONTENT, color = color)
+    internal fun gotoInfo() = router.routeToInfo()
 
-        fun createSnack(snackMessage: String, isPersistenceException: Boolean? = null) =
-            CameraViewModel(
-                contentState = ContentState.CONTENT,
-                snackMessage = snackMessage,
-                isPersistenceException = isPersistenceException
-            )
-    }
+    internal fun gotoHistory() = router.routeToHistory()
+
+    internal fun gotoPreview(color: Color) = router.routeToPreview(color)
+
+    private fun onSnack(error: Throwable): CameraData =
+            CameraData.createSnack(getErrorMessage(error), error is PersistenceException)
 
 }

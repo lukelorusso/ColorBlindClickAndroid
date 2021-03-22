@@ -6,11 +6,6 @@ import com.lukelorusso.presentation.AndroidApplication
 import com.lukelorusso.presentation.di.components.ActivityComponent
 import com.lukelorusso.presentation.di.components.ApplicationComponent
 
-/**
- * Copyright (C) 2020 Mikhael LOPEZ
- * Licensed under the Apache License Version 2.0
- * Base [Fragment] class for every fragment in this application.
- */
 abstract class ABaseFragment(@LayoutRes contentLayoutId: Int) : Fragment(contentLayoutId) {
 
     protected val appComponent: ApplicationComponent by lazy {

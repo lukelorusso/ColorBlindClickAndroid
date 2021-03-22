@@ -22,7 +22,7 @@ import kotlinx.android.synthetic.main.item_info.view.*
 class InfoAdapter(private val withHeader: Boolean, private val withFooter: Boolean) :
     HFRecyclerView<String>(withHeader, withFooter) {
 
-    val intentItemClick: PublishSubject<Int> = PublishSubject.create<Int>()
+    val intentItemClick: PublishSubject<Int> = PublishSubject.create()
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {

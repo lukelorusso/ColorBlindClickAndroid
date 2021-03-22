@@ -36,12 +36,12 @@ class MainActivity : ABaseActivity(R.layout.activity_main), AskRateBottomSheet.A
     // View
     private val adapter by lazy {
         MainPagerAdapter(
-            supportFragmentManager,
-            listOf(
-                InfoFragment.TAG,
-                CameraFragment.TAG,
-                HistoryFragment.TAG
-            ) // this is usually a list of tab labels
+                supportFragmentManager,
+                listOf(
+                        InfoFragment.TAG,
+                        CameraFragment.TAG,
+                        HistoryFragment.TAG
+                ) // this is usually a list of tab labels
         )
     }
 
@@ -83,7 +83,7 @@ class MainActivity : ABaseActivity(R.layout.activity_main), AskRateBottomSheet.A
         val duration = resources.getInteger(R.integer.splash_screen_duration)
         splashScreenLogo.setAlphaWithAnimation(0F, 1F, duration.toLong()) {
             initializationActivity(
-                savedInstanceState
+                    savedInstanceState
             )
         }
     }
@@ -94,29 +94,29 @@ class MainActivity : ABaseActivity(R.layout.activity_main), AskRateBottomSheet.A
         }
 
         RateBottomSheetManager(this)
-            .setInstallDays(2)
-            .setLaunchTimes(4)
-            .setRemindInterval(1)
-            .setShowAskBottomSheet(false)
-            .setShowLaterButton(true)
-            .setShowCloseButtonIcon(false)
-            .monitor()
+                .setInstallDays(2)
+                .setLaunchTimes(4)
+                .setRemindInterval(1)
+                .setShowAskBottomSheet(false)
+                .setShowLaterButton(true)
+                .setShowCloseButtonIcon(false)
+                .monitor()
     }
 
     private fun checkPermission() {
         if (!isPermissionGranted(Manifest.permission.CAMERA)) { // permission NOT granted
             if (ActivityCompat.shouldShowRequestPermissionRationale( // the permission was already denied before
-                    this,
-                    Manifest.permission.CAMERA
-                )
+                            this,
+                            Manifest.permission.CAMERA
+                    )
             ) {
                 showBrokenView()
 
             } else { // we can request the permission
                 ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(Manifest.permission.CAMERA),
-                    PERMISSIONS_REQUEST_CAMERA
+                        this,
+                        arrayOf(Manifest.permission.CAMERA),
+                        PERMISSIONS_REQUEST_CAMERA
                 )
             }
 
@@ -126,14 +126,14 @@ class MainActivity : ABaseActivity(R.layout.activity_main), AskRateBottomSheet.A
     }
 
     override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        resultArray: IntArray
+            requestCode: Int,
+            permissions: Array<String>,
+            resultArray: IntArray
     ) {
         when (requestCode) {
             PERMISSIONS_REQUEST_CAMERA -> {
                 if (resultArray.isNotEmpty() // if the request is cancelled, resultArray is empty
-                    && resultArray[0] == PackageManager.PERMISSION_GRANTED
+                        && resultArray[0] == PackageManager.PERMISSION_GRANTED
                 ) {
                     hideBrokenView()
                 } else {
@@ -145,11 +145,11 @@ class MainActivity : ABaseActivity(R.layout.activity_main), AskRateBottomSheet.A
 
     @Suppress("SameParameterValue")
     private fun isPageVisible(position: Int): Boolean =
-        !isBrokenViewVisible() && activityViewpager.currentItem == position
+            !isBrokenViewVisible() && activityViewpager.currentItem == position
 
     private fun isBrokenViewVisible(): Boolean =
-        activityBrokenView.visibility == View.VISIBLE
-                && activityViewpager.visibility == View.GONE
+            activityBrokenView.visibility == View.VISIBLE
+                    && activityViewpager.visibility == View.GONE
 
     private fun showBrokenView() {
         immersiveMode = false
@@ -159,7 +159,7 @@ class MainActivity : ABaseActivity(R.layout.activity_main), AskRateBottomSheet.A
         activityPermissionsLabel.text = resources.getString(R.string.permissions_label).toHtml()
         activityBrokenView.setOnClickListener { v ->
             if (ContextCompat.checkSelfPermission(v.context, Manifest.permission.CAMERA)
-                == PackageManager.PERMISSION_GRANTED
+                    == PackageManager.PERMISSION_GRANTED
             ) { // permission is granted
                 hideBrokenView()
             } else {
@@ -189,11 +189,11 @@ class MainActivity : ABaseActivity(R.layout.activity_main), AskRateBottomSheet.A
                     }
                     when (newPage) {
                         0 -> activityViewpager.direction =
-                            MaybeScrollableViewPager.SwipeDirection.RIGHT // info page cannot scroll left... this will hide the swiping feedback when you can't scroll anymore
+                                MaybeScrollableViewPager.SwipeDirection.RIGHT // info page cannot scroll left... this will hide the swiping feedback when you can't scroll anymore
                         adapter.count - 1 -> activityViewpager.direction =
-                            MaybeScrollableViewPager.SwipeDirection.LEFT // history page cannot scroll right, because swipe right gesture is set to delete an item from history
+                                MaybeScrollableViewPager.SwipeDirection.LEFT // history page cannot scroll right, because swipe right gesture is set to delete an item from history
                         else -> activityViewpager.direction =
-                            MaybeScrollableViewPager.SwipeDirection.ALL
+                                MaybeScrollableViewPager.SwipeDirection.ALL
                     }
                     lastPage = newPage
                 }
@@ -207,8 +207,8 @@ class MainActivity : ABaseActivity(R.layout.activity_main), AskRateBottomSheet.A
 
         // Show bottom sheet if meets conditions
         RateBottomSheet.showRateBottomSheetIfMeetsConditions(
-            this,
-            this
+                this,
+                this
         )
     }
 
@@ -229,15 +229,15 @@ class MainActivity : ABaseActivity(R.layout.activity_main), AskRateBottomSheet.A
     }
 
     fun showColorPreviewDialog(color: Color) =
-        PreviewDialogFragment.newInstance(gson.toJson(color), !isPageVisible(1))
-            .show(supportFragmentManager, PreviewDialogFragment.TAG)
+            PreviewDialogFragment.newInstance(gson.toJson(color), !isPageVisible(1))
+                    .show(supportFragmentManager, PreviewDialogFragment.TAG)
 
     //region RateBottomSheet.ActionListener
     override fun onRateClickListener() =
-        trackerHelper.track(this, TrackerHelper.Actions.RATING_YES_CLICKED)
+            trackerHelper.track(this, TrackerHelper.Actions.RATING_YES_CLICKED)
 
     override fun onNoClickListener() =
-        trackerHelper.track(this, TrackerHelper.Actions.RATING_NO_CLICKED)
+            trackerHelper.track(this, TrackerHelper.Actions.RATING_NO_CLICKED)
     //endregion
 
 }

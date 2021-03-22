@@ -1,29 +1,17 @@
 package com.lukelorusso.presentation.scenes.camera
 
-import androidx.appcompat.app.AppCompatActivity
 import com.lukelorusso.domain.model.Color
+import com.lukelorusso.presentation.scenes.base.router.ARouter
 import com.lukelorusso.presentation.scenes.main.MainActivity
 import javax.inject.Inject
 
 class CameraRouter
-@Inject internal constructor(private val activity: AppCompatActivity) {
+@Inject internal constructor() : ARouter() {
 
-    fun routeToInfo() {
-        if (activity is MainActivity) {
-            activity.gotoInfo()
-        }
-    }
+    fun routeToInfo() = (activity as? MainActivity)?.gotoInfo()
 
-    fun routeToHistory() {
-        if (activity is MainActivity) {
-            activity.gotoHistory()
-        }
-    }
+    fun routeToHistory() = (activity as? MainActivity)?.gotoHistory()
 
-    fun routeToPreview(color: Color) {
-        if (activity is MainActivity) {
-            activity.showColorPreviewDialog(color)
-        }
-    }
+    fun routeToPreview(color: Color) = (activity as? MainActivity)?.showColorPreviewDialog(color)
 
 }

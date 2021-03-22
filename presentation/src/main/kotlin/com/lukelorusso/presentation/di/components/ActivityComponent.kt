@@ -3,6 +3,8 @@ package com.lukelorusso.presentation.di.components
 import android.app.Activity
 import com.lukelorusso.presentation.di.PerActivity
 import com.lukelorusso.presentation.di.modules.ActivityModule
+import com.lukelorusso.presentation.scenes.base.view.ABaseBottomSheetDialogFragment
+import com.lukelorusso.presentation.scenes.base.view.ABaseDataFragment
 import com.lukelorusso.presentation.scenes.camera.CameraFragment
 import com.lukelorusso.presentation.scenes.history.HistoryFragment
 import com.lukelorusso.presentation.scenes.info.InfoFragment
@@ -21,6 +23,10 @@ interface ActivityComponent {
     }
 
     //region Inject
+    fun inject(injector: ABaseDataFragment.ABaseDataFragmentViewBindingInjector)
+
+    fun inject(injector: ABaseBottomSheetDialogFragment.ABaseBottomSheetDialogFragmentViewBindingInjector)
+
     fun inject(activity: MainActivity)
 
     fun inject(fragment: InfoFragment)

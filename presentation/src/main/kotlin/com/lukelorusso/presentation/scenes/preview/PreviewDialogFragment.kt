@@ -7,7 +7,6 @@ import android.os.Handler
 import android.view.View
 import android.widget.Toast
 import com.google.gson.Gson
-import com.lukelorusso.data.helper.TimberWrapper
 import com.lukelorusso.domain.model.Color
 import com.lukelorusso.presentation.BuildConfig
 import com.lukelorusso.presentation.R
@@ -21,10 +20,11 @@ import kotlinx.android.synthetic.main.dialog_fragment_preview.*
 import kotlinx.android.synthetic.main.layout_color_toolbar.*
 import javax.inject.Inject
 
-class PreviewDialogFragment : ABaseBottomSheetDialogFragment(
-    R.layout.dialog_fragment_preview,
-    isFullScreen = false
-), PreviewDialogView {
+class PreviewDialogFragment : ABaseBottomSheetDialogFragment<PreviewDialogViewModel, PreviewDialogData>(
+        R.layout.dialog_fragment_preview,
+        PreviewDialogViewModel::class.java,
+        isFullScreen = false
+) {
 
     companion object {
         private const val EXTRA_SERIALIZED_COLOR = "EXTRA_SERIALIZED_COLOR"
@@ -33,17 +33,14 @@ class PreviewDialogFragment : ABaseBottomSheetDialogFragment(
         val TAG: String = PreviewDialogFragment::class.java.simpleName
 
         fun newInstance(
-            serializedColor: String,
-            statusBarTopMargin: Boolean
+                serializedColor: String,
+                statusBarTopMargin: Boolean
         ): PreviewDialogFragment =
-            PreviewDialogFragment().build {
-                putString(EXTRA_SERIALIZED_COLOR, serializedColor)
-                putBoolean(EXTRA_STATUS_BAR_TOP_MARGIN, statusBarTopMargin)
-            }
+                PreviewDialogFragment().build {
+                    putString(EXTRA_SERIALIZED_COLOR, serializedColor)
+                    putBoolean(EXTRA_STATUS_BAR_TOP_MARGIN, statusBarTopMargin)
+                }
     }
-
-    @Inject
-    lateinit var presenter: PreviewDialogPresenter
 
     @Inject
     lateinit var gson: Gson
@@ -58,16 +55,6 @@ class PreviewDialogFragment : ABaseBottomSheetDialogFragment(
     private lateinit var colorDescription: String
     private var task: SharePNGTask? = null
 
-    override fun onResume() {
-        super.onResume()
-        presenter.attach(this)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        presenter.detach()
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityComponent.inject(this)
@@ -76,6 +63,10 @@ class PreviewDialogFragment : ABaseBottomSheetDialogFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
+
+        viewModel.observe(viewLifecycleOwner) {
+            if (it != null) render(it)
+        }
     }
 
     override fun onCancel(dialog: DialogInterface) {
@@ -83,18 +74,10 @@ class PreviewDialogFragment : ABaseBottomSheetDialogFragment(
         (activity as? MainActivity)?.applyImmersiveMode()
     }
 
-    // region INTENTS
-    override fun intentGetHomeUrl(): Observable<Unit> = Observable.just(Unit)
-    // endregion
-
     // region RENDER
-    override fun render(viewModel: PreviewDialogViewModel) {
-        TimberWrapper.d { "render: $viewModel" }
-
-        activity?.runOnUiThread {
-            renderHomeUrl(viewModel.homeUrl)
-            renderSnack(viewModel.snackMessage)
-        }
+    override fun render(data: PreviewDialogData) {
+        renderHomeUrl(data.homeUrl)
+        renderSnack(data.snackMessage)
     }
 
     private fun renderHomeUrl(homeUrl: String?) = homeUrl?.also {
@@ -109,6 +92,8 @@ class PreviewDialogFragment : ABaseBottomSheetDialogFragment(
     // endregion
 
     private fun initView() {
+        subscribeIntents()
+
         fabPreviewShare.setOnClickListener(fabClickListener)
 
         val duration = resources.getInteger(R.integer.fading_effect_duration_default)
@@ -118,9 +103,15 @@ class PreviewDialogFragment : ABaseBottomSheetDialogFragment(
         }, duration.toLong())
     }
 
+    private fun subscribeIntents() {
+        val getHomeUrl = Observable.just(Unit).flatMap { viewModel.intentGetHomeUrl(it) }
+
+        viewModel.subscribe(getHomeUrl)
+    }
+
     private fun setColor(color: Color) =
-        (vPreviewPanel?.background as? GradientDrawable)
-            ?.setColor(color.colorHex.hashColorToPixel())
+            (vPreviewPanel?.background as? GradientDrawable)
+                    ?.setColor(color.colorHex.hashColorToPixel())
 
     private val fabClickListener = View.OnClickListener {
         if (activity != null && this@PreviewDialogFragment.isAdded) sharePNG()
@@ -154,18 +145,18 @@ class PreviewDialogFragment : ABaseBottomSheetDialogFragment(
             trackerHelper.track(activity, TrackerHelper.Actions.SHARED_PREVIEW)
             fabPreviewShare.fadeOutView()
             task = SharePNGTask(
-                it,
-                vPreviewPanel,
-                BuildConfig.APPLICATION_ID,
-                resources.getInteger(R.integer.color_picker_dimens_share_in_px),
-                colorDescription,
-                getString(R.string.choose_an_app),
-                object : SharePNGTask.ActionListener {
-                    override fun onTaskCompleted() {
-                        fabPreviewShare.fadeInView()
-                        task = null
+                    it,
+                    vPreviewPanel,
+                    BuildConfig.APPLICATION_ID,
+                    resources.getInteger(R.integer.color_picker_dimens_share_in_px),
+                    colorDescription,
+                    getString(R.string.choose_an_app),
+                    object : SharePNGTask.ActionListener {
+                        override fun onTaskCompleted() {
+                            fabPreviewShare.fadeInView()
+                            task = null
+                        }
                     }
-                }
             )
             task?.execute()
         }

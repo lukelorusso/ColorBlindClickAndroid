@@ -1,14 +1,24 @@
 package com.lukelorusso.presentation.scenes.preview
 
-data class PreviewDialogViewModel(
-    val homeUrl: String? = null,
-    val snackMessage: String? = null
-) {
+import com.lukelorusso.domain.usecases.GetHomeUrl
+import com.lukelorusso.presentation.exception.ErrorMessageFactory
+import com.lukelorusso.presentation.scenes.base.viewmodel.AViewModel
+import io.reactivex.rxjava3.core.Observable
+import javax.inject.Inject
 
-    companion object {
-        fun createHomeUrl(homeUrl: String) = PreviewDialogViewModel(homeUrl = homeUrl)
+class PreviewDialogViewModel
+@Inject constructor(
+        private val getHomeUrl: GetHomeUrl,
+        errorMessageFactory: ErrorMessageFactory
+) : AViewModel<PreviewDialogData>(errorMessageFactory) {
 
-        fun createSnack(snackMessage: String) = PreviewDialogViewModel(snackMessage = snackMessage)
-    }
+    internal fun intentGetHomeUrl(param: Unit): Observable<PreviewDialogData> =
+            getHomeUrl.execute(param)
+                    .toObservable()
+                    .map { PreviewDialogData.createHomeUrl(it) }
+                    .onErrorReturn { onSnack(it) }
+
+    private fun onSnack(error: Throwable): PreviewDialogData =
+            PreviewDialogData.createSnack(getErrorMessage(error))
 
 }

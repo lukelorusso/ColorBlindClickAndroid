@@ -1,19 +1,36 @@
 package com.lukelorusso.presentation.scenes.base.view
 
+import android.os.Bundle
 import android.view.View
 import androidx.annotation.LayoutRes
-import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.snackbar.Snackbar
+import com.lukelorusso.presentation.scenes.base.viewmodel.AViewModel
 import kotlinx.android.synthetic.main.layout_error.*
 import kotlinx.android.synthetic.main.layout_progress.*
+import javax.inject.Inject
 
-/**
- * Copyright (C) 2020 Mikhael LOPEZ
- * Licensed under the Apache License Version 2.0
- * Base [Fragment] class for data fragments in this application.
- */
-abstract class ABaseDataFragment(@LayoutRes contentLayoutId: Int) : ABaseFragment(contentLayoutId) {
+abstract class ABaseDataFragment<ViewModel : AViewModel<Data>, Data : Any>(
+        @LayoutRes contentLayoutId: Int,
+        private val viewModelType: Class<ViewModel>
+) : ABaseFragment(contentLayoutId), ADataView<Data> {
+
+    class ABaseDataFragmentViewBindingInjector {
+        @Inject
+        lateinit var viewModelFactory: ViewModelProvider.Factory
+    }
+
+    private val injector = ABaseDataFragmentViewBindingInjector()
+    lateinit var viewModel: ViewModel
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        activityComponent.inject(injector)
+        viewModel = ViewModelProvider(this, injector.viewModelFactory).get(viewModelType)
+        viewModel.initRouter(requireActivity() as AppCompatActivity, this)
+        super.onCreate(savedInstanceState)
+    }
 
     //region RENDER
     protected fun showLoading(visible: Boolean) {
@@ -41,12 +58,12 @@ abstract class ABaseDataFragment(@LayoutRes contentLayoutId: Int) : ABaseFragmen
         messageError?.also { textErrorDescription.text = it }
     }
 
-    protected fun renderSnack(message: String?) {
-        message?.also {
+    protected open fun renderSnack(messageError: String?) {
+        messageError?.also {
             activity?.also { activity ->
                 Snackbar.make(
-                    activity.findViewById(android.R.id.content),
-                    it, Snackbar.LENGTH_LONG
+                        activity.findViewById(android.R.id.content),
+                        it, Snackbar.LENGTH_LONG
                 ).show()
             }
         }
