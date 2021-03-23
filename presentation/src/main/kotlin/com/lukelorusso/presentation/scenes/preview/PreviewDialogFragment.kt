@@ -171,6 +171,11 @@ class PreviewDialogFragment : ABaseBottomSheetDialogFragment<PreviewDialogViewMo
                             binding.fabPreviewShare.fadeInView()
                             task = null
                         }
+
+                        override fun onTaskFailed() {
+                            onTaskCompleted()
+                            renderSnack(getString(R.string.error_generic))
+                        }
                     }
             )
             task?.execute()
