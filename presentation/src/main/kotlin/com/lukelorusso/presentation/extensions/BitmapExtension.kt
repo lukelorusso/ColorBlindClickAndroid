@@ -18,9 +18,9 @@ private var scaleMatrix: Matrix? = null
  * @throws IllegalArgumentException if width is <= 0, or height is <= 0
  */
 fun Bitmap.getScaled(
-    dstWidth: Int,
-    dstHeight: Int,
-    filter: Boolean
+        dstWidth: Int,
+        dstHeight: Int,
+        filter: Boolean
 ): Bitmap {
     var m: Matrix?
     synchronized(Bitmap::class.java) {

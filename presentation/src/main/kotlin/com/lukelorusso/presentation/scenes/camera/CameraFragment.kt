@@ -72,7 +72,7 @@ class CameraFragment : ABaseDataFragment<CameraViewModel, CameraData>(
     fun backPressHandled(): Boolean {
         return when {
             isToolbarColorVisible() -> {
-                hideColorPanel()
+                hideToolbarColor()
                 true
             }
             else -> false
@@ -172,8 +172,9 @@ class CameraFragment : ABaseDataFragment<CameraViewModel, CameraData>(
     }
 
     private fun renderPersistenceException(isPersistenceException: Boolean?) {
-        if (isPersistenceException == true)
+        isPersistenceException?.alsoTrue {
             trackerHelper.track(activity, TrackerHelper.Actions.PERSISTENCE_EXCEPTION)
+        }
     }
     // endregion
 
@@ -331,26 +332,26 @@ class CameraFragment : ABaseDataFragment<CameraViewModel, CameraData>(
         }
     }
 
-    private fun showProgress(show: Boolean) {
-        if (show) {
-            hideColorPanel()
-            binding.inclToolbarCameraBottom.toolbarCameraButton.visibility = View.GONE
-            binding.inclToolbarCameraBottom.toolbarProgressBar.visibility = View.VISIBLE
-        } else {
-            binding.inclToolbarCameraBottom.toolbarProgressBar.visibility = View.GONE
-            binding.inclToolbarCameraBottom.toolbarCameraButton.visibility = View.VISIBLE
-        }
+    private fun isToolbarColorVisible(): Boolean {
+        return binding.inclToolbarColor.root.visibility == View.VISIBLE
     }
 
-    private fun hideColorPanel() {
+    private fun hideToolbarColor() {
         if (isToolbarColorVisible()) {
             val duration = resources.getInteger(R.integer.fading_effect_duration_fast)
             binding.inclToolbarColor.root.fadeOutView(duration)
         }
     }
 
-    private fun isToolbarColorVisible(): Boolean {
-        return binding.inclToolbarColor.root.visibility == View.VISIBLE
+    private fun showProgress(show: Boolean) {
+        if (show) {
+            hideToolbarColor()
+            binding.inclToolbarCameraBottom.toolbarCameraButton.visibility = View.GONE
+            binding.inclToolbarCameraBottom.toolbarProgressBar.visibility = View.VISIBLE
+        } else {
+            binding.inclToolbarCameraBottom.toolbarProgressBar.visibility = View.GONE
+            binding.inclToolbarCameraBottom.toolbarCameraButton.visibility = View.VISIBLE
+        }
     }
 
 }

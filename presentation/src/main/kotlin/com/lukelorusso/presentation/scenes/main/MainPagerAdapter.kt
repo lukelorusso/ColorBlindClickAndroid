@@ -12,14 +12,14 @@ import java.lang.ref.WeakReference
  * @author LukeLorusso on 07-01-2019.
  */
 class MainPagerAdapter(
-    fm: FragmentManager,
-    private val tabTitleList: List<String>
+        fm: FragmentManager,
+        private val tabTitleList: List<String>
 ) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
     // It's important to keep WeakReference to Fragments.
     // Otherwise the risk is to lose the fragment's instance (empty context)
     private val weakFragmentList: ArrayList<WeakReference<Fragment>?> =
-        ArrayList(tabTitleList.map { null })
+            ArrayList(tabTitleList.map { null })
 
     override fun getCount(): Int {
         return tabTitleList.size
@@ -33,9 +33,9 @@ class MainPagerAdapter(
     }
 
     private fun instanceOf(position: Int, newInstance: Fragment): Fragment =
-        weakFragmentList[position]?.get() ?: newInstance.also {
-            weakFragmentList[position] = WeakReference(it)
-        }
+            weakFragmentList[position]?.get() ?: newInstance.also {
+                weakFragmentList[position] = WeakReference(it)
+            }
 
     override fun getPageTitle(position: Int): CharSequence {
         return tabTitleList.getOrNull(position) ?: ""

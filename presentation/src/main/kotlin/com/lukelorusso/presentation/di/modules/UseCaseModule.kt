@@ -25,7 +25,7 @@ class UseCaseModule {
     @Provides
     @PerApplication
     internal fun provideUseCaseScheduler(postScheduler: Scheduler) =
-        UseCaseScheduler(Schedulers.io(), postScheduler)
+            UseCaseScheduler(Schedulers.io(), postScheduler)
 
     @Provides
     @PerApplication

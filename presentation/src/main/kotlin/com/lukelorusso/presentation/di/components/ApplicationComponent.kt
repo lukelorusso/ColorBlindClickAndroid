@@ -28,8 +28,8 @@ interface ApplicationComponent {
     @Component.Factory
     interface Factory {
         fun create(
-            @BindsInstance application: Application,
-            dataComponent: DataComponent
+                @BindsInstance application: Application,
+                dataComponent: DataComponent
         ): ApplicationComponent
     }
 

@@ -16,14 +16,14 @@ import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 
 fun View.setAlphaWithAnimation(
-    start: Float,
-    end: Float,
-    duration: Long? = null,
-    animationEnd: (() -> Unit)? = null
+        start: Float,
+        end: Float,
+        duration: Long? = null,
+        animationEnd: (() -> Unit)? = null
 ) =
-    (start to end).applyFloatAnimation(duration = duration, animationEnd = animationEnd) {
-        alpha = it
-    }
+        (start to end).applyFloatAnimation(duration = duration, animationEnd = animationEnd) {
+            alpha = it
+        }
 
 fun ImageView?.load(url: String?, onError: (() -> Unit)? = null, onSuccess: (() -> Unit)? = null) {
     url?.also { imageUrl ->
@@ -58,7 +58,7 @@ fun EditText.actionDone(callback: () -> Unit) {
     setOnKeyListener { _, keyCode, event ->
         // If the event is a key-down event on the "enter" button
         return@setOnKeyListener if (event.action == KeyEvent.ACTION_DOWN &&
-            keyCode == KeyEvent.KEYCODE_ENTER
+                keyCode == KeyEvent.KEYCODE_ENTER
         ) {
             // Perform action on key press
             callback()
@@ -74,19 +74,19 @@ fun EditText.onTextChanged(listener: (String) -> Unit) {
         }
 
         override fun beforeTextChanged(
-            charSequence: CharSequence?,
-            start: Int,
-            count: Int,
-            after: Int
+                charSequence: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
         ) {
             // Nothing
         }
 
         override fun onTextChanged(
-            charSequence: CharSequence?,
-            start: Int,
-            before: Int,
-            count: Int
+                charSequence: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int
         ) {
             charSequence?.also { listener(it.toString()) }
         }
@@ -115,9 +115,9 @@ fun View.fadeOutView(duration: Int? = null) {
     val effectDuration = duration ?: resources.getInteger(R.integer.fading_effect_duration_default)
     this.visibility = View.VISIBLE // setting precondition (just in case)
     this.setAlphaWithAnimation(
-        1F,
-        0F,
-        effectDuration.toLong()
+            1F,
+            0F,
+            effectDuration.toLong()
     ) // setting animation with listener at the end (if reached)
     if (this is FloatingActionButton) this.hide() // custom behaviour
     else this.visibility = View.INVISIBLE // making this invisible
@@ -125,9 +125,9 @@ fun View.fadeOutView(duration: Int? = null) {
 
 fun View.getBitmap(): Bitmap {
     val b = Bitmap.createBitmap(
-        this.layoutParams.width,
-        this.layoutParams.height,
-        Bitmap.Config.ARGB_8888
+            this.layoutParams.width,
+            this.layoutParams.height,
+            Bitmap.Config.ARGB_8888
     )
     val c = Canvas(b)
     this.layout(this.left, this.top, this.right, this.bottom)

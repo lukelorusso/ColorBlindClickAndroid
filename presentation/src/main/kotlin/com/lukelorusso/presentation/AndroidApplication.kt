@@ -52,6 +52,6 @@ class AndroidApplication : Application() {
 
     @VisibleForTesting
     fun createAppComponent(): ApplicationComponent =
-        DaggerApplicationComponent.factory().create(this, dataComponent)
+            DaggerApplicationComponent.factory().create(this, dataComponent)
 
 }
