@@ -23,7 +23,7 @@
             android:gravity="center"
             android:orientation="horizontal">
 
-            <androidx.appcompat.widget.AppCompatImageView
+            <ImageView
                 android:id="@+id/btnToolbarSearch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -53,8 +53,8 @@
                     android:textColor="@color/gray_E5E5E5"
                     android:textColorHint="@color/white_50"
                     android:visibility="gone"
-                    tools:visibility="visible"
-                    tools:ignore="Autofill" />
+                    tools:ignore="Autofill"
+                    tools:visibility="visible" />
 
                 <TextView
                     android:id="@+id/tvToolbarTitle"
@@ -70,7 +70,7 @@
 
             </LinearLayout>
 
-            <androidx.appcompat.widget.AppCompatImageView
+            <ImageView
                 android:id="@+id/btnToolbarDeleteAll"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

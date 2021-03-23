@@ -14,24 +14,24 @@ import kotlin.math.roundToInt
  * @param fragment The fragment to be added.
  */
 fun AppCompatActivity.addFragment(
-    containerViewId: Int,
-    fragment: Fragment,
-    animation: Boolean = false
+        containerViewId: Int,
+        fragment: Fragment,
+        animation: Boolean = false
 ) {
     supportFragmentManager.beginTransaction().apply {
         if (animation) setCustomAnimations(
-            R.anim.transition_enter_from_left,
-            R.anim.transition_enter_from_left,
-            R.anim.transition_fade_out,
-            R.anim.transition_fade_out
+                R.anim.transition_enter_from_left,
+                R.anim.transition_enter_from_left,
+                R.anim.transition_fade_out,
+                R.anim.transition_fade_out
         )
         replace(containerViewId, fragment)
     }.commit()
 }
 
 fun AppCompatActivity.applyStatusBarMarginTopOnToolbar(
-    toolbar: Toolbar,
-    extraMarginInDp: Float? = null
+        toolbar: Toolbar,
+        extraMarginInDp: Float? = null
 ) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
         toolbar.layoutParams = (toolbar.layoutParams as? LinearLayout.LayoutParams)?.apply {

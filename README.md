@@ -6,6 +6,8 @@ This is the source code of the published Android application: `-=:[ ColorBlindCl
 
 > https://play.google.com/store/apps/details?id=com.lukelorusso.colorblindclick
 
+![Demo](press/demo.gif)
+
 ColorBlindClick is designed to help all colorblind people to distinguish colors. It's very simple to use, just point an object and click to get the name, RGB and hash of the color.
 
 An iOS version is also available.
@@ -15,7 +17,7 @@ In this project you can find
 
 * [Pure Kotlin code](https://kotlinlang.org/)
 
-* [lopspower's Clean RX Architecture and MVI (Model View Intent)](https://github.com/lopspower/CleanRxArchitecture)
+* [lopspower's Clean RX Architecture](https://github.com/lopspower/CleanRxArchitecture) modified for MVVM (Model-View-ViewModel) architectural pattern
 
 * [AndroidX packages](https://developer.android.com/jetpack/androidx)
 

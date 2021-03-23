@@ -9,7 +9,9 @@
     android:orientation="vertical"
     tools:context=".scenes.info.InfoFragment">
 
-    <include layout="@layout/layout_info_toolbar" />
+    <include
+        android:id="@+id/inclToolbar"
+        layout="@layout/layout_info_toolbar" />
 
     <!-- Line -->
     <View

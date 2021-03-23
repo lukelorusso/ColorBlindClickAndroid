@@ -27,7 +27,7 @@ fun Int.pixelColorToHash(): String {
  * HASH: #5D362F -> PIXEL: -10668497
  */
 fun String.hashColorToPixel(): Int =
-    android.graphics.Color.parseColor(this)
+        android.graphics.Color.parseColor(this)
 
 /**
  * HASH: #5D362F -> [36.470588235294116, 21.176470588235293, 18.431372549019606]

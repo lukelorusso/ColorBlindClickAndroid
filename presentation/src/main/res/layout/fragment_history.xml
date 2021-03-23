@@ -13,7 +13,9 @@
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
-        <include layout="@layout/layout_history_toolbar" />
+        <include
+            android:id="@+id/inclToolbar"
+            layout="@layout/layout_history_toolbar" />
 
         <!-- Line -->
         <View
@@ -66,10 +68,12 @@
     </LinearLayout>
 
     <include
+        android:id="@+id/inclProgress"
         layout="@layout/layout_progress"
         android:visibility="gone" />
 
     <include
+        android:id="@+id/inclError"
         layout="@layout/layout_error"
         android:visibility="gone" />
 

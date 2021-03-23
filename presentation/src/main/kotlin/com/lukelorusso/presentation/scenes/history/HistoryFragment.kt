@@ -2,7 +2,9 @@ package com.lukelorusso.presentation.scenes.history
 
 import android.app.Dialog
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.Window
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -10,9 +12,9 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding4.swiperefreshlayout.refreshes
 import com.jakewharton.rxbinding4.view.clicks
-import com.lukelorusso.data.helper.TimberWrapper
 import com.lukelorusso.domain.model.Color
 import com.lukelorusso.presentation.R
+import com.lukelorusso.presentation.databinding.FragmentHistoryBinding
 import com.lukelorusso.presentation.extensions.*
 import com.lukelorusso.presentation.helper.TrackerHelper
 import com.lukelorusso.presentation.scenes.base.view.ABaseDataFragment
@@ -22,12 +24,11 @@ import com.lukelorusso.presentation.view.SwipeToDeleteHelperCallback
 import com.lukelorusso.presentation.view.VerticalSpaceItemDecoration
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
-import kotlinx.android.synthetic.main.fragment_history.*
-import kotlinx.android.synthetic.main.layout_error.*
-import kotlinx.android.synthetic.main.layout_history_toolbar.*
 import javax.inject.Inject
 
-class HistoryFragment : ABaseDataFragment(R.layout.fragment_history), HistoryView {
+class HistoryFragment : ABaseDataFragment<HistoryViewModel, HistoryData>(
+        HistoryViewModel::class.java
+) {
 
     companion object {
         val TAG: String = HistoryFragment::class.java.simpleName
@@ -36,34 +37,35 @@ class HistoryFragment : ABaseDataFragment(R.layout.fragment_history), HistoryVie
     }
 
     @Inject
-    lateinit var presenter: HistoryPresenter
-
-    @Inject
     lateinit var trackerHelper: TrackerHelper
 
     // Intents
-    val intentLoadData: PublishSubject<Unit> = PublishSubject.create<Unit>()
-    private val intentGotoCamera = PublishSubject.create<Unit>()
+    val intentLoadData: PublishSubject<Unit> = PublishSubject.create()
     private val intentDeleteItem = PublishSubject.create<Color>()
     private val intentDeleteAllItem = PublishSubject.create<Unit>()
 
+    // View
+    private lateinit var binding: FragmentHistoryBinding // This property is only valid between onCreateView and onDestroyView
+
     // Properties
     private var isSearchingMode: Boolean
-        get() = tvToolbarTitle.visibility == View.GONE
+        get() = binding.inclToolbar.tvToolbarTitle.visibility == View.GONE
         set(searching) {
             if (searching) {
-                tvToolbarTitle.visibility = View.GONE
-                etToolbarSearch.visibility = View.VISIBLE
-                etToolbarSearch.requestFocus()
-                etToolbarSearch.showKeyboard()
+                binding.inclToolbar.tvToolbarTitle.visibility = View.GONE
+                binding.inclToolbar.etToolbarSearch.visibility = View.VISIBLE
+                binding.inclToolbar.etToolbarSearch.requestFocus()
+                binding.inclToolbar.etToolbarSearch.showKeyboard()
             } else {
-                tvToolbarTitle.visibility = View.VISIBLE
-                etToolbarSearch.visibility = View.GONE
-                etToolbarSearch.setText("")
-                etToolbarSearch.hideKeyboard()
+                binding.inclToolbar.tvToolbarTitle.visibility = View.VISIBLE
+                binding.inclToolbar.etToolbarSearch.visibility = View.GONE
+                binding.inclToolbar.etToolbarSearch.setText("")
+                binding.inclToolbar.etToolbarSearch.hideKeyboard()
             }
         }
-    private val adapter = HistoryAdapter(withHeader = false, withFooter = false)
+    private val adapter = HistoryAdapter(withHeader = false, withFooter = false) { colorSelected ->
+        viewModel.gotoPreview(colorSelected)
+    }
 
     fun backPressHandled(): Boolean {
         return when {
@@ -72,20 +74,10 @@ class HistoryFragment : ABaseDataFragment(R.layout.fragment_history), HistoryVie
                 true
             }
             else -> {
-                intentGotoCamera.onNext(Unit)
+                viewModel.gotoCamera()
                 true
             }
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        presenter.attach(this)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        presenter.detach()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -93,55 +85,48 @@ class HistoryFragment : ABaseDataFragment(R.layout.fragment_history), HistoryVie
         activityComponent.inject(this)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        initView()
-    }
-
-    // region INTENTS
-    override fun intentLoadData(): Observable<Unit> = Observable.merge(
-        Observable.just(Unit),
-        intentLoadData
-    )
-
-    override fun intentRefreshData(): Observable<Unit> = srlHistoryList.refreshes().map { Unit }
-
-    override fun intentErrorRetry(): Observable<Unit> = btnErrorRetry.clicks().map { Unit }
-
-    override fun intentDeleteItem(): Observable<Color> = intentDeleteItem
-
-    override fun intentDeleteAllItem(): Observable<Unit> = intentDeleteAllItem
-
-    override fun intentGotoCamera(): Observable<Unit> = Observable.merge(
-        fabHistoryGotoCamera.clicks().map { Unit },
-        intentGotoCamera
-    )
-
-    override fun intentOpenPreview(): Observable<Color> = adapter.intentItemClick
-    // endregion
-
-    // region RENDER
-    override fun render(viewModel: HistoryViewModel) {
-        TimberWrapper.d { "render: $viewModel" }
-
-        activity?.runOnUiThread {
-            showLoading(viewModel.loadingState == LoadingState.LOADING)
-            showRefreshingLoading(srlHistoryList, false)
-            showRetryLoading(viewModel.loadingState == LoadingState.RETRY)
-            showContent(content, viewModel.contentState == ContentState.CONTENT)
-            showError(viewModel.contentState == ContentState.ERROR)
-
-            renderData(viewModel.data, viewModel.deletedItem, viewModel.deletedAllItems)
-            renderError(viewModel.errorMessage)
-            renderSnack(viewModel.snackMessage)
-            renderPersistenceException(viewModel.isPersistenceException)
+    override fun onCreateView(
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
+    ): View {
+        FragmentHistoryBinding.inflate(inflater, container, false).also { inflated ->
+            binding = inflated
+            return binding.root
         }
     }
 
-    private fun renderData(list: List<Color>?, deletedItem: Color?, deletedAllItems: Boolean?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initView()
+
+        viewModel.observe(viewLifecycleOwner) {
+            if (it != null) render(it)
+        }
+    }
+
+    // region RENDER
+    override fun render(data: HistoryData) {
+        showLoading(binding.inclProgress.root, data.loadingState == LoadingState.LOADING)
+        showRefreshingLoading(binding.srlHistoryList, false)
+        showRetryLoading(binding.inclError.btnErrorRetry, binding.inclError.inclProgress.root, data.loadingState == LoadingState.RETRY)
+        showContent(binding.content, data.contentState == ContentState.CONTENT)
+        showError(binding.inclError.viewError, data.contentState == ContentState.ERROR)
+
+        renderData(data.list, data.deletedItem, data.deletedAllItems)
+        renderError(binding.inclError.textErrorDescription, data.errorMessage)
+        renderSnack(data.snackMessage)
+        renderPersistenceException(data.isPersistenceException)
+    }
+
+    private fun renderData(
+            list: List<Color>?,
+            deletedItem: Color?,
+            deletedAllItems: Boolean?
+    ) {
         list?.also {
             adapter.originalData = it
-            rvHistoryList.scrollToPosition(0)
+            binding.rvHistoryList.scrollToPosition(0)
             renderNoItems()
             renderDeleteAll()
         }
@@ -161,13 +146,13 @@ class HistoryFragment : ABaseDataFragment(R.layout.fragment_history), HistoryVie
     }
 
     private fun renderNoItems() {
-        tvHistoryNoItems.visibility =
-            if (adapter.data.isEmpty()) View.VISIBLE else View.GONE
+        binding.tvHistoryNoItems.visibility =
+                if (adapter.data.isEmpty()) View.VISIBLE else View.GONE
     }
 
     private fun renderDeleteAll() {
-        btnToolbarDeleteAll.visibility =
-            if (adapter.data.isNotEmpty()) View.VISIBLE else View.GONE
+        binding.inclToolbar.btnToolbarDeleteAll.visibility =
+                if (adapter.data.isNotEmpty()) View.VISIBLE else View.GONE
     }
 
     private fun renderPersistenceException(isPersistenceException: Boolean?) {
@@ -177,44 +162,48 @@ class HistoryFragment : ABaseDataFragment(R.layout.fragment_history), HistoryVie
     // endregion
 
     private fun initView() {
+        subscribeIntents()
+
         activity?.also {
-            (it as? AppCompatActivity)?.applyStatusBarMarginTopOnToolbar(toolbar)
+            (it as? AppCompatActivity)?.applyStatusBarMarginTopOnToolbar(binding.inclToolbar.toolbar)
         }
 
-        btnToolbarSearch.setOnClickListener { switchSearchingMode() }
-        btnToolbarDeleteAll.setOnClickListener { askToRemoveAllItem() }
-        tvToolbarTitle.setOnClickListener { switchSearchingMode() }
+        binding.inclToolbar.btnToolbarSearch.setOnClickListener { switchSearchingMode() }
+        binding.inclToolbar.btnToolbarDeleteAll.setOnClickListener { askToRemoveAllItem() }
+        binding.inclToolbar.tvToolbarTitle.setOnClickListener { switchSearchingMode() }
 
-        srlHistoryList.isEnabled = false
+        binding.srlHistoryList.isEnabled = false
+
+        binding.fabHistoryGotoCamera.setOnClickListener { viewModel.gotoCamera() }
 
         populateAdapter()
     }
 
     private fun populateAdapter() {
         //rvHistoryList.setHasFixedSize(true)
-        rvHistoryList.adapter = adapter
-        rvHistoryList.addItemDecoration(
-            VerticalSpaceItemDecoration(
-                requireContext().dpToPixel(2F)
-            )
+        binding.rvHistoryList.adapter = adapter
+        binding.rvHistoryList.addItemDecoration(
+                VerticalSpaceItemDecoration(
+                        requireContext().dpToPixel(2F)
+                )
         )
-        rvHistoryList.addOnScrollListener(
-            object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(rv: RecyclerView, dx: Int, dy: Int) {
-                    if (dy > 0 || dy < 0 && fabHistoryGotoCamera.isShown)
-                        switchFAB(false)
-                }
+        binding.rvHistoryList.addOnScrollListener(
+                object : RecyclerView.OnScrollListener() {
+                    override fun onScrolled(rv: RecyclerView, dx: Int, dy: Int) {
+                        if (dy > 0 || dy < 0 && binding.fabHistoryGotoCamera.isShown)
+                            switchFAB(false)
+                    }
 
-                override fun onScrollStateChanged(rv: RecyclerView, newState: Int) {
-                    if (newState == RecyclerView.SCROLL_STATE_IDLE)
-                        switchFAB(true)
-                    super.onScrollStateChanged(rv, newState)
+                    override fun onScrollStateChanged(rv: RecyclerView, newState: Int) {
+                        if (newState == RecyclerView.SCROLL_STATE_IDLE)
+                            switchFAB(true)
+                        super.onScrollStateChanged(rv, newState)
+                    }
                 }
-            }
         )
         val swipeHelper = object : SwipeToDeleteHelperCallback(
-            hasHeader = false,
-            hasFooter = false
+                hasHeader = false,
+                hasFooter = false
         ) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
@@ -222,8 +211,25 @@ class HistoryFragment : ABaseDataFragment(R.layout.fragment_history), HistoryVie
             }
         }
         val itemTouchHelper = ItemTouchHelper(swipeHelper)
-        itemTouchHelper.attachToRecyclerView(rvHistoryList)
-        etToolbarSearch.onTextChanged { filter -> adapter.nameFilter = filter }
+        itemTouchHelper.attachToRecyclerView(binding.rvHistoryList)
+        binding.inclToolbar.etToolbarSearch.onTextChanged { filter -> adapter.nameFilter = filter }
+    }
+
+    private fun subscribeIntents() {
+        val loadData = Observable.merge(Observable.just(Unit), intentLoadData)
+                .flatMap { viewModel.intentLoadData(it) }
+        val refreshData = binding.srlHistoryList.refreshes().flatMap { viewModel.intentRefreshData(it) }
+        val retryData = binding.inclError.btnErrorRetry.clicks().flatMap { viewModel.intentRetryData(it) }
+        val deleteItem = intentDeleteItem.flatMap { viewModel.intentDeleteItem(it) }
+        val deleteAllItem = intentDeleteAllItem.flatMap { viewModel.intentDeleteAllItems(it) }
+
+        viewModel.subscribe(
+                loadData,
+                refreshData,
+                retryData,
+                deleteItem,
+                deleteAllItem
+        )
     }
 
     private fun switchSearchingMode() {
@@ -231,11 +237,11 @@ class HistoryFragment : ABaseDataFragment(R.layout.fragment_history), HistoryVie
     }
 
     private fun switchFAB(showFAB: Boolean? = null) {
-        val show = showFAB ?: !fabHistoryGotoCamera.isShown
+        val show = showFAB ?: !binding.fabHistoryGotoCamera.isShown
         if (show) {
-            fabHistoryGotoCamera.show()
+            binding.fabHistoryGotoCamera.show()
         } else {
-            fabHistoryGotoCamera.hide()
+            binding.fabHistoryGotoCamera.hide()
         }
     }
 
@@ -246,13 +252,13 @@ class HistoryFragment : ABaseDataFragment(R.layout.fragment_history), HistoryVie
             setContentView(R.layout.dialog_generic_confirmation)
         }
         dialog.findViewById<TextView>(R.id.textDialogGenericConfirmationMessage).text =
-            getString(R.string.color_delete_confirmation_message).toHtml(requireContext())
+                getString(R.string.color_delete_confirmation_message).toHtml(requireContext())
         dialog.findViewById<TextView>(R.id.textDialogGenericConfirmationPositive).text =
-            getString(R.string.yes).toHtml(requireContext())
+                getString(R.string.yes).toHtml(requireContext())
         dialog.findViewById<TextView>(R.id.textDialogGenericConfirmationNegative).text =
-            getString(R.string.no).toHtml(requireContext())
+                getString(R.string.no).toHtml(requireContext())
         dialog.findViewById<View>(R.id.textDialogGenericConfirmationNegative)
-            .setOnClickListener { dialog.dismiss() }
+                .setOnClickListener { dialog.dismiss() }
         dialog.findViewById<View>(R.id.textDialogGenericConfirmationPositive).setOnClickListener {
             trackerHelper.track(activity, TrackerHelper.Actions.DELETED_ITEM)
             (adapter.originalData as? MutableList)?.remove(color)
@@ -277,13 +283,13 @@ class HistoryFragment : ABaseDataFragment(R.layout.fragment_history), HistoryVie
             setContentView(R.layout.dialog_generic_confirmation)
         }
         dialog.findViewById<TextView>(R.id.textDialogGenericConfirmationMessage).text =
-            getString(R.string.color_delete_all_confirmation_message).toHtml(requireContext())
+                getString(R.string.color_delete_all_confirmation_message).toHtml(requireContext())
         dialog.findViewById<TextView>(R.id.textDialogGenericConfirmationPositive).text =
-            getString(R.string.yes).toHtml(requireContext())
+                getString(R.string.yes).toHtml(requireContext())
         dialog.findViewById<TextView>(R.id.textDialogGenericConfirmationNegative).text =
-            getString(R.string.no).toHtml(requireContext())
+                getString(R.string.no).toHtml(requireContext())
         dialog.findViewById<View>(R.id.textDialogGenericConfirmationNegative)
-            .setOnClickListener { dialog.dismiss() }
+                .setOnClickListener { dialog.dismiss() }
         dialog.findViewById<View>(R.id.textDialogGenericConfirmationPositive).setOnClickListener {
             trackerHelper.track(activity, TrackerHelper.Actions.DELETED_ALL_ITEMS)
             (adapter.originalData as? MutableList)?.clear()

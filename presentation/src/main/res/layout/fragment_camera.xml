@@ -24,7 +24,7 @@
 
     </io.fotoapparat.view.CameraView>
 
-    <androidx.appcompat.widget.AppCompatImageView
+    <ImageView
         android:id="@+id/cameraViewfinder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -33,21 +33,21 @@
         app:srcCompat="@drawable/viewfinder" />
 
     <include
-        android:id="@+id/toolbarCameraTop"
+        android:id="@+id/inclToolbarCameraTop"
         layout="@layout/layout_camera_toolbar_top"
         android:visibility="gone"
         tools:visibility="visible" />
 
     <include
-        android:id="@+id/toolbarCameraBottom"
+        android:id="@+id/inclToolbarCameraBottom"
         layout="@layout/layout_camera_toolbar_bottom" />
 
     <com.lukelorusso.verticalseekbar.VerticalSeekBar
         android:id="@+id/cameraZoomSeekBar"
         android:layout_width="70dp"
         android:layout_height="match_parent"
-        android:layout_above="@id/toolbarColor"
-        android:layout_below="@id/toolbarCameraTop"
+        android:layout_above="@id/inclToolbarColor"
+        android:layout_below="@id/inclToolbarCameraTop"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_gravity="center"
@@ -70,10 +70,10 @@
         app:vsb_use_thumb_to_set_progress="true" />
 
     <include
-        android:id="@+id/toolbarColor"
+        android:id="@+id/inclToolbarColor"
         layout="@layout/layout_color_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/toolbarCameraBottom" />
+        android:layout_above="@id/inclToolbarCameraBottom" />
 
 </RelativeLayout>

@@ -7,6 +7,7 @@ import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -17,17 +18,17 @@ import com.lukelorusso.presentation.extensions.getLocalizedDateTime
 import com.lukelorusso.presentation.extensions.hashColorToPixel
 import com.lukelorusso.presentation.view.DoubleGroundViewHolder
 import com.mikhaellopez.hfrecyclerviewkotlin.HFRecyclerView
-import io.reactivex.rxjava3.subjects.PublishSubject
-import kotlinx.android.synthetic.main.item_color.view.*
 
 /**
  * Based on https://github.com/lopspower/HFRecyclerView
  * Copyright 2018 Mikhael LOPEZ - http://mikhaellopez.com/
  */
-class HistoryAdapter(private val withHeader: Boolean, private val withFooter: Boolean) :
-    HFRecyclerView<Color>(withHeader, withFooter) {
+class HistoryAdapter(
+        private val withHeader: Boolean,
+        private val withFooter: Boolean,
+        private val onItemClicked: (Color) -> Unit
+) : HFRecyclerView<Color>(withHeader, withFooter) {
 
-    val intentItemClick: PublishSubject<Color> = PublishSubject.create<Color>()
     internal var nameFilter = ""
         set(value) {
             field = value
@@ -52,24 +53,24 @@ class HistoryAdapter(private val withHeader: Boolean, private val withFooter: Bo
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is ViewHolder.ItemViewHolder -> holder.bind(
-                getItem(position),
-                position,
-                intentItemClick
+                    getItem(position),
+                    position,
+                    onItemClicked
             )
         }
     }
 
     override fun getItemView(inflater: LayoutInflater, parent: ViewGroup): RecyclerView.ViewHolder =
-        ViewHolder.ItemViewHolder(inflater.inflate(R.layout.item_color, parent, false))
+            ViewHolder.ItemViewHolder(inflater.inflate(R.layout.item_color, parent, false))
 
     override fun getHeaderView(
-        inflater: LayoutInflater,
-        parent: ViewGroup
+            inflater: LayoutInflater,
+            parent: ViewGroup
     ): RecyclerView.ViewHolder? = null
 
     override fun getFooterView(
-        inflater: LayoutInflater,
-        parent: ViewGroup
+            inflater: LayoutInflater,
+            parent: ViewGroup
     ): RecyclerView.ViewHolder? = null
 
     fun removeItem(item: Color) = (data as? MutableList)?.remove(item)
@@ -85,33 +86,38 @@ class HistoryAdapter(private val withHeader: Boolean, private val withFooter: Bo
     sealed class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         class ItemViewHolder(view: View) : DoubleGroundViewHolder(view) {
-            fun bind(item: Color, position: Int, intentItemClick: PublishSubject<Color>) =
-                with(itemView) {
-                    val even = position % 2 == 0
+            fun bind(item: Color, position: Int, onItemClicked: (Color) -> Unit) =
+                    with(itemView) {
+                        val even = position % 2 == 0
 
-                    val states = arrayOf(
-                        intArrayOf(android.R.attr.state_enabled),  // enabled
-                        intArrayOf(-android.R.attr.state_enabled), // disabled
-                        intArrayOf(-android.R.attr.state_checked), // unchecked
-                        intArrayOf(android.R.attr.state_pressed)   // pressed
-                    )
+                        val states = arrayOf(
+                                intArrayOf(android.R.attr.state_enabled),  // enabled
+                                intArrayOf(-android.R.attr.state_enabled), // disabled
+                                intArrayOf(-android.R.attr.state_checked), // unchecked
+                                intArrayOf(android.R.attr.state_pressed)   // pressed
+                        )
 
-                    val colorRes = if (even) R.color.background_evens else R.color.background_odds
-                    val color = ContextCompat.getColor(context, colorRes)
-                    val colors = arrayOf(color, color, color, color).toIntArray()
+                        val colorRes = if (even) R.color.background_evens else R.color.background_odds
+                        val color = ContextCompat.getColor(context, colorRes)
+                        val colors = arrayOf(color, color, color, color).toIntArray()
 
-                    ViewCompat.setBackgroundTintList(content, ColorStateList(states, colors))
+                        val content = findViewById<View>(R.id.content)
+                        ViewCompat.setBackgroundTintList(content, ColorStateList(states, colors))
 
-                    (itemPreviewPanel.background as? GradientDrawable)?.setColor(item.colorHex.hashColorToPixel())
+                        val itemPreviewPanel = findViewById<View>(R.id.itemPreviewPanel)
+                        (itemPreviewPanel.background as? GradientDrawable)?.setColor(item.colorHex.hashColorToPixel())
 
-                    itemName.text = item.colorName
+                        val itemName = findViewById<TextView>(R.id.itemName)
+                        itemName.text = item.colorName
 
-                    itemPicker.text = item.colorHex
+                        val itemPicker = findViewById<TextView>(R.id.itemPicker)
+                        itemPicker.text = item.colorHex
 
-                    itemDescription.text = context.getLocalizedDateTime(item.timestamp)
+                        val itemDescription = findViewById<TextView>(R.id.itemDescription)
+                        itemDescription.text = context.getLocalizedDateTime(item.timestamp)
 
-                    setOnClickListener { intentItemClick.onNext(item) }
-                }
+                        setOnClickListener { onItemClicked(item) }
+                    }
         }
     }
     //endregion

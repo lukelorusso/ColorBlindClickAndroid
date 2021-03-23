@@ -1,30 +1,48 @@
 package com.lukelorusso.presentation.scenes.base.view
 
+import android.os.Bundle
 import android.view.View
-import androidx.annotation.LayoutRes
-import androidx.fragment.app.Fragment
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.layout_error.*
-import kotlinx.android.synthetic.main.layout_progress.*
+import com.lukelorusso.presentation.scenes.base.viewmodel.AViewModel
+import javax.inject.Inject
 
-/**
- * Copyright (C) 2020 Mikhael LOPEZ
- * Licensed under the Apache License Version 2.0
- * Base [Fragment] class for data fragments in this application.
- */
-abstract class ABaseDataFragment(@LayoutRes contentLayoutId: Int) : ABaseFragment(contentLayoutId) {
+abstract class ABaseDataFragment<ViewModel : AViewModel<Data>, Data : Any>(
+        private val viewModelType: Class<ViewModel>
+) : ABaseFragment(), ADataView<Data> {
+
+    class ABaseDataFragmentViewBindingInjector {
+        @Inject
+        lateinit var viewModelFactory: ViewModelProvider.Factory
+    }
+
+    private val injector = ABaseDataFragmentViewBindingInjector()
+    lateinit var viewModel: ViewModel
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        activityComponent.inject(injector)
+        viewModel = ViewModelProvider(this, injector.viewModelFactory).get(viewModelType)
+        viewModel.initRouter(requireActivity() as AppCompatActivity, this)
+        super.onCreate(savedInstanceState)
+    }
 
     //region RENDER
-    protected fun showLoading(visible: Boolean) {
+    protected fun showLoading(progress: View, visible: Boolean) {
         progress.visibility = if (visible) View.VISIBLE else View.GONE
+    }
+
+    protected fun showFullLoading(loadingFull: View, visible: Boolean) {
+        loadingFull.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
     protected fun showRefreshingLoading(swipeRefreshLayout: SwipeRefreshLayout, visible: Boolean) {
         swipeRefreshLayout.isRefreshing = visible
     }
 
-    protected fun showRetryLoading(visible: Boolean) {
+    protected fun showRetryLoading(btnErrorRetry: View, errorProgress: View, visible: Boolean) {
         btnErrorRetry.isClickable = !visible
         errorProgress.visibility = if (visible) View.VISIBLE else View.INVISIBLE
     }
@@ -33,20 +51,20 @@ abstract class ABaseDataFragment(@LayoutRes contentLayoutId: Int) : ABaseFragmen
         content.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
-    protected fun showError(visible: Boolean) {
+    fun showError(viewError: View, visible: Boolean) {
         viewError.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
-    protected fun renderError(messageError: String?) {
+    fun renderError(textErrorDescription: TextView, messageError: String?) {
         messageError?.also { textErrorDescription.text = it }
     }
 
-    protected fun renderSnack(message: String?) {
-        message?.also {
+    protected open fun renderSnack(messageError: String?) {
+        messageError?.also {
             activity?.also { activity ->
                 Snackbar.make(
-                    activity.findViewById(android.R.id.content),
-                    it, Snackbar.LENGTH_LONG
+                        activity.findViewById(android.R.id.content),
+                        it, Snackbar.LENGTH_LONG
                 ).show()
             }
         }

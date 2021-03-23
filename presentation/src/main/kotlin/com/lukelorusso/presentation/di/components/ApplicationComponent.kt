@@ -5,6 +5,7 @@ import com.lukelorusso.data.di.components.DataComponent
 import com.lukelorusso.presentation.di.PerApplication
 import com.lukelorusso.presentation.di.modules.ApplicationModule
 import com.lukelorusso.presentation.di.modules.UseCaseModule
+import com.lukelorusso.presentation.di.modules.ViewModelModule
 import dagger.BindsInstance
 import dagger.Component
 
@@ -15,16 +16,20 @@ import dagger.Component
  */
 @PerApplication // Constraints this component to one-per-application or un-scoped bindings.
 @Component(
-    dependencies = [(DataComponent::class)],
-    modules = [(ApplicationModule::class), (UseCaseModule::class)]
+        dependencies = [(DataComponent::class)],
+        modules = [
+            (ApplicationModule::class),
+            (UseCaseModule::class),
+            (ViewModelModule::class)
+        ]
 )
 interface ApplicationComponent {
 
     @Component.Factory
     interface Factory {
         fun create(
-            @BindsInstance application: Application,
-            dataComponent: DataComponent
+                @BindsInstance application: Application,
+                dataComponent: DataComponent
         ): ApplicationComponent
     }
 
