@@ -9,10 +9,10 @@ data class HistoryData(
         val contentState: ContentState = ContentState.NONE,
         val list: List<Color>? = null,
         val deletedItem: Color? = null,
-        val deletedAllItems: Boolean? = true,
+        val deletedAllItems: Boolean? = null,
         val errorMessage: String? = null,
         val snackMessage: String? = null,
-        val isPersistenceException: Boolean? = true
+        val isPersistenceException: Boolean? = null
 ) {
 
     companion object {

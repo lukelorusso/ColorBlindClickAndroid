@@ -2,6 +2,7 @@ package com.lukelorusso.presentation.helper
 
 import android.app.Activity
 import android.content.Context
+import android.os.Bundle
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.lukelorusso.presentation.BuildConfig
 import timber.log.Timber
@@ -28,7 +29,13 @@ class TrackerHelper
     fun track(activity: Activity?, action: String) {
         if (isEnable()) {
             Timber.d("TrackerHelper: $activity -> $action")
-            activity?.also { firebaseAnalytics.setCurrentScreen(it, action, null) }
+            activity?.also {
+                //firebaseAnalytics.setCurrentScreen(it, action, null)
+                firebaseAnalytics.logEvent(
+                        FirebaseAnalytics.Event.SCREEN_VIEW,
+                        Bundle().apply { putString(FirebaseAnalytics.Param.SCREEN_NAME, action) }
+                )
+            }
         }
     }
 

@@ -12,7 +12,7 @@ data class CameraData(
         val color: Color? = null,
         val errorMessage: String? = null,
         val snackMessage: String? = null,
-        val isPersistenceException: Boolean? = true
+        val isPersistenceException: Boolean? = null
 ) {
 
     companion object {
