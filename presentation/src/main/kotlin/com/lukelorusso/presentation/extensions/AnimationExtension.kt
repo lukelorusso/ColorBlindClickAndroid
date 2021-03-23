@@ -3,6 +3,7 @@ package com.lukelorusso.presentation.extensions
 import android.animation.TimeInterpolator
 import android.animation.ValueAnimator
 import android.os.Handler
+import android.os.Looper
 
 fun Pair<Float, Float>.applyFloatAnimation(
     duration: Long? = null,
@@ -13,7 +14,7 @@ fun Pair<Float, Float>.applyFloatAnimation(
     val animator = ValueAnimator.ofFloat(first, second).apply {
         duration?.also { this.duration = it }
         addUpdateListener { animation -> action(animation.animatedValue as Float) }
-        animationEnd?.also { Handler().postDelayed({ it.invoke() }, duration ?: this.duration) }
+        animationEnd?.also { Handler(Looper.getMainLooper()).postDelayed({ it.invoke() }, duration ?: this.duration) }
         timeInterpolator?.also { interpolator = it }
     }
     animator.start()

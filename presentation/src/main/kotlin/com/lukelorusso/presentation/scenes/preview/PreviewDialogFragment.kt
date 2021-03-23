@@ -4,24 +4,25 @@ import android.content.DialogInterface
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import com.google.gson.Gson
 import com.lukelorusso.domain.model.Color
 import com.lukelorusso.presentation.BuildConfig
 import com.lukelorusso.presentation.R
+import com.lukelorusso.presentation.databinding.DialogFragmentPreviewBinding
 import com.lukelorusso.presentation.extensions.*
 import com.lukelorusso.presentation.helper.TrackerHelper
 import com.lukelorusso.presentation.scenes.base.view.ABaseBottomSheetDialogFragment
 import com.lukelorusso.presentation.scenes.main.MainActivity
 import com.lukelorusso.presentation.task.SharePNGTask
 import io.reactivex.rxjava3.core.Observable
-import kotlinx.android.synthetic.main.dialog_fragment_preview.*
-import kotlinx.android.synthetic.main.layout_color_toolbar.*
 import javax.inject.Inject
 
 class PreviewDialogFragment : ABaseBottomSheetDialogFragment<PreviewDialogViewModel, PreviewDialogData>(
-        R.layout.dialog_fragment_preview,
         PreviewDialogViewModel::class.java,
         isFullScreen = false
 ) {
@@ -48,6 +49,9 @@ class PreviewDialogFragment : ABaseBottomSheetDialogFragment<PreviewDialogViewMo
     @Inject
     lateinit var trackerHelper: TrackerHelper
 
+    // View
+    private lateinit var binding: DialogFragmentPreviewBinding // This property is only valid between onCreateView and onDestroyView
+
     // Properties
     private val extraColor by lazy {
         requireArguments().getString(EXTRA_SERIALIZED_COLOR)!!.let { gson.fromJson<Color>(it) }
@@ -58,6 +62,17 @@ class PreviewDialogFragment : ABaseBottomSheetDialogFragment<PreviewDialogViewMo
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityComponent.inject(this)
+    }
+
+    override fun onCreateView(
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
+    ): View {
+        DialogFragmentPreviewBinding.inflate(inflater, container, false).also { inflated ->
+            binding = inflated
+            return binding.root
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -94,12 +109,12 @@ class PreviewDialogFragment : ABaseBottomSheetDialogFragment<PreviewDialogViewMo
     private fun initView() {
         subscribeIntents()
 
-        fabPreviewShare.setOnClickListener(fabClickListener)
+        binding.fabPreviewShare.setOnClickListener(fabClickListener)
 
         val duration = resources.getInteger(R.integer.fading_effect_duration_default)
-        Handler().postDelayed({
+        Handler(Looper.getMainLooper()).postDelayed({
             setColor(extraColor)
-            vPreviewPanel?.fadeInView()
+            binding.vPreviewPanel.fadeInView()
         }, duration.toLong())
     }
 
@@ -110,7 +125,7 @@ class PreviewDialogFragment : ABaseBottomSheetDialogFragment<PreviewDialogViewMo
     }
 
     private fun setColor(color: Color) =
-            (vPreviewPanel?.background as? GradientDrawable)
+            (binding.vPreviewPanel.background as? GradientDrawable)
                     ?.setColor(color.colorHex.hashColorToPixel())
 
     private val fabClickListener = View.OnClickListener {
@@ -118,21 +133,21 @@ class PreviewDialogFragment : ABaseBottomSheetDialogFragment<PreviewDialogViewMo
     }
 
     private fun showColorToast() {
-        toolbarColor.visibility = View.VISIBLE
+        binding.inclToolbarColor.root.visibility = View.VISIBLE
 
-        colorPreviewPanel.visibility = View.GONE
+        binding.inclToolbarColor.colorPreviewPanel.visibility = View.GONE
 
-        colorTopLine.visibility = View.VISIBLE
+        binding.inclToolbarColor.colorTopLine.visibility = View.VISIBLE
         val topLineText = extraColor.colorHex
-        colorTopLine.text = topLineText
+        binding.inclToolbarColor.colorTopLine.text = topLineText
 
-        colorMainLine.visibility = View.VISIBLE
-        colorMainLine.text = extraColor.colorName
+        binding.inclToolbarColor.colorMainLine.visibility = View.VISIBLE
+        binding.inclToolbarColor.colorMainLine.text = extraColor.colorName
 
-        colorBottomLine.visibility = View.VISIBLE
-        colorBottomLine.text = extraColor.toRGBString()
+        binding.inclToolbarColor.colorBottomLine.visibility = View.VISIBLE
+        binding.inclToolbarColor.colorBottomLine.text = extraColor.toRGBString()
 
-        toolbarColor.setOnClickListener {
+        binding.inclToolbarColor.root.setOnClickListener {
             activity?.also {
                 trackerHelper.track(activity, TrackerHelper.Actions.SHARED_TEXT)
                 it.shareText(colorDescription, getString(R.string.choose_an_app))
@@ -143,17 +158,17 @@ class PreviewDialogFragment : ABaseBottomSheetDialogFragment<PreviewDialogViewMo
     private fun sharePNG() = activity?.also {
         if (task == null) {
             trackerHelper.track(activity, TrackerHelper.Actions.SHARED_PREVIEW)
-            fabPreviewShare.fadeOutView()
+            binding.fabPreviewShare.fadeOutView()
             task = SharePNGTask(
                     it,
-                    vPreviewPanel,
+                    binding.vPreviewPanel,
                     BuildConfig.APPLICATION_ID,
                     resources.getInteger(R.integer.color_picker_dimens_share_in_px),
                     colorDescription,
                     getString(R.string.choose_an_app),
                     object : SharePNGTask.ActionListener {
                         override fun onTaskCompleted() {
-                            fabPreviewShare.fadeInView()
+                            binding.fabPreviewShare.fadeInView()
                             task = null
                         }
                     }

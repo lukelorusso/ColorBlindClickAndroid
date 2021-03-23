@@ -4,10 +4,14 @@ import android.content.pm.PackageManager
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import com.lukelorusso.data.helper.TimberWrapper
 import com.lukelorusso.domain.model.Color
 import com.lukelorusso.presentation.R
+import com.lukelorusso.presentation.databinding.FragmentCameraBinding
 import com.lukelorusso.presentation.extensions.*
 import com.lukelorusso.presentation.helper.TrackerHelper
 import com.lukelorusso.presentation.scenes.base.view.ABaseDataFragment
@@ -20,15 +24,10 @@ import io.fotoapparat.parameter.Flash
 import io.fotoapparat.selector.*
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
-import kotlinx.android.synthetic.main.fragment_camera.*
-import kotlinx.android.synthetic.main.layout_camera_toolbar_bottom.*
-import kotlinx.android.synthetic.main.layout_camera_toolbar_top.*
-import kotlinx.android.synthetic.main.layout_color_toolbar.*
 import timber.log.Timber
 import javax.inject.Inject
 
 class CameraFragment : ABaseDataFragment<CameraViewModel, CameraData>(
-        R.layout.fragment_camera,
         CameraViewModel::class.java
 ) {
 
@@ -46,6 +45,9 @@ class CameraFragment : ABaseDataFragment<CameraViewModel, CameraData>(
     // Intents
     private val intentGetColor = PublishSubject.create<Pair<String, String>>()
     private val intentSetLastLensPosition = PublishSubject.create<Int>()
+
+    // View
+    private lateinit var binding: FragmentCameraBinding // This property is only valid between onCreateView and onDestroyView
 
     // Properties
     private var homeUrl: String = ""
@@ -92,6 +94,17 @@ class CameraFragment : ABaseDataFragment<CameraViewModel, CameraData>(
         activityComponent.inject(this)
     }
 
+    override fun onCreateView(
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
+    ): View {
+        FragmentCameraBinding.inflate(inflater, container, false).also { inflated ->
+            binding = inflated
+            return binding.root
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
@@ -123,8 +136,8 @@ class CameraFragment : ABaseDataFragment<CameraViewModel, CameraData>(
         lastLensPosition?.also { position ->
             camera = Fotoapparat(
                     context = requireContext(),
-                    view = cameraView,
-                    focusView = focusView,
+                    view = binding.cameraView,
+                    focusView = binding.focusView,
                     logger = object : Logger {
                         override fun log(message: String) {
                             TimberWrapper.d { "Camera message: $message" }
@@ -138,15 +151,17 @@ class CameraFragment : ABaseDataFragment<CameraViewModel, CameraData>(
             checkFrontCamera()
             checkCameraCapabilities()
 
-            cameraZoomSeekBar?.maxValue = MAX_ZOOM_VALUE
-            cameraZoomSeekBar?.setOnProgressChangeListener { progressValue ->
-                camera?.setZoom(progressValue.toFloat().div(MAX_ZOOM_VALUE))
+            binding.cameraZoomSeekBar.apply {
+                maxValue = MAX_ZOOM_VALUE
+                setOnProgressChangeListener { progressValue ->
+                    camera?.setZoom(progressValue.toFloat().div(MAX_ZOOM_VALUE))
+                }
+                progress = INIT_ZOOM_VALUE
+                visibility = View.VISIBLE
             }
-            cameraZoomSeekBar?.progress = INIT_ZOOM_VALUE
-            cameraZoomSeekBar?.visibility = View.VISIBLE
 
             val duration = resources.getInteger(R.integer.fading_effect_duration_default)
-            Handler().postDelayed({
+            Handler(Looper.getMainLooper()).postDelayed({
                 (activity as? MainActivity)?.hideSplashScreen()
             }, duration.toLong())
         }
@@ -165,12 +180,12 @@ class CameraFragment : ABaseDataFragment<CameraViewModel, CameraData>(
     private fun initView() {
         subscribeIntents()
 
-        toolbarCameraButton.setOnClickListener {
+        binding.inclToolbarCameraBottom.toolbarCameraButton.setOnClickListener {
             showProgress(true)
             camera?.also { camera ->
                 camera.takePicture().toBitmap().whenAvailable { bitmapPhoto ->
                     bitmapPhoto?.also { result ->
-                        Handler().post {
+                        Handler(Looper.getMainLooper()).post {
                             val bitmap = result.bitmap
                             val pixel = bitmap.getPixel(
                                     bitmap.width / 2,
@@ -188,7 +203,7 @@ class CameraFragment : ABaseDataFragment<CameraViewModel, CameraData>(
             }
         }
 
-        toolbarSwitchCameraButton.setOnClickListener {
+        binding.inclToolbarCameraTop.toolbarSwitchCameraButton.setOnClickListener {
             camera?.also { camera ->
                 camera.switchTo(
                         lensPosition = if (isFrontCamera) back() else front(),
@@ -198,11 +213,11 @@ class CameraFragment : ABaseDataFragment<CameraViewModel, CameraData>(
                 intentSetLastLensPosition.onNext(if (isFrontCamera) 1 else 0)
                 initToolbarTop()
                 checkCameraCapabilities()
-                camera.setZoom(cameraZoomSeekBar.progress.toFloat().div(MAX_ZOOM_VALUE))
+                camera.setZoom(binding.cameraZoomSeekBar.progress.toFloat().div(MAX_ZOOM_VALUE))
             }
         }
 
-        toolbarFlashButton.setOnClickListener {
+        binding.inclToolbarCameraTop.toolbarFlashButton.setOnClickListener {
             camera?.also { camera ->
                 camera.getCurrentParameters().whenAvailable { cameraParameters ->
                     val isFlashOn = cameraParameters?.flashMode == Flash.Torch
@@ -216,14 +231,21 @@ class CameraFragment : ABaseDataFragment<CameraViewModel, CameraData>(
             }
         }
 
-        toolbarInfoButton.setOnClickListener { viewModel.gotoInfo() }
+        binding.inclToolbarCameraBottom.toolbarInfoButton.setOnClickListener {
+            viewModel.gotoInfo()
+        }
 
-        toolbarHistoryButton.setOnClickListener { viewModel.gotoHistory() }
+        binding.inclToolbarCameraBottom.toolbarHistoryButton.setOnClickListener {
+            viewModel.gotoHistory()
+        }
     }
 
     private fun subscribeIntents() {
         val loadData = Observable.just(Unit).flatMap { unit ->
-            Observable.merge(viewModel.intentGetHomeUrl(unit), viewModel.intentGetLastLensPosition(unit))
+            Observable.merge(
+                    viewModel.intentGetHomeUrl(unit),
+                    viewModel.intentGetLastLensPosition(unit)
+            )
         }
         val getColor = intentGetColor.flatMap { viewModel.intentGetColor(it) }
         val setLastLensPosition = intentSetLastLensPosition
@@ -233,11 +255,11 @@ class CameraFragment : ABaseDataFragment<CameraViewModel, CameraData>(
     }
 
     private fun initToolbarTop(isFlashOn: Boolean = false) {
-        toolbarSwitchCameraButton.setImageResource(
+        binding.inclToolbarCameraTop.toolbarSwitchCameraButton.setImageResource(
                 if (isFrontCamera) R.drawable.camera_rear_white
                 else R.drawable.camera_front_white
         )
-        toolbarFlashButton.setImageResource(
+        binding.inclToolbarCameraTop.toolbarFlashButton.setImageResource(
                 if (isFlashOn) R.drawable.flash_off_white
                 else R.drawable.flash_on_white
         )
@@ -245,89 +267,90 @@ class CameraFragment : ABaseDataFragment<CameraViewModel, CameraData>(
 
     private fun checkFrontCamera() {
         if (requireContext().packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT)) {
-            toolbarCameraTop?.visibility = View.VISIBLE
-            toolbarSwitchCameraButton?.visibility = View.VISIBLE
+            binding.inclToolbarCameraTop.root.visibility = View.VISIBLE
+            binding.inclToolbarCameraTop.toolbarSwitchCameraButton.visibility = View.VISIBLE
         }
     }
 
     private fun checkCameraCapabilities() {
-        Handler().post {
+        Handler(Looper.getMainLooper()).post {
             camera?.also { camera ->
-                camera.getCapabilities().whenAvailable {
-                    if (it?.flashModes?.contains(Flash.On) == true) {
-                        toolbarCameraTop?.visibility = View.VISIBLE
-                        toolbarFlashButton?.visibility = View.VISIBLE
+                camera.getCapabilities().whenAvailable { capabilities ->
+                    if (capabilities?.flashModes?.contains(Flash.On) == true) {
+                        binding.inclToolbarCameraTop.root.visibility = View.VISIBLE
+                        binding.inclToolbarCameraTop.toolbarFlashButton.visibility = View.VISIBLE
                     } else {
-                        toolbarFlashButton?.visibility = View.GONE
+                        binding.inclToolbarCameraTop.toolbarFlashButton.visibility = View.GONE
                     }
 
-                    if (it?.zoom.toString() == "Zoom.FixedZoom") {
-                        cameraZoomSeekBar?.visibility = View.GONE
-                    } else {
-                        cameraZoomSeekBar?.visibility = View.VISIBLE
-                    }
+                    binding.cameraZoomSeekBar.visibility =
+                            if (capabilities?.zoom.toString() == "Zoom.FixedZoom")
+                                View.GONE
+                            else
+                                View.VISIBLE
                 }
             }
         }
     }
 
     private fun showToolbarColor(color: Color) {
-        toolbarColor.fadeInView()
+        binding.inclToolbarColor.root.fadeInView()
 
-        colorPreviewPanel.visibility = View.VISIBLE
+        binding.inclToolbarColor.colorPreviewPanel.visibility = View.VISIBLE
 
-        (colorPreviewPanel.background as? GradientDrawable)?.setColor(color.colorHex.hashColorToPixel())
+        (binding.inclToolbarColor.colorPreviewPanel.background as? GradientDrawable)
+                ?.setColor(color.colorHex.hashColorToPixel())
 
-        colorMainLine.visibility = View.VISIBLE
-        colorMainLine.text = color.colorName
+        binding.inclToolbarColor.colorMainLine.visibility = View.VISIBLE
+        binding.inclToolbarColor.colorMainLine.text = color.colorName
 
-        colorTopLine.visibility = View.VISIBLE
+        binding.inclToolbarColor.colorTopLine.visibility = View.VISIBLE
         val topLineText = color.colorHex
-        colorTopLine.text = topLineText
+        binding.inclToolbarColor.colorTopLine.text = topLineText
 
-        colorBottomLine.visibility = View.VISIBLE
-        colorBottomLine.text = color.toRGBString()
+        binding.inclToolbarColor.colorBottomLine.visibility = View.VISIBLE
+        binding.inclToolbarColor.colorBottomLine.text = color.toRGBString()
 
-        toolbarColor.setOnClickListener { viewModel.gotoPreview(color) }
+        binding.inclToolbarColor.root.setOnClickListener { viewModel.gotoPreview(color) }
     }
 
     private fun showToolbarColor(errorMessage: String?) {
         errorMessage?.also { msg ->
-            toolbarColor.fadeInView()
+            binding.inclToolbarColor.root.fadeInView()
 
-            colorPreviewPanel.visibility = View.GONE
+            binding.inclToolbarColor.colorPreviewPanel.visibility = View.GONE
 
-            colorTopLine.visibility = View.VISIBLE
-            colorTopLine.text = msg
+            binding.inclToolbarColor.colorTopLine.visibility = View.VISIBLE
+            binding.inclToolbarColor.colorTopLine.text = msg
 
-            colorMainLine.visibility = View.GONE
+            binding.inclToolbarColor.colorMainLine.visibility = View.GONE
 
-            colorBottomLine.visibility = View.GONE
+            binding.inclToolbarColor.colorBottomLine.visibility = View.GONE
 
-            toolbarColor.setOnClickListener(null)
+            binding.inclToolbarColor.root.setOnClickListener(null)
         }
     }
 
     private fun showProgress(show: Boolean) {
         if (show) {
             hideColorPanel()
-            toolbarCameraButton.visibility = View.GONE
-            toolbarProgressBar.visibility = View.VISIBLE
+            binding.inclToolbarCameraBottom.toolbarCameraButton.visibility = View.GONE
+            binding.inclToolbarCameraBottom.toolbarProgressBar.visibility = View.VISIBLE
         } else {
-            toolbarProgressBar.visibility = View.GONE
-            toolbarCameraButton.visibility = View.VISIBLE
+            binding.inclToolbarCameraBottom.toolbarProgressBar.visibility = View.GONE
+            binding.inclToolbarCameraBottom.toolbarCameraButton.visibility = View.VISIBLE
         }
     }
 
     private fun hideColorPanel() {
         if (isToolbarColorVisible()) {
             val duration = resources.getInteger(R.integer.fading_effect_duration_fast)
-            toolbarColor.fadeOutView(duration)
+            binding.inclToolbarColor.root.fadeOutView(duration)
         }
     }
 
     private fun isToolbarColorVisible(): Boolean {
-        return toolbarColor.visibility == View.VISIBLE
+        return binding.inclToolbarColor.root.visibility == View.VISIBLE
     }
 
 }

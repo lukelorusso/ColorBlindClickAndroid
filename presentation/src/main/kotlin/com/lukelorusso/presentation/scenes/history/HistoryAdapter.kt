@@ -7,6 +7,7 @@ import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -17,7 +18,6 @@ import com.lukelorusso.presentation.extensions.getLocalizedDateTime
 import com.lukelorusso.presentation.extensions.hashColorToPixel
 import com.lukelorusso.presentation.view.DoubleGroundViewHolder
 import com.mikhaellopez.hfrecyclerviewkotlin.HFRecyclerView
-import kotlinx.android.synthetic.main.item_color.view.*
 
 /**
  * Based on https://github.com/lopspower/HFRecyclerView
@@ -101,14 +101,19 @@ class HistoryAdapter(
                         val color = ContextCompat.getColor(context, colorRes)
                         val colors = arrayOf(color, color, color, color).toIntArray()
 
+                        val content = findViewById<View>(R.id.content)
                         ViewCompat.setBackgroundTintList(content, ColorStateList(states, colors))
 
+                        val itemPreviewPanel = findViewById<View>(R.id.itemPreviewPanel)
                         (itemPreviewPanel.background as? GradientDrawable)?.setColor(item.colorHex.hashColorToPixel())
 
+                        val itemName = findViewById<TextView>(R.id.itemName)
                         itemName.text = item.colorName
 
+                        val itemPicker = findViewById<TextView>(R.id.itemPicker)
                         itemPicker.text = item.colorHex
 
+                        val itemDescription = findViewById<TextView>(R.id.itemDescription)
                         itemDescription.text = context.getLocalizedDateTime(item.timestamp)
 
                         setOnClickListener { onItemClicked(item) }

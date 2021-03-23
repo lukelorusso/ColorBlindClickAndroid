@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'com.google.firebase.crashlytics'
@@ -8,6 +7,11 @@ apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion androidCompileSdkVersion
+
+    buildFeatures {
+        viewBinding true
+    }
+
     defaultConfig {
         applicationId androidApplicationId
         targetSdkVersion androidCompileSdkVersion
@@ -34,7 +38,7 @@ android {
         def ENABLE_ANALYTICS = "ENABLE_ANALYTICS"
         debug {
             applicationIdSuffix = ".debug"
-            versionNameSuffix " DEBUG"
+            versionNameSuffix "-DEBUG"
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt')
             buildConfigField "boolean", ENABLE_ANALYTICS, 'Boolean.parseBoolean("false")'

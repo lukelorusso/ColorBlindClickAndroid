@@ -2,7 +2,9 @@ package com.lukelorusso.presentation.scenes.history
 
 import android.app.Dialog
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.Window
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -12,6 +14,7 @@ import com.jakewharton.rxbinding4.swiperefreshlayout.refreshes
 import com.jakewharton.rxbinding4.view.clicks
 import com.lukelorusso.domain.model.Color
 import com.lukelorusso.presentation.R
+import com.lukelorusso.presentation.databinding.FragmentHistoryBinding
 import com.lukelorusso.presentation.extensions.*
 import com.lukelorusso.presentation.helper.TrackerHelper
 import com.lukelorusso.presentation.scenes.base.view.ABaseDataFragment
@@ -21,13 +24,9 @@ import com.lukelorusso.presentation.view.SwipeToDeleteHelperCallback
 import com.lukelorusso.presentation.view.VerticalSpaceItemDecoration
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
-import kotlinx.android.synthetic.main.fragment_history.*
-import kotlinx.android.synthetic.main.layout_error.*
-import kotlinx.android.synthetic.main.layout_history_toolbar.*
 import javax.inject.Inject
 
 class HistoryFragment : ABaseDataFragment<HistoryViewModel, HistoryData>(
-        R.layout.fragment_history,
         HistoryViewModel::class.java
 ) {
 
@@ -45,20 +44,23 @@ class HistoryFragment : ABaseDataFragment<HistoryViewModel, HistoryData>(
     private val intentDeleteItem = PublishSubject.create<Color>()
     private val intentDeleteAllItem = PublishSubject.create<Unit>()
 
+    // View
+    private lateinit var binding: FragmentHistoryBinding // This property is only valid between onCreateView and onDestroyView
+
     // Properties
     private var isSearchingMode: Boolean
-        get() = tvToolbarTitle.visibility == View.GONE
+        get() = binding.inclToolbar.tvToolbarTitle.visibility == View.GONE
         set(searching) {
             if (searching) {
-                tvToolbarTitle.visibility = View.GONE
-                etToolbarSearch.visibility = View.VISIBLE
-                etToolbarSearch.requestFocus()
-                etToolbarSearch.showKeyboard()
+                binding.inclToolbar.tvToolbarTitle.visibility = View.GONE
+                binding.inclToolbar.etToolbarSearch.visibility = View.VISIBLE
+                binding.inclToolbar.etToolbarSearch.requestFocus()
+                binding.inclToolbar.etToolbarSearch.showKeyboard()
             } else {
-                tvToolbarTitle.visibility = View.VISIBLE
-                etToolbarSearch.visibility = View.GONE
-                etToolbarSearch.setText("")
-                etToolbarSearch.hideKeyboard()
+                binding.inclToolbar.tvToolbarTitle.visibility = View.VISIBLE
+                binding.inclToolbar.etToolbarSearch.visibility = View.GONE
+                binding.inclToolbar.etToolbarSearch.setText("")
+                binding.inclToolbar.etToolbarSearch.hideKeyboard()
             }
         }
     private val adapter = HistoryAdapter(withHeader = false, withFooter = false) { colorSelected ->
@@ -83,6 +85,17 @@ class HistoryFragment : ABaseDataFragment<HistoryViewModel, HistoryData>(
         activityComponent.inject(this)
     }
 
+    override fun onCreateView(
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
+    ): View {
+        FragmentHistoryBinding.inflate(inflater, container, false).also { inflated ->
+            binding = inflated
+            return binding.root
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
@@ -94,14 +107,14 @@ class HistoryFragment : ABaseDataFragment<HistoryViewModel, HistoryData>(
 
     // region RENDER
     override fun render(data: HistoryData) {
-        showLoading(data.loadingState == LoadingState.LOADING)
-        showRefreshingLoading(srlHistoryList, false)
-        showRetryLoading(data.loadingState == LoadingState.RETRY)
-        showContent(content, data.contentState == ContentState.CONTENT)
-        showError(data.contentState == ContentState.ERROR)
+        showLoading(binding.inclProgress.root, data.loadingState == LoadingState.LOADING)
+        showRefreshingLoading(binding.srlHistoryList, false)
+        showRetryLoading(binding.inclError.btnErrorRetry, binding.inclError.inclProgress.root, data.loadingState == LoadingState.RETRY)
+        showContent(binding.content, data.contentState == ContentState.CONTENT)
+        showError(binding.inclError.viewError, data.contentState == ContentState.ERROR)
 
         renderData(data.list, data.deletedItem, data.deletedAllItems)
-        renderError(data.errorMessage)
+        renderError(binding.inclError.textErrorDescription, data.errorMessage)
         renderSnack(data.snackMessage)
         renderPersistenceException(data.isPersistenceException)
     }
@@ -113,7 +126,7 @@ class HistoryFragment : ABaseDataFragment<HistoryViewModel, HistoryData>(
     ) {
         list?.also {
             adapter.originalData = it
-            rvHistoryList.scrollToPosition(0)
+            binding.rvHistoryList.scrollToPosition(0)
             renderNoItems()
             renderDeleteAll()
         }
@@ -133,12 +146,12 @@ class HistoryFragment : ABaseDataFragment<HistoryViewModel, HistoryData>(
     }
 
     private fun renderNoItems() {
-        tvHistoryNoItems.visibility =
+        binding.tvHistoryNoItems.visibility =
                 if (adapter.data.isEmpty()) View.VISIBLE else View.GONE
     }
 
     private fun renderDeleteAll() {
-        btnToolbarDeleteAll.visibility =
+        binding.inclToolbar.btnToolbarDeleteAll.visibility =
                 if (adapter.data.isNotEmpty()) View.VISIBLE else View.GONE
     }
 
@@ -152,32 +165,32 @@ class HistoryFragment : ABaseDataFragment<HistoryViewModel, HistoryData>(
         subscribeIntents()
 
         activity?.also {
-            (it as? AppCompatActivity)?.applyStatusBarMarginTopOnToolbar(toolbar)
+            (it as? AppCompatActivity)?.applyStatusBarMarginTopOnToolbar(binding.inclToolbar.toolbar)
         }
 
-        btnToolbarSearch.setOnClickListener { switchSearchingMode() }
-        btnToolbarDeleteAll.setOnClickListener { askToRemoveAllItem() }
-        tvToolbarTitle.setOnClickListener { switchSearchingMode() }
+        binding.inclToolbar.btnToolbarSearch.setOnClickListener { switchSearchingMode() }
+        binding.inclToolbar.btnToolbarDeleteAll.setOnClickListener { askToRemoveAllItem() }
+        binding.inclToolbar.tvToolbarTitle.setOnClickListener { switchSearchingMode() }
 
-        srlHistoryList.isEnabled = false
+        binding.srlHistoryList.isEnabled = false
 
-        fabHistoryGotoCamera.setOnClickListener { viewModel.gotoCamera() }
+        binding.fabHistoryGotoCamera.setOnClickListener { viewModel.gotoCamera() }
 
         populateAdapter()
     }
 
     private fun populateAdapter() {
         //rvHistoryList.setHasFixedSize(true)
-        rvHistoryList.adapter = adapter
-        rvHistoryList.addItemDecoration(
+        binding.rvHistoryList.adapter = adapter
+        binding.rvHistoryList.addItemDecoration(
                 VerticalSpaceItemDecoration(
                         requireContext().dpToPixel(2F)
                 )
         )
-        rvHistoryList.addOnScrollListener(
+        binding.rvHistoryList.addOnScrollListener(
                 object : RecyclerView.OnScrollListener() {
                     override fun onScrolled(rv: RecyclerView, dx: Int, dy: Int) {
-                        if (dy > 0 || dy < 0 && fabHistoryGotoCamera.isShown)
+                        if (dy > 0 || dy < 0 && binding.fabHistoryGotoCamera.isShown)
                             switchFAB(false)
                     }
 
@@ -198,15 +211,15 @@ class HistoryFragment : ABaseDataFragment<HistoryViewModel, HistoryData>(
             }
         }
         val itemTouchHelper = ItemTouchHelper(swipeHelper)
-        itemTouchHelper.attachToRecyclerView(rvHistoryList)
-        etToolbarSearch.onTextChanged { filter -> adapter.nameFilter = filter }
+        itemTouchHelper.attachToRecyclerView(binding.rvHistoryList)
+        binding.inclToolbar.etToolbarSearch.onTextChanged { filter -> adapter.nameFilter = filter }
     }
 
     private fun subscribeIntents() {
         val loadData = Observable.merge(Observable.just(Unit), intentLoadData)
                 .flatMap { viewModel.intentLoadData(it) }
-        val refreshData = srlHistoryList.refreshes().flatMap { viewModel.intentRefreshData(it) }
-        val retryData = btnErrorRetry.clicks().flatMap { viewModel.intentRetryData(it) }
+        val refreshData = binding.srlHistoryList.refreshes().flatMap { viewModel.intentRefreshData(it) }
+        val retryData = binding.inclError.btnErrorRetry.clicks().flatMap { viewModel.intentRetryData(it) }
         val deleteItem = intentDeleteItem.flatMap { viewModel.intentDeleteItem(it) }
         val deleteAllItem = intentDeleteAllItem.flatMap { viewModel.intentDeleteAllItems(it) }
 
@@ -224,11 +237,11 @@ class HistoryFragment : ABaseDataFragment<HistoryViewModel, HistoryData>(
     }
 
     private fun switchFAB(showFAB: Boolean? = null) {
-        val show = showFAB ?: !fabHistoryGotoCamera.isShown
+        val show = showFAB ?: !binding.fabHistoryGotoCamera.isShown
         if (show) {
-            fabHistoryGotoCamera.show()
+            binding.fabHistoryGotoCamera.show()
         } else {
-            fabHistoryGotoCamera.hide()
+            binding.fabHistoryGotoCamera.hide()
         }
     }
 

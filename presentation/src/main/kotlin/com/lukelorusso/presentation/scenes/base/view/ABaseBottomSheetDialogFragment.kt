@@ -2,12 +2,10 @@ package com.lukelorusso.presentation.scenes.base.view
 
 import android.app.Dialog
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.FrameLayout
-import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -27,7 +25,6 @@ import javax.inject.Inject
  * Base [BottomSheetDialogFragment] class for every fragment in this application.
  */
 abstract class ABaseBottomSheetDialogFragment<ViewModel : AViewModel<Data>, Data : Any>(
-        @LayoutRes private val contentLayoutId: Int,
         private val viewModelType: Class<ViewModel>,
         private val isFullScreen: Boolean = false
 ) : BottomSheetDialogFragment(), ADataView<Data> {
@@ -59,15 +56,6 @@ abstract class ABaseBottomSheetDialogFragment<ViewModel : AViewModel<Data>, Data
 
     protected val behavior by lazy {
         (dialog as BottomSheetDialog).behavior
-    }
-
-    override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
-    ): View? {
-        return if (contentLayoutId != 0) {
-            inflater.inflate(contentLayoutId, container, false)
-        } else null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

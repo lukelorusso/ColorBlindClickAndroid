@@ -33,7 +33,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1">
 
-                <androidx.appcompat.widget.AppCompatImageView
+                <ImageView
                     android:layout_width="@dimen/color_picker_dimens_big"
                     android:layout_height="@dimen/color_picker_dimens_big"
                     android:layout_gravity="center"
@@ -60,7 +60,7 @@
                 android:layout_height="wrap_content">
 
                 <include
-                    android:id="@+id/toolbarColor"
+                    android:id="@+id/inclToolbarColor"
                     layout="@layout/layout_color_toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
