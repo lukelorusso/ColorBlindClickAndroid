@@ -14,7 +14,7 @@ class PersistenceProvider(private val appDatabase: AppDatabase) {
 
     fun saveColor(newColor: Color) =
         appDatabase.color().getColorList().toMutableList().apply {
-            val existent = find { c -> c.colorHex == newColor.colorHex }
+            val existent = find { c -> c.similarColor == newColor.similarColor }
             existent?.also { remove(it) }
             add(0, newColor)
             appDatabase.color().saveColorList(this)
@@ -22,7 +22,7 @@ class PersistenceProvider(private val appDatabase: AppDatabase) {
 
     fun deleteColor(color: Color) =
         appDatabase.color().getColorList().toMutableList().apply {
-            val existent = find { c -> c.colorHex == color.colorHex }
+            val existent = find { c -> c.similarColor == color.similarColor }
             existent?.also { remove(it) }
             appDatabase.color().saveColorList(this)
         }

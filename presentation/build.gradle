@@ -20,7 +20,7 @@ android {
         versionName androidVersionName
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
-        testInstrumentationRunner "com.lukelorusso.presentation.TestRunner"
+        testInstrumentationRunner packageAndroidJUnitRunner
     }
 
     sourceSets {
@@ -84,6 +84,12 @@ dependencies {
     implementation rxKotlin
     implementation rxBinding
     implementation rxBindingSwipeRefreshLayout
+
+    // ANDROID TEST
+    androidTestImplementation androidXTestRunner
+    androidTestImplementation androidXTestJunit
+    androidTestImplementation espressoCore
+    testImplementation junit
 
     // DATABASE
     implementation paperDB

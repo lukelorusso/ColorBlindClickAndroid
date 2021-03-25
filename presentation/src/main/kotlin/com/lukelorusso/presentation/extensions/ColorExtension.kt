@@ -43,14 +43,14 @@ fun String.hashColorToPercent(): List<Double> {
 
 fun Color.sharableDescription(credits: String): String {
     return (this.colorName + LINE_BREAK
-            + this.colorHex.toUpperCase(Locale.getDefault()) + LINE_BREAK
+            + this.similarColor.toUpperCase(Locale.getDefault()) + LINE_BREAK
             + this.toRGBString() + LINE_BREAK
             + LINE_BREAK
             + credits)
 }
 
 fun Color.toRGBString(): String {
-    val colors = this.colorHex.hashColorToPercent()
+    val colors = this.similarColor.hashColorToPercent()
     val places = 2
     var red = BigDecimal(colors[0])
     red = red.setScale(places, RoundingMode.HALF_UP)

@@ -11,15 +11,20 @@ import javax.inject.Inject
 
 class GetColor
 @Inject constructor(
-    private val repository: ColorRepository,
-    useCaseScheduler: UseCaseScheduler? = null, logger: Logger? = null
+        private val repository: ColorRepository,
+        useCaseScheduler: UseCaseScheduler? = null, logger: Logger? = null
 ) :
-    SingleUseCase<Color, Pair<String, String>>(useCaseScheduler, logger) {
+        SingleUseCase<Color, GetColor.Param>(useCaseScheduler, logger) {
 
-    override fun build(param: Pair<String, String>): Single<Color> =
-        Single.just(repository.isConnected)
-            .filter(ConnectionFilter())
-            .flatMapSingle { repository.getColor(param.first, param.second) }
-            .toSingle()
+    override fun build(param: Param): Single<Color> =
+            Single.just(repository.isConnected)
+                    .filter(ConnectionFilter())
+                    .flatMapSingle { repository.getColor(param.colorHash, param.deviceUdid) }
+                    .toSingle()
+
+    data class Param(
+            val colorHash: String,
+            val deviceUdid: String
+    )
 
 }
