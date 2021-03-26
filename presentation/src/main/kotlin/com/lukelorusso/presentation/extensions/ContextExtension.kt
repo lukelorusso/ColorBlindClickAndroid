@@ -58,11 +58,14 @@ fun Context.isPermissionGranted(permission: String): Boolean {
     return rc == PackageManager.PERMISSION_GRANTED
 }
 
-fun Context.getDeviceUdid(): String {
-    return Settings.System.getString(
-            this.contentResolver,
-            Settings.Secure.ANDROID_ID
-    )
+fun Context?.getDeviceUdid(): String {
+    return this?.run {
+        Settings.System.getString(
+                this.contentResolver,
+                Settings.Secure.ANDROID_ID
+        )
+    } ?: ""
+
 }
 
 fun Context.gotoAppDetailsSettings() {

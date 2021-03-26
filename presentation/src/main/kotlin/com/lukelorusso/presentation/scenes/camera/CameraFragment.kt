@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.lukelorusso.data.helper.TimberWrapper
 import com.lukelorusso.domain.model.Color
+import com.lukelorusso.domain.usecases.GetColor
 import com.lukelorusso.presentation.R
 import com.lukelorusso.presentation.databinding.FragmentCameraBinding
 import com.lukelorusso.presentation.extensions.*
@@ -43,7 +44,7 @@ class CameraFragment : ABaseDataFragment<CameraViewModel, CameraData>(
     lateinit var trackerHelper: TrackerHelper
 
     // Intents
-    private val intentGetColor = PublishSubject.create<Pair<String, String>>()
+    private val intentGetColor = PublishSubject.create<GetColor.Param>()
     private val intentSetLastLensPosition = PublishSubject.create<Int>()
 
     // View
@@ -193,9 +194,9 @@ class CameraFragment : ABaseDataFragment<CameraViewModel, CameraData>(
                                     bitmap.height / 2
                             )
                             intentGetColor.onNext(
-                                    Pair(
-                                            pixel.pixelColorToHash(),
-                                            activity?.getDeviceUdid() ?: ""
+                                    GetColor.Param(
+                                            colorHash = pixel.pixelColorToHash(),
+                                            deviceUdid = activity.getDeviceUdid()
                                     )
                             )
                         }
@@ -300,13 +301,13 @@ class CameraFragment : ABaseDataFragment<CameraViewModel, CameraData>(
         binding.inclToolbarColor.colorPreviewPanel.visibility = View.VISIBLE
 
         (binding.inclToolbarColor.colorPreviewPanel.background as? GradientDrawable)
-                ?.setColor(color.colorHex.hashColorToPixel())
+                ?.setColor(color.similarColor.hashColorToPixel())
 
         binding.inclToolbarColor.colorMainLine.visibility = View.VISIBLE
         binding.inclToolbarColor.colorMainLine.text = color.colorName
 
         binding.inclToolbarColor.colorTopLine.visibility = View.VISIBLE
-        val topLineText = color.colorHex
+        val topLineText = color.similarColor
         binding.inclToolbarColor.colorTopLine.text = topLineText
 
         binding.inclToolbarColor.colorBottomLine.visibility = View.VISIBLE

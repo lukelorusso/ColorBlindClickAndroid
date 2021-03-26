@@ -22,7 +22,7 @@ class CameraViewModel
         errorMessageFactory: ErrorMessageFactory
 ) : AViewModel<CameraData>(errorMessageFactory, router) {
 
-    internal fun intentGetColor(param: Pair<String, String>): Observable<CameraData> =
+    internal fun intentGetColor(param: GetColor.Param): Observable<CameraData> =
             getColor.execute(param)
                     .toObservable()
                     .map { CameraData.createColor(it) }
