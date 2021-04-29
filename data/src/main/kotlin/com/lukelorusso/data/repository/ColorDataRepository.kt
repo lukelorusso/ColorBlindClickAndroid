@@ -19,9 +19,9 @@ import java.util.*
 class ColorDataRepository(
     private val api: ColorApi,
     private val colorMapper: ColorMapper,
-    private val networkChecker: NetworkChecker,
-    private val sessionManager: SessionManager,
-    private val persistenceProvider: PersistenceProvider
+    private val networkChecker: NetworkChecker? = null,
+    private val sessionManager: SessionManager? = null,
+    private val persistenceProvider: PersistenceProvider? = null
 ) : ColorRepository {
 
     companion object {
@@ -35,13 +35,13 @@ class ColorDataRepository(
     }
 
     override val isConnected: Boolean
-        get() = networkChecker.isConnected
+        get() = networkChecker?.isConnected ?: true
 
     override fun getLastLensPosition(): Single<Int> =
-        Single.just(sessionManager.getLastLensPosition())
+        Single.just(sessionManager?.getLastLensPosition())
 
     override fun setLastLensPosition(position: Int): Completable =
-        Single.just(sessionManager.setLastLensPosition(position)).ignoreElement()
+        Single.just(sessionManager?.setLastLensPosition(position)).ignoreElement()
 
     override fun getHelpUrl(): Single<String> = Single.just(
         String.format(
@@ -71,22 +71,22 @@ class ColorDataRepository(
             deviceUdid
         )
             .map { colorMapper.transform(it) }
-            .doOnSuccess { persistenceProvider.saveColor(it) }
+            .doOnSuccess { persistenceProvider?.saveColor(it) }
             .onErrorResumeNext { e -> e.catchWebServiceException() }
             .onErrorResumeNext { e -> e.catchPersistenceException() }
     }
 
     override fun getColorList(): Single<List<Color>> = Single
-        .fromCallable { persistenceProvider.getColorList() }
+        .fromCallable { persistenceProvider?.getColorList() ?: emptyList() }
         .onErrorResumeNext { e -> e.catchPersistenceException() }
 
     override fun deleteColor(color: Color): Completable = Single
-        .fromCallable { persistenceProvider.deleteColor(color) }
+        .fromCallable { persistenceProvider?.deleteColor(color) }
         .onErrorResumeNext { e -> e.catchPersistenceException() }
         .ignoreElement()
 
     override fun deleteAllColors(): Completable = Single
-        .fromCallable { persistenceProvider.deleteAllColors() }
+        .fromCallable { persistenceProvider?.deleteAllColors() }
         .onErrorResumeNext { e -> e.catchPersistenceException() }
         .ignoreElement()
 

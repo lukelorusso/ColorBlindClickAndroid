@@ -81,17 +81,8 @@ ext {
     // ANDROID TEST
     androidXTestVersion         = '1.3.0'
     androidXTestJunitVersion    = '1.1.1'
-    espressoVersion             = '3.2.0'
-    rxidlerVersion              = '0.9.1'
-    multidexInstVersion         = '2.0.0'
-    androidXTestRunner          = "androidx.test:runner:$androidXTestVersion"
     androidXTestJunit           = "androidx.test.ext:junit:$androidXTestJunitVersion"
-    androidXTestRules           = "androidx.test:rules:$androidXTestVersion"
-    espressoCore                = "androidx.test.espresso:espresso-core:$espressoVersion"
-    espressoIntents             = "androidx.test.espresso:espresso-intents:$espressoVersion"
-    espressoContrib             = "androidx.test.espresso:espresso-contrib:$espressoVersion"
-    rxidler                     = "com.squareup.rx.idler:rx2-idler:$rxidlerVersion"
-    multidexInstrumentation     = "androidx.multidex:multidex-instrumentation:$multidexInstVersion"
+    androidXTestRunner          = "androidx.test:runner:$androidXTestVersion"
     junit                       = "junit:junit:4.13.1"
 
     // PROGUARD

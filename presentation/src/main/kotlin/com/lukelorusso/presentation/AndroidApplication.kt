@@ -30,7 +30,6 @@ class AndroidApplication : Application() {
 
         // Init Crashlytics
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true)
-        Timber.plant(CrashlyticsTree())
 
         // Init Stetho
         if (BuildConfig.DEBUG) {

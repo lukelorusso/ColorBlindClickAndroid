@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit
  */
 open class OkHttpClientFactory {
 
-    open fun createOkHttpClient(context: Context): OkHttpClient =
+    open fun createOkHttpClient(context: Context? = null): OkHttpClient =
         OkHttpClient.Builder()
             .apply {
                 if (BuildConfig.DEBUG) {
@@ -24,9 +24,9 @@ open class OkHttpClientFactory {
             .build()
 
 
-    private fun OkHttpClient.Builder.enableDebugTools(context: Context) {
+    private fun OkHttpClient.Builder.enableDebugTools(context: Context?) {
         addInterceptor(StethoInterceptor())
-        addInterceptor(ChuckInterceptor(context))
+        context?.also { addInterceptor(ChuckInterceptor(it)) }
     }
 
     private fun OkHttpClient.Builder.updateTimeout(read: Long = 60, write: Long = 60) {

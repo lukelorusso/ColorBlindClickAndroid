@@ -88,7 +88,6 @@ dependencies {
     // ANDROID TEST
     androidTestImplementation androidXTestRunner
     androidTestImplementation androidXTestJunit
-    androidTestImplementation espressoCore
     testImplementation junit
 
     // DATABASE

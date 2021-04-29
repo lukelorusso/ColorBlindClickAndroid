@@ -1,10 +1,8 @@
-package com.lukelorusso.presenter.scenes.base.lifecycle
+package com.lukelorusso.presentation.scenes.base.lifecycle
 
-import android.content.Context
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
-import androidx.test.platform.app.InstrumentationRegistry
 import com.lukelorusso.data.helper.TimberWrapper
 import com.lukelorusso.domain.usecases.base.Logger
 
@@ -13,16 +11,12 @@ import com.lukelorusso.domain.usecases.base.Logger
  */
 abstract class TestLifecycleOwner : LifecycleOwner {
 
-    lateinit var context: Context
     lateinit var logger: Logger
     var onSuccess: ((Any) -> Unit)? = null
     private lateinit var lifecycleRegistry: LifecycleRegistry
 
     fun startLifecycle() {
         lifecycleRegistry = LifecycleRegistry(this)
-        InstrumentationRegistry.getInstrumentation().targetContext.also { context ->
-            this.context = context
-        }
         logger = object : Logger {
             override fun log(message: () -> String) {
                 TimberWrapper.d(message)

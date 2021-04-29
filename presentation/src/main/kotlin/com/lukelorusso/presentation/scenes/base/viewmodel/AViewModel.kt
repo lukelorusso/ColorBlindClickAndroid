@@ -18,7 +18,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
  * Abstract class representing a Presenter in a model view presenter (MVI) pattern.
  */
 abstract class AViewModel<Data>(
-        private val errorMessageFactory: ErrorMessageFactory,
+        private val errorMessageFactory: ErrorMessageFactory? = null,
         private val router: ARouter? = null
 ) : ViewModel() {
 
@@ -49,7 +49,8 @@ abstract class AViewModel<Data>(
         }
     }
 
-    protected fun getErrorMessage(error: Throwable): String = errorMessageFactory.getError(error)
+    protected fun getErrorMessage(error: Throwable): String =
+        errorMessageFactory?.getError(error) ?: error.message ?: ""
 
     override fun onCleared() {
         super.onCleared()

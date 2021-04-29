@@ -1,18 +1,16 @@
-package com.lukelorusso.presenter.scenes.camera
+package com.lukelorusso.presentation.scenes.camera
 
 import android.os.Handler
 import android.os.Looper
 import com.lukelorusso.data.repository.TestColorDataRepository
 import com.lukelorusso.domain.usecases.GetColor
-import com.lukelorusso.presentation.exception.ErrorMessageFactory
-import com.lukelorusso.presentation.extensions.getDeviceUdid
-import com.lukelorusso.presentation.scenes.camera.CameraData
-import com.lukelorusso.presenter.scenes.base.lifecycle.TestLifecycleOwner
+import com.lukelorusso.presentation.scenes.base.lifecycle.TestLifecycleOwner
 import io.reactivex.rxjava3.subjects.PublishSubject
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
+
 
 /**
  * @author LukeLorusso on 26-03-2021.
@@ -23,7 +21,7 @@ class CameraTest : TestLifecycleOwner() {
     private val intentGetColor = PublishSubject.create<GetColor.Param>()
 
     // Properties
-    private lateinit var viewModel: CameraViewModel
+    private lateinit var viewModel: CameraTestViewModel
 
     @Before
     fun setup() {
@@ -39,11 +37,8 @@ class CameraTest : TestLifecycleOwner() {
     }
 
     private fun initViewModel() {
-        TestColorDataRepository().getRepository(context).also { repository ->
-            viewModel = CameraViewModel(
-                    repository,
-                    ErrorMessageFactory.Impl(context, logger)
-            )
+        TestColorDataRepository().getRepository().also { repository ->
+            viewModel = CameraTestViewModel(repository)
         }
     }
 
@@ -71,7 +66,7 @@ class CameraTest : TestLifecycleOwner() {
     @Test
     fun testGetColor() {
         val colorHex = "#52851E"
-        val deviceUdid = context.getDeviceUdid()
+        val deviceUdid = "JUnit"
         var similarColorHex: String? = null
 
         onSuccess = object : (Any) -> Unit {

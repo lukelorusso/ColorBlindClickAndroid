@@ -36,6 +36,6 @@ class NetModule {
         gson: Gson,
         okHttpClientFactory: OkHttpClientFactory
     ) =
-        RetrofitFactory.getLocalRetrofit(context, gson, okHttpClientFactory)
+        RetrofitFactory.getRetrofitBuilder(context, gson, okHttpClientFactory)
 
 }

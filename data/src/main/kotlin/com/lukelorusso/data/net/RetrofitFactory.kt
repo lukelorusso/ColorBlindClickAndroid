@@ -34,7 +34,7 @@ object RetrofitFactory {
      * @return instances of [Retrofit]
      */
     @RequiresPermission(value = Manifest.permission.INTERNET)
-    fun getLocalRetrofit(
+    fun getRetrofitBuilder(
         context: Context,
         gson: Gson,
         okHttpClientFactory: OkHttpClientFactory
@@ -45,6 +45,24 @@ object RetrofitFactory {
             .addConverterFactory(ScalarsConverterFactory.create())
             .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
             .client(okHttpClientFactory.createOkHttpClient(context))
+            .build()
+
+
+    /**
+     * Get [Retrofit] instance for unit tests.
+     * @return instances of [Retrofit]
+     */
+    @RequiresPermission(value = Manifest.permission.INTERNET)
+    fun getRetrofitTestBuilder(
+        gson: Gson,
+        okHttpClientFactory: OkHttpClientFactory
+    ): Retrofit =
+        Retrofit.Builder()
+            .baseUrl(COLOR_API_BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
+            .client(okHttpClientFactory.createOkHttpClient())
             .build()
 
 }
