@@ -6,8 +6,6 @@ import io.reactivex.rxjava3.core.Single
 
 interface ColorRepository {
 
-    val isConnected: Boolean
-
     fun getLastLensPosition(): Single<Int>
 
     fun setLastLensPosition(position: Int): Completable

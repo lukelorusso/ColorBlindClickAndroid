@@ -93,9 +93,11 @@ dependencies {
     // DATABASE
     implementation paperDB
 
-    // CODE GENERATION
-    implementation dagger
-    kapt daggerCompiler
+    // DEPENDENCY INJECTION
+    implementation koinCore
+    implementation koinAndroidxViewmodel
+    testImplementation koinTest
+    androidTestImplementation koinTest
 
     // DEBUG TOOLS
     implementation timber

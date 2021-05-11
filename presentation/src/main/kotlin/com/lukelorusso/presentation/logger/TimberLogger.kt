@@ -1,0 +1,27 @@
+package com.lukelorusso.presentation.logger
+
+import timber.log.Timber
+
+object TimberLogger {
+
+    fun d(message: () -> String) {
+        if (Timber.treeCount() > 0) {
+            try {
+                Timber.d(message())
+            } catch (ex: Exception) {
+                Timber.e(ex)
+            }
+        }
+    }
+
+    fun e(throwable: () -> Throwable) {
+        if (Timber.treeCount() > 0) {
+            try {
+                Timber.d(throwable())
+            } catch (ex: Exception) {
+                Timber.e(ex)
+            }
+        }
+    }
+
+}

@@ -22,7 +22,7 @@
         tools:ignore="GoogleAppIndexingWarning">
 
         <activity
-            android:name=".scenes.main.MainActivity"
+            android:name=".ui.main.MainActivity"
             android:alwaysRetainTaskState="true"
             android:screenOrientation="portrait"
             android:theme="@style/ActivityNoActionBar">

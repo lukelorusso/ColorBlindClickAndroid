@@ -1,15 +1,16 @@
 package com.lukelorusso.presentation
 
 import android.app.Application
-import androidx.annotation.VisibleForTesting
 import com.facebook.stetho.Stetho
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import com.lukelorusso.data.di.components.DaggerDataComponent
-import com.lukelorusso.data.di.components.DataComponent
-import com.lukelorusso.presentation.di.components.ApplicationComponent
-import com.lukelorusso.presentation.di.components.DaggerApplicationComponent
+import com.lukelorusso.data.di.dataModule
+import com.lukelorusso.domain.di.domainModule
+import com.lukelorusso.presentation.di.presentationModule
 import com.lukelorusso.presentation.helper.CrashlyticsTree
 import io.paperdb.Paper
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.startKoin
 import timber.log.Timber
 
 /**
@@ -19,11 +20,11 @@ import timber.log.Timber
  */
 class AndroidApplication : Application() {
 
-    @set:VisibleForTesting
-    lateinit var appComponent: ApplicationComponent
-
-    @VisibleForTesting
-    val dataComponent: DataComponent by lazy { DaggerDataComponent.factory().create(baseContext) }
+    companion object {
+        val modules = dataModule +
+                domainModule +
+                presentationModule
+    }
 
     override fun onCreate() {
         super.onCreate()
@@ -45,12 +46,14 @@ class AndroidApplication : Application() {
         // Init Paper
         Paper.init(this)
 
-        // Create App Component
-        appComponent = createAppComponent()
-    }
+        startKoin {
+            if (BuildConfig.DEBUG) {
+                androidLogger()
+            }
+            androidContext(this@AndroidApplication)
 
-    @VisibleForTesting
-    fun createAppComponent(): ApplicationComponent =
-            DaggerApplicationComponent.factory().create(this, dataComponent)
+            modules(modules)
+        }
+    }
 
 }

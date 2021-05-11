@@ -2,14 +2,12 @@ package com.lukelorusso.data.mapper
 
 import com.lukelorusso.data.net.dto.ColorResponseDTO
 import com.lukelorusso.domain.model.Color
-import javax.inject.Inject
 
 /**
  * Mapper class used to transform [ColorResponseDTO] (in the data layer) to [Color]
  * in the domain layer and vice versa.
  */
-class ColorMapper
-@Inject constructor() {
+class ColorMapper {
 
     //region DTO to MODEL
     /**

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:background="@drawable/shape_bottom_sheet"
-    tools:context=".scenes.preview.PreviewDialogFragment">
+    tools:context=".ui.preview.PreviewDialogFragment">
 
     <View
         android:layout_width="32dp"

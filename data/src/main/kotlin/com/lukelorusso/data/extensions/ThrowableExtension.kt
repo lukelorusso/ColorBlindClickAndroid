@@ -9,17 +9,17 @@ import io.reactivex.rxjava3.core.SingleSource
 @Throws(Exception::class)
 fun <T> Throwable.catchWebServiceException(): SingleSource<T> = Single.just(this).flatMap {
     if (it is NullPointerException) {
-        Single.error<T>(WebServiceException)
+        Single.error(WebServiceException)
     } else {
-        Single.error<T>(it)
+        Single.error(it)
     }
 }
 
 @Throws(Exception::class)
 fun <T> Throwable.catchPersistenceException(): SingleSource<T> = Single.just(this).flatMap {
     if (it is RuntimeException && it !is AppException) {
-        Single.error<T>(PersistenceException(it.message))
+        Single.error(PersistenceException(it.message))
     } else {
-        Single.error<T>(it)
+        Single.error(it)
     }
 }

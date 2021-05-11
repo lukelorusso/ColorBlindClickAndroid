@@ -10,8 +10,8 @@ dependencies {
     implementation rxJava
     implementation rxKotlin
 
-    // CODE GENERATION
-    implementation dagger
+    // DEPENDENCY INJECTION
+    implementation koinCore
 
     // DEPENDENCY CHECK STRATEGY
     dependencyUpdates.resolutionStrategy dependencyUpdatesStrategy

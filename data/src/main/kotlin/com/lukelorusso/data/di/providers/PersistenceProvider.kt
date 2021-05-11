@@ -1,32 +1,82 @@
 package com.lukelorusso.data.di.providers
 
-import com.lukelorusso.data.persistence.AppDatabase
-import com.lukelorusso.domain.model.Color
+import com.lukelorusso.domain.usecase.base.Logger
+import io.paperdb.Paper
 
 /**
- * Copyright (C) 2020 Luke Lorusso
- * Licensed under the Apache License Version 2.0
- * Exposing methods to get, set and delete persistence data.
+ * PaperDB is affected by a RuntimeException that sometimes pops up:
+ * https://github.com/pilgr/Paper/issues/108
  */
-class PersistenceProvider(private val appDatabase: AppDatabase) {
+interface PersistenceProvider {
 
-    fun getColorList() = appDatabase.color().getColorList()
+    fun <Model> getList(key: String): List<Model>
 
-    fun saveColor(newColor: Color) =
-        appDatabase.color().getColorList().toMutableList().apply {
-            val existent = find { c -> c.similarColor == newColor.similarColor }
-            existent?.also { remove(it) }
-            add(0, newColor)
-            appDatabase.color().saveColorList(this)
+    fun <Model> saveList(key: String, list: List<Model>)
+
+    fun clearList(key: String)
+
+    class Impl(private val logger: Logger) : PersistenceProvider {
+
+        companion object {
+            private const val EXCEPTION_RETRY_TIMES = 3
         }
 
-    fun deleteColor(color: Color) =
-        appDatabase.color().getColorList().toMutableList().apply {
-            val existent = find { c -> c.similarColor == color.similarColor }
-            existent?.also { remove(it) }
-            appDatabase.color().saveColorList(this)
+        override fun <Model> getList(key: String): List<Model> {
+            for (i in 1..EXCEPTION_RETRY_TIMES) {
+                try {
+                    return Paper.book().read(key, emptyList())
+                } catch (error: RuntimeException) {
+                    logger.logError { error }
+                    if (i == EXCEPTION_RETRY_TIMES) throw RuntimeException("getColorList()", error)
+                }
+            }
+            return emptyList()
         }
 
-    fun deleteAllColors() = appDatabase.color().clearColorList()
+        override fun <Model> saveList(key: String, list: List<Model>) {
+            for (i in 1..EXCEPTION_RETRY_TIMES) {
+                try {
+                    Paper.book().write(key, list)
+                    return
+                } catch (error: RuntimeException) {
+                    logger.logError { error }
+                    if (i == EXCEPTION_RETRY_TIMES) throw RuntimeException(
+                        "saveColorList(...)",
+                        error
+                    )
+                }
+            }
+        }
+
+        override fun clearList(key: String) {
+            for (i in 1..EXCEPTION_RETRY_TIMES) {
+                try {
+                    Paper.book().delete(key)
+                    return
+                } catch (error: RuntimeException) {
+                    logger.logError { error }
+                    if (i == EXCEPTION_RETRY_TIMES) throw RuntimeException(
+                        "clearColorList()",
+                        error
+                    )
+                }
+            }
+        }
+
+    }
+
+    class TestImpl(private val logger: Logger) : PersistenceProvider {
+
+        override fun <Model> getList(key: String): List<Model> = emptyList<Model>().also {
+            logger.log { "${this::class.java}: returning fake values for key \"$key\"" }
+        }
+
+        override fun <Model> saveList(key: String, list: List<Model>) =
+            logger.log { "${this::class.java}: fake-saving values for key \"$key\"" }
+
+        override fun clearList(key: String) =
+            logger.log { "${this::class.java}: fake-deleting values for key \"$key\"" }
+
+    }
 
 }

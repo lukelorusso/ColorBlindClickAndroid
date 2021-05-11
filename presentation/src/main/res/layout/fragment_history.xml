@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black_000000"
-    tools:context=".scenes.history.HistoryFragment">
+    tools:context=".ui.history.HistoryFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

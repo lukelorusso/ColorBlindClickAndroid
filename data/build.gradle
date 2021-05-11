@@ -43,9 +43,8 @@ dependencies {
     implementation androidXCore
     implementation androidXPreference
 
-    // DAGGER
-    implementation dagger
-    kapt daggerCompiler
+    // DEPENDENCY INJECTION
+    implementation koinCore
 
     // RX
     implementation rxAndroid
