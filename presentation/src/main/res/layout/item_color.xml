@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:background="@color/fragment_background">
 
     <RelativeLayout
         android:id="@+id/viewBackground"
@@ -19,7 +20,7 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="15dp"
-            app:srcCompat="@drawable/clear_item" />
+            app:srcCompat="@drawable/clear_item_white" />
 
     </RelativeLayout>
 
@@ -27,17 +28,14 @@
         android:id="@+id/viewForeground"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/black_000000"
         tools:visibility="visible">
 
-        <androidx.cardview.widget.CardView
+        <FrameLayout
             android:id="@+id/content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:elevation="2dp"
             android:foreground="?android:attr/selectableItemBackground"
-            tools:backgroundTint="@color/black_000000"
-            tools:ignore="UnusedAttribute">
+            tools:ignore="UnusedAttribute,UselessParent">
 
             <View
                 android:id="@+id/itemPreviewPanel"
@@ -69,8 +67,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:drawablePadding="5dp"
-                        android:textColor="@color/white_FFFFFF"
-                        android:textSize="18sp"
+                        android:textSize="16sp"
                         android:textStyle="bold"
                         tools:text="@sample/color.json/data/rowsColors/colorName" />
 
@@ -80,7 +77,6 @@
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:maxLines="1"
-                        android:textColor="@color/white_FFFFFF"
                         android:textSize="14sp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
@@ -96,7 +92,6 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:textColor="@color/white_FFFFFF"
                     android:textSize="14sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
@@ -106,7 +101,7 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </androidx.cardview.widget.CardView>
+        </FrameLayout>
 
     </RelativeLayout>
 

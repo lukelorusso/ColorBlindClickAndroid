@@ -137,7 +137,7 @@ class PreviewDialogFragment : ARenderBottomSheetDialogFragment<PreviewDialogData
         binding.inclToolbarColor.colorMainLine.text = extraColor.colorName
 
         binding.inclToolbarColor.colorBottomLine.visibility = View.VISIBLE
-        binding.inclToolbarColor.colorBottomLine.text = extraColor.toRGBString()
+        binding.inclToolbarColor.colorBottomLine.text = extraColor.toRGBPercentString()
 
         binding.inclToolbarColor.root.setOnClickListener {
             activity?.also {

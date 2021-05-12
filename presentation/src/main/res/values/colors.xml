@@ -2,22 +2,30 @@
 <resources>
 
     <!--System-->
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#1d2761</color> <!--notification bar color-->
-    <color name="colorAccent">#758bff</color> <!--progress bar color-->
-    <color name="textColor">#212121</color>
-    <color name="secondaryTextColor">#757575</color>
+    <color name="color_primary">#3F51B5</color>
+    <color name="color_primary_dark">#1d2761</color> <!--notification bar color-->
+    <color name="color_accent">#758bff</color> <!--progress bar color-->
 
     <!--App colors-->
     <color name="white_FFFFFF">#FFFFFF</color>
     <color name="white_50">#88FFFFFF</color>
     <color name="gray_E5E5E5">#E5E5E5</color>
-    <color name="gray_CACACC">#CACACC</color>
+    <color name="gray_C8C8C8">#C8C8C8</color>
+    <color name="gray_373737">#373737</color>
+    <color name="gray_1A1A1A">#1A1A1A</color>
     <color name="black_000000">#000000</color>
     <color name="black_50">#88000000</color>
     <color name="transparent">#0000</color>
-    <color name="background_evens">#1FFF</color>
-    <color name="background_odds">#2FFF</color>
     <color name="red_delete">#f44336</color>
+
+    <!--Day-->
+    <color name="text_color">@color/gray_373737</color>
+    <color name="fragment_background">@color/white_FFFFFF</color>
+    <color name="fragment_separation_view">@color/gray_1A1A1A</color>
+    <color name="item_background_evens">#14000000</color>
+    <color name="item_background_odds">#06000000</color>
+    <color name="dialog_background">@color/white_FFFFFF</color>
+    <color name="dialog_line">@color/black_50</color>
+    <color name="dialog_inverse_background">@color/black_000000</color>
 
 </resources>

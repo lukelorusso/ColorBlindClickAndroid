@@ -15,8 +15,9 @@ import com.lukelorusso.presentation.R
 
 
 /**
- * Copyright (C) 2020 Luke Lorusso, based on ABaseDataFragment
+ * Copyright (C) 2021 Luke Lorusso
  * Licensed under the Apache License Version 2.0
+ *
  * Base [BottomSheetDialogFragment] class for every fragment in this application.
  */
 abstract class ARenderBottomSheetDialogFragment<Data>(

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/shape_black50_solid_rounded_top_corner"
+    android:background="@drawable/shape_bottom_toolbar"
     android:padding="10dp"
     android:visibility="invisible"
     tools:visibility="visible">
@@ -46,7 +46,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/white_FFFFFF"
             android:textSize="14sp"
-            tools:text="R: rr.rr, G: gg.gg, B: bb.bb" />
+            tools:text="rgb(rr.rr%, gg.gg%, bb.bb%)" />
 
     </LinearLayout>
 

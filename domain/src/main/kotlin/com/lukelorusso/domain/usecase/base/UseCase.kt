@@ -3,6 +3,9 @@ package com.lukelorusso.domain.usecase.base
 import org.koin.java.KoinJavaComponent.inject
 
 /**
+ * Copyright (C) 2020 Mikhael LOPEZ
+ * Licensed under the Apache License Version 2.0
+ *
  * Abstract class for a Use Case
  * This interface represents a execution unit for different use cases (this means any use case
  * in the application should implement this contract).

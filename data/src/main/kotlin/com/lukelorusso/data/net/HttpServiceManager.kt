@@ -6,6 +6,10 @@ import com.lukelorusso.data.extensions.catchWebServiceException
 import com.lukelorusso.domain.exception.NotConnectedException
 import io.reactivex.rxjava3.core.Single
 
+/**
+ * Copyright (C) 2021 Luke Lorusso
+ * Licensed under the Apache License Version 2.0
+ */
 class HttpServiceManager(
     private val networkChecker: NetworkChecker? = null
 ) {

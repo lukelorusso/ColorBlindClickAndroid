@@ -10,7 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 
 /**
- * Copyright (C) 2020 Mikhael LOPEZ
+ * Copyright (C) 2021 Luke Lorusso
  * Licensed under the Apache License Version 2.0
  * RetrofitFactory to generate a Retrofit instance.
  * It sets up request logging and a Gson type adapter.

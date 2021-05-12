@@ -13,7 +13,7 @@
         android:layout_height="3dp"
         android:layout_gravity="center"
         android:layout_margin="10dp"
-        android:background="@color/white_50" />
+        android:background="@color/dialog_line" />
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/content"
@@ -21,43 +21,43 @@
         android:layout_height="match_parent"
         android:fillViewport="true">
 
-        <LinearLayout
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clickable="true"
-            android:focusable="true"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
 
-            <FrameLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1">
+                android:layout_height="match_parent"
+                android:clickable="true"
+                android:focusable="true"
+                android:orientation="vertical">
 
-                <ImageView
-                    android:layout_width="@dimen/color_picker_dimens_big"
-                    android:layout_height="@dimen/color_picker_dimens_big"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginBottom="20dp"
-                    android:contentDescription="@null"
-                    android:scaleType="center" />
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1">
 
-                <View
-                    android:id="@+id/vPreviewPanel"
-                    android:layout_width="@dimen/color_picker_dimens_big"
-                    android:layout_height="@dimen/color_picker_dimens_big"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginBottom="20dp"
-                    android:background="@drawable/square_color_picker_big"
-                    android:visibility="invisible"
-                    tools:visibility="visible" />
+                    <ImageView
+                        android:layout_width="@dimen/color_picker_dimens_big"
+                        android:layout_height="@dimen/color_picker_dimens_big"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="20dp"
+                        android:contentDescription="@null"
+                        android:scaleType="center" />
 
-            </FrameLayout>
+                    <View
+                        android:id="@+id/vPreviewPanel"
+                        android:layout_width="@dimen/color_picker_dimens_big"
+                        android:layout_height="@dimen/color_picker_dimens_big"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="20dp"
+                        android:background="@drawable/shape_preview_panel"
+                        android:visibility="invisible"
+                        tools:visibility="visible" />
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                </FrameLayout>
 
                 <include
                     android:id="@+id/inclToolbarColor"
@@ -65,26 +65,27 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
-                <androidx.coordinatorlayout.widget.CoordinatorLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+            </LinearLayout>
 
-                    <com.google.android.material.floatingactionbutton.FloatingActionButton
-                        android:id="@+id/fabPreviewShare"
-                        style="@style/Widget.Design.FloatingActionButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="bottom|end"
-                        android:layout_margin="15dp"
-                        android:contentDescription="@string/share_color"
-                        app:srcCompat="@drawable/share_white"
-                        app:tint="@color/white_FFFFFF" />
+            <androidx.coordinatorlayout.widget.CoordinatorLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom">
 
-                </androidx.coordinatorlayout.widget.CoordinatorLayout>
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/fabPreviewShare"
+                    style="@style/Widget.Design.FloatingActionButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|end"
+                    android:layout_margin="15dp"
+                    android:contentDescription="@string/share_color"
+                    app:srcCompat="@drawable/share_white"
+                    app:tint="@color/white_FFFFFF" />
 
-            </FrameLayout>
+            </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-        </LinearLayout>
+        </FrameLayout>
 
     </androidx.core.widget.NestedScrollView>
 

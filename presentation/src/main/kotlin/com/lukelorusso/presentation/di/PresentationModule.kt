@@ -17,6 +17,10 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
+/**
+ * Copyright (C) 2021 Luke Lorusso
+ * Licensed under the Apache License Version 2.0
+ */
 val presentationModule = module {
     //region AppComponent
     factory<ErrorMessageFactory> { ErrorMessageFactory.Impl(get(), get()) }

@@ -10,6 +10,10 @@ import com.lukelorusso.presentation.exception.ErrorMessageFactory
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 
+/**
+ * Copyright (C) 2021 Luke Lorusso
+ * Licensed under the Apache License Version 2.0
+ */
 abstract class AViewModel<Data>(private val errorMessageFactory: ErrorMessageFactory) :
     ViewModel() {
 

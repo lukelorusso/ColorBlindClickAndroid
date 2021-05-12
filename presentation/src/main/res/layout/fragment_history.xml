@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black_000000"
+    android:background="@color/fragment_background"
     tools:context=".ui.history.HistoryFragment">
 
     <LinearLayout
@@ -21,7 +21,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/gray_E5E5E5" />
+            android:background="@color/fragment_separation_view" />
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:id="@+id/content"
@@ -36,7 +36,6 @@
                 android:layout_marginTop="85dp"
                 android:lineSpacingMultiplier="1.2"
                 android:text="@string/history_no_item"
-                android:textColor="@color/gray_E5E5E5"
                 android:textSize="14sp" />
 
             <androidx.swiperefreshlayout.widget.SwipeRefreshLayout

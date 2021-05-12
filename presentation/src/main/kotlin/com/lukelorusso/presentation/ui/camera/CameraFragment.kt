@@ -312,7 +312,7 @@ class CameraFragment : ARenderFragment<CameraData>() {
         binding.inclToolbarColor.colorTopLine.text = topLineText
 
         binding.inclToolbarColor.colorBottomLine.visibility = View.VISIBLE
-        binding.inclToolbarColor.colorBottomLine.text = color.toRGBString()
+        binding.inclToolbarColor.colorBottomLine.text = color.toRGBPercentString()
 
         binding.inclToolbarColor.root.setOnClickListener { viewModel.gotoPreview(color) }
     }

@@ -8,7 +8,7 @@ import okhttp3.OkHttpClient
 import java.util.concurrent.TimeUnit
 
 /**
- * Copyright (C) 2020 Mikhael LOPEZ
+ * Copyright (C) 2021 Luke Lorusso
  * Licensed under the Apache License Version 2.0
  */
 open class OkHttpClientFactory {

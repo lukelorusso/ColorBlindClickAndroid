@@ -16,7 +16,8 @@ import java.io.IOException
 import java.util.concurrent.Executors
 
 /**
- * Created by LukeLorusso on 09-Jan-18.
+ * Copyright (C) 2021 Luke Lorusso
+ * Licensed under the Apache License Version 2.0
  */
 class SharePNGTask(
         private val context: Context,

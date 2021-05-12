@@ -3,7 +3,7 @@ package com.lukelorusso.data.di.providers
 import com.lukelorusso.domain.model.Color
 
 /**
- * Copyright (C) 2020 Luke Lorusso
+ * Copyright (C) 2021 Luke Lorusso
  * Licensed under the Apache License Version 2.0
  */
 class PersistenceManager(private val persistenceProvider: PersistenceProvider) {

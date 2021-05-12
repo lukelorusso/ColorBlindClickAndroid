@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorPrimary"
+    android:background="@color/color_primary"
     app:elevation="0dp">
 
     <androidx.appcompat.widget.Toolbar
@@ -44,7 +44,7 @@
                     android:layout_width="0dp"
                     android:layout_height="30dp"
                     android:layout_weight="1"
-                    android:background="@drawable/shape_white_stroke_rounded_corner"
+                    android:background="@drawable/shape_history_toolbar"
                     android:hint="@string/history_search_hint"
                     android:inputType="text"
                     android:maxLines="1"
@@ -75,7 +75,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end|center_vertical"
-                app:srcCompat="@drawable/delete_sweep" />
+                app:srcCompat="@drawable/delete_sweep_white" />
 
         </FrameLayout>
 

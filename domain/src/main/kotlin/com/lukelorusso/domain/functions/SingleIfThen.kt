@@ -7,6 +7,7 @@ import io.reactivex.rxjava3.core.SingleSource
 /**
  * Copyright (C) 2020 Mikhael LOPEZ
  * Licensed under the Apache License Version 2.0
+ *
  * When an [Single] subscribes, the condition is evaluated
  * and the appropriate [SingleSource] is subscribed to.
  * @param <T> the common value type of the Single

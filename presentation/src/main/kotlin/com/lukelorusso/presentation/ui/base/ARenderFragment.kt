@@ -6,6 +6,10 @@ import androidx.fragment.app.Fragment
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.snackbar.Snackbar
 
+/**
+ * Copyright (C) 2021 Luke Lorusso
+ * Licensed under the Apache License Version 2.0
+ */
 abstract class ARenderFragment<Data> : Fragment(), ADataView<Data> {
 
     //region RENDER

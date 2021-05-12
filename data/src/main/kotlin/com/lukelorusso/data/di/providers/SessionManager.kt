@@ -1,7 +1,7 @@
 package com.lukelorusso.data.di.providers
 
 /**
- * Copyright (C) 2020 Luke Lorusso
+ * Copyright (C) 2021 Luke Lorusso
  * Licensed under the Apache License Version 2.0
  */
 class SessionManager(private val sharedPrefProvider: SharedPrefProvider) {

@@ -11,13 +11,9 @@ import io.paperdb.Paper
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
+import org.koin.core.logger.Level
 import timber.log.Timber
 
-/**
- * Copyright (C) 2020 Mikhael LOPEZ
- * Licensed under the Apache License Version 2.0
- * Android Main Application
- */
 class AndroidApplication : Application() {
 
     companion object {
@@ -48,7 +44,7 @@ class AndroidApplication : Application() {
 
         startKoin {
             if (BuildConfig.DEBUG) {
-                androidLogger()
+                androidLogger(Level.ERROR)
             }
             androidContext(this@AndroidApplication)
 

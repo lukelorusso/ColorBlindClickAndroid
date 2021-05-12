@@ -8,6 +8,10 @@ import com.lukelorusso.presentation.BuildConfig
 import timber.log.Timber
 import javax.inject.Inject
 
+/**
+ * Copyright (C) 2021 Luke Lorusso
+ * Licensed under the Apache License Version 2.0
+ */
 class TrackerHelper
 @Inject internal constructor(context: Context) {
 

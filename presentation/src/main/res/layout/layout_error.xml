@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/viewError"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:background="@color/fragment_background">
 
     <ImageView
         android:id="@+id/imageError"
@@ -17,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed"
         app:srcCompat="@drawable/error_view_cloud"
-        app:tint="@color/colorAccent" />
+        app:tint="@color/color_accent" />
 
     <TextView
         android:id="@+id/textErrorOops"
@@ -26,7 +27,6 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="16dp"
         android:text="@string/error_view_oops"
-        android:textColor="@color/textColor"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/textErrorDescription"
@@ -45,7 +45,6 @@
         android:ellipsize="end"
         android:gravity="center_horizontal"
         android:maxLines="5"
-        android:textColor="@color/secondaryTextColor"
         app:layout_constraintBottom_toTopOf="@+id/btnErrorRetry"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -60,7 +59,7 @@
         android:layout_marginTop="16dp"
         android:padding="8dp"
         android:text="@string/error_view_retry"
-        android:textColor="@color/colorAccent"
+        android:textColor="@color/color_accent"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/inclProgress"
         app:layout_constraintEnd_toEndOf="parent"

@@ -2,13 +2,11 @@
 
 package com.lukelorusso.presentation.ui.info
 
-import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.lukelorusso.presentation.R
 import com.lukelorusso.presentation.view.DoubleGroundViewHolder
@@ -54,20 +52,12 @@ class InfoAdapter(private val withHeader: Boolean, private val withFooter: Boole
             fun bind(item: String, position: Int, intentItemClick: PublishSubject<Int>) =
                 with(itemView) {
                     val even = position % 2 == 0
-
-                    val states = arrayOf(
-                        intArrayOf(android.R.attr.state_enabled),  // enabled
-                        intArrayOf(-android.R.attr.state_enabled), // disabled
-                        intArrayOf(-android.R.attr.state_checked), // unchecked
-                        intArrayOf(android.R.attr.state_pressed)   // pressed
-                    )
-
-                    val colorRes = if (even) R.color.background_evens else R.color.background_odds
+                    val colorRes = if (even)
+                        R.color.item_background_evens
+                    else
+                        R.color.item_background_odds
                     val color = ContextCompat.getColor(context, colorRes)
-                    val colors = arrayOf(color, color, color, color).toIntArray()
-
-                    val content = findViewById<View>(R.id.content)
-                    ViewCompat.setBackgroundTintList(content, ColorStateList(states, colors))
+                    setBackgroundColor(color)
 
                     val itemName = findViewById<TextView>(R.id.itemName)
                     itemName.text = item

@@ -4,6 +4,10 @@ import android.util.Log
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import timber.log.Timber
 
+/**
+ * Copyright (C) 2021 Luke Lorusso
+ * Licensed under the Apache License Version 2.0
+ */
 class CrashlyticsTree : Timber.Tree() {
 
     companion object {

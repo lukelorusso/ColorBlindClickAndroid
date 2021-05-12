@@ -14,7 +14,7 @@ fun String.toHtml(context: Context, withChangeSize: Boolean = false): Spanned =
     let {
         // Change color
         val color =
-            String.format("%X", ContextCompat.getColor(context, R.color.colorAccent)).substring(2)
+            String.format("%X", ContextCompat.getColor(context, R.color.color_accent)).substring(2)
         it.replace("<color>", String.format("<font color=\"#%s\">", color))
             .replace("</color>", "</font>")
     }.let {

@@ -4,6 +4,9 @@ import com.lukelorusso.domain.usecase.base.Logger
 import io.paperdb.Paper
 
 /**
+ * Copyright (C) 2021 Luke Lorusso
+ * Licensed under the Apache License Version 2.0
+ *
  * PaperDB is affected by a RuntimeException that sometimes pops up:
  * https://github.com/pilgr/Paper/issues/108
  */

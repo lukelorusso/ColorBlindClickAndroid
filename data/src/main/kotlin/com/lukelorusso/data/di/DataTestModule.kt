@@ -16,6 +16,9 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 
 /**
+ * Copyright (C) 2021 Luke Lorusso
+ * Licensed under the Apache License Version 2.0
+ *
  * A dataModule variant, lacking of any instance of [android.content.Context].
  */
 val dataTestModule = module {

@@ -34,13 +34,13 @@
 
     <include
         android:id="@+id/inclToolbarCameraTop"
-        layout="@layout/layout_camera_toolbar_top"
+        layout="@layout/layout_camera_top_toolbar"
         android:visibility="gone"
         tools:visibility="visible" />
 
     <include
         android:id="@+id/inclToolbarCameraBottom"
-        layout="@layout/layout_camera_toolbar_bottom" />
+        layout="@layout/layout_camera_bottom_toolbar" />
 
     <com.lukelorusso.verticalseekbar.VerticalSeekBar
         android:id="@+id/cameraZoomSeekBar"
@@ -55,8 +55,8 @@
         android:layout_marginBottom="15dp"
         android:visibility="invisible"
         app:vsb_bar_background="@color/white_FFFFFF"
-        app:vsb_bar_progress_gradient_end="@color/colorPrimary"
-        app:vsb_bar_progress_gradient_start="@color/colorAccent"
+        app:vsb_bar_progress_gradient_end="@color/color_primary"
+        app:vsb_bar_progress_gradient_start="@color/color_accent"
         app:vsb_bar_width="2dp"
         app:vsb_click_to_set_progress="true"
         app:vsb_max_placeholder_position="outside"
@@ -65,7 +65,7 @@
         app:vsb_min_placeholder_src="@drawable/min_placeholder"
         app:vsb_show_thumb="true"
         app:vsb_thumb_container_corner_radius="10dp"
-        app:vsb_thumb_container_tint="@color/colorPrimary"
+        app:vsb_thumb_container_tint="@color/color_primary"
         app:vsb_thumb_placeholder_src="@drawable/mid_placeholder"
         app:vsb_use_thumb_to_set_progress="true" />
 

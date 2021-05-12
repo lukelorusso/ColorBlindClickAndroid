@@ -12,6 +12,10 @@ import com.lukelorusso.domain.repository.ColorRepository
 import org.koin.dsl.module
 import retrofit2.Retrofit
 
+/**
+ * Copyright (C) 2021 Luke Lorusso
+ * Licensed under the Apache License Version 2.0
+ */
 val dataModule = module {
     //region Net
     factory { NetworkChecker(get()) }
