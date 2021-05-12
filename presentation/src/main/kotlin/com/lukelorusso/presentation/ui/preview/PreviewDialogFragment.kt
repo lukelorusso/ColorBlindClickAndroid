@@ -71,7 +71,11 @@ class PreviewDialogFragment : ARenderBottomSheetDialogFragment<PreviewDialogData
         super.onViewCreated(view, savedInstanceState)
         initView()
 
-        viewModel.observe(viewLifecycleOwner) { data -> data?.also { render(it) } }
+        viewModel.observe(
+            viewLifecycleOwner,
+            dataObserver = { data -> data?.also { render(it) } },
+            eventObserver = { event -> event?.also { renderSnack(it.contentIfNotHandled()) } }
+        )
     }
 
     override fun onCancel(dialog: DialogInterface) {
@@ -82,7 +86,6 @@ class PreviewDialogFragment : ARenderBottomSheetDialogFragment<PreviewDialogData
     // region RENDER
     override fun render(data: PreviewDialogData) {
         renderHomeUrl(data.homeUrl)
-        renderSnack(data.snackMessage)
     }
 
     private fun renderHomeUrl(homeUrl: String?) = homeUrl?.also {

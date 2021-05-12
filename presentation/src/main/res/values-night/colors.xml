@@ -3,6 +3,7 @@
 
     <!--Night-->
     <color name="text_color">@color/gray_C8C8C8</color>
+    <color name="progress_background">@color/black_50</color>
     <color name="fragment_background">@color/black_000000</color>
     <color name="fragment_separation_view">@color/gray_E5E5E5</color>
     <color name="item_background_evens">#1FFF</color>

@@ -21,7 +21,6 @@ import com.lukelorusso.presentation.ui.base.ContentState
 import com.lukelorusso.presentation.ui.main.MainActivity
 import io.fotoapparat.Fotoapparat
 import io.fotoapparat.configuration.CameraConfiguration
-import io.fotoapparat.log.Logger as FotoApparatLogger
 import io.fotoapparat.parameter.Flash
 import io.fotoapparat.selector.*
 import io.reactivex.rxjava3.core.Observable
@@ -29,6 +28,7 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
+import io.fotoapparat.log.Logger as FotoApparatLogger
 
 class CameraFragment : ARenderFragment<CameraData>() {
 
@@ -42,6 +42,9 @@ class CameraFragment : ARenderFragment<CameraData>() {
 
     // Intents
     private val intentGetColor = PublishSubject.create<GetColorUseCase.Param>()
+
+    private val intentGetLastZoomValue = PublishSubject.create<Unit>()
+    private val intentSetLastZoomValue = PublishSubject.create<Int>()
     private val intentSetLastLensPosition = PublishSubject.create<Int>()
 
     // View
@@ -113,7 +116,17 @@ class CameraFragment : ARenderFragment<CameraData>() {
         super.onViewCreated(view, savedInstanceState)
         initView()
 
-        viewModel.observe(viewLifecycleOwner) { data -> data?.also { render(it) } }
+        viewModel.observe(
+            viewLifecycleOwner,
+            dataObserver = { data -> data?.also { render(it) } },
+            eventObserver = { event -> event?.also { renderSnack(it.contentIfNotHandled()) } }
+        )
+
+        if (savedInstanceState != null) {
+            val duration = resources.getInteger(R.integer.splash_screen_duration)
+            Handler(Looper.getMainLooper())
+                .postDelayed({ intentGetLastZoomValue.onNext(Unit) }, duration.toLong())
+        }
     }
 
     // region RENDER
@@ -122,50 +135,62 @@ class CameraFragment : ARenderFragment<CameraData>() {
             data.contentState == ContentState.LOADING ||
                     data.contentState == ContentState.RETRY
         )
+
         renderHomeUrl(data.homeUrl)
-        renderInitCamera(data.lastLensPosition)
+        renderInitCamera(data.lastLensPosition, data.lastZoomValue)
         renderColorResult(data.color)
-        showToolbarColor(data.errorMessage)
-        showToolbarColor(data.snackMessage)
+        //renderError(binding.inclError.textErrorDescription, data.errorMessage)
         renderPersistenceException(data.isPersistenceException)
+    }
+
+    override fun renderSnack(messageError: String?) {
+        showToolbarColor(messageError)
     }
 
     private fun renderHomeUrl(homeUrl: String?) {
         homeUrl?.also { this.homeUrl = it }
     }
 
-    private fun renderInitCamera(lastLensPosition: Int?) {
+    private fun renderInitCamera(lastLensPosition: Int?, lastZoomValue: Int?) {
         lastLensPosition?.also { position ->
-            camera = Fotoapparat(
-                context = requireContext(),
-                view = binding.cameraView,
-                focusView = binding.focusView,
-                logger = object : FotoApparatLogger {
-                    override fun log(message: String) {
-                        logger.log { "Camera message: $message" }
-                    }
-                },
-                lensPosition = if (position == 0) back() else front(),
-                cameraConfiguration = cameraConfiguration,
-                cameraErrorCallback = { Timber.e("Camera error: $it") }
-            ).apply { start() }
-            isFrontCamera = position == 1
-            checkFrontCamera()
-            checkCameraCapabilities()
+            if (camera == null) {
+                camera = Fotoapparat(
+                    context = requireContext(),
+                    view = binding.cameraView,
+                    focusView = binding.focusView,
+                    logger = object : FotoApparatLogger {
+                        override fun log(message: String) {
+                            logger.log { "Camera message: $message" }
+                        }
+                    },
+                    lensPosition = if (position == 0) back() else front(),
+                    cameraConfiguration = cameraConfiguration,
+                    cameraErrorCallback = { Timber.e("Camera error: $it") }
+                ).apply { start() }
+                isFrontCamera = position == 1
+                checkFrontCamera()
+                checkCameraCapabilities()
+
+                val duration = resources.getInteger(R.integer.fading_effect_duration_default)
+                Handler(Looper.getMainLooper()).postDelayed({
+                    (activity as? MainActivity)?.hideSplashScreen()
+                }, duration.toLong())
+            }
 
             binding.cameraZoomSeekBar.apply {
                 maxValue = MAX_ZOOM_VALUE
                 setOnProgressChangeListener { progressValue ->
                     camera?.setZoom(progressValue.toFloat().div(MAX_ZOOM_VALUE))
                 }
-                progress = INIT_ZOOM_VALUE
+                setOnReleaseListener { progressValue ->
+                    intentSetLastZoomValue.onNext(progressValue)
+                }
                 visibility = View.VISIBLE
             }
+        }
 
-            val duration = resources.getInteger(R.integer.fading_effect_duration_default)
-            Handler(Looper.getMainLooper()).postDelayed({
-                (activity as? MainActivity)?.hideSplashScreen()
-            }, duration.toLong())
+        lastZoomValue?.also {
+            binding.cameraZoomSeekBar.progress = if (it == -1) INIT_ZOOM_VALUE else it
         }
     }
 
@@ -196,7 +221,7 @@ class CameraFragment : ARenderFragment<CameraData>() {
                             )
                             intentGetColor.onNext(
                                 GetColorUseCase.Param(
-                                    colorHash = pixel.pixelColorToHash(),
+                                    colorHex = pixel.pixelColorToHash(),
                                     deviceUdid = activity.getDeviceUdid()
                                 )
                             )
@@ -247,14 +272,25 @@ class CameraFragment : ARenderFragment<CameraData>() {
         val loadData = Observable.just(Unit).flatMap { unit ->
             Observable.merge(
                 viewModel.intentGetHomeUrl(unit),
-                viewModel.intentGetLastLensPosition(unit)
+                viewModel.intentGetLastLensPositionAndZoomValue(unit)
             )
         }
-        val getColor = intentGetColor.flatMap { viewModel.intentGetColor(it) }
+        val getColor = intentGetColor
+            .flatMap { viewModel.intentGetColor(it) }
         val setLastLensPosition = intentSetLastLensPosition
             .flatMap { viewModel.intentSetLastLensPosition(it) }
+        val getLastZoomValue = intentGetLastZoomValue
+            .flatMap { viewModel.intentGetLastZoomValue(it) }
+        val setLastZoomValue = intentSetLastZoomValue
+            .flatMap { viewModel.intentSetLastZoomValue(it) }
 
-        viewModel.subscribe(loadData, getColor, setLastLensPosition)
+        viewModel.subscribe(
+            loadData,
+            getColor,
+            setLastLensPosition,
+            getLastZoomValue,
+            setLastZoomValue
+        )
     }
 
     private fun initToolbarTop(isFlashOn: Boolean = false) {

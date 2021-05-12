@@ -38,7 +38,7 @@ android {
         def ENABLE_ANALYTICS = "ENABLE_ANALYTICS"
         debug {
             applicationIdSuffix = ".debug"
-            versionNameSuffix "-DEBUG"
+            //versionNameSuffix "-DEBUG"
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt')
             buildConfigField "boolean", ENABLE_ANALYTICS, 'Boolean.parseBoolean("false")'

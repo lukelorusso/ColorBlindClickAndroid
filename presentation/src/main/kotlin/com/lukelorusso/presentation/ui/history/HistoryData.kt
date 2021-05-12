@@ -8,8 +8,6 @@ data class HistoryData(
     val list: List<Color>? = null,
     val deletedItem: Color? = null,
     val deletedAllItems: Boolean? = null,
-    val errorMessage: String? = null,
-    val snackMessage: String? = null,
     val isPersistenceException: Boolean? = null
 ) {
 
@@ -27,12 +25,10 @@ data class HistoryData(
         fun createDeletedAllItem() =
                 HistoryData(contentState = ContentState.CONTENT, deletedAllItems = true)
 
-        fun createSnack(snackMessage: String, isPersistenceException: Boolean? = null) =
-                HistoryData(
-                        contentState = ContentState.CONTENT,
-                        snackMessage = snackMessage,
-                        isPersistenceException = isPersistenceException
-                )
+        fun createIsPersistenceException(isPersistenceException: Boolean? = null) = HistoryData(
+            contentState = ContentState.CONTENT,
+            isPersistenceException = isPersistenceException
+        )
     }
 
 }

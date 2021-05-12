@@ -5,7 +5,11 @@ import com.lukelorusso.domain.usecase.base.UseCaseScheduler
 import io.reactivex.rxjava3.schedulers.Schedulers
 import org.koin.dsl.module
 
-val testModule = module {
+/**
+ * Copyright (C) 2021 Luke Lorusso
+ * Licensed under the Apache License Version 2.0
+ */
+val presentationTestModule = module {
     //region AppComponent
     factory<Logger> {
         object : Logger {

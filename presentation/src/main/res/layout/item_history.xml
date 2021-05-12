@@ -28,6 +28,7 @@
         android:id="@+id/viewForeground"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/fragment_background"
         tools:visibility="visible">
 
         <FrameLayout

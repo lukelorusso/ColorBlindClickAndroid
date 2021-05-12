@@ -14,9 +14,9 @@ class PreviewDialogViewModel(
         getHomeUrl.execute(param)
             .toObservable()
             .map { PreviewDialogData.createHomeUrl(it) }
-            .onErrorReturn { onSnack(it) }
+            .onErrorReturn { onError(it) }
 
-    private fun onSnack(error: Throwable): PreviewDialogData =
-        PreviewDialogData.createSnack(getErrorMessage(error))
+    private fun onError(e: Throwable): PreviewDialogData =
+        PreviewDialogData.createEmptyContent().also { postEvent(getErrorMessage(e)) }
 
 }

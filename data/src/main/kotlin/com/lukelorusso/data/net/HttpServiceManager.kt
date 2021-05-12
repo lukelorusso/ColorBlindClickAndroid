@@ -19,7 +19,7 @@ class HttpServiceManager(
         mapper: (DTO) -> Entity
     ): Single<Entity> =
         if (networkChecker?.isConnected == false)
-            throw NotConnectedException
+            Single.error(NotConnectedException)
         else
             call.map(mapper)
                 .onErrorResumeNext { e -> e.catchWebServiceException() }

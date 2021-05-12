@@ -28,16 +28,16 @@ class HistoryViewModel(
 
     internal fun intentLoadData(param: Unit): Observable<HistoryData> = intentGetItems(param)
             .startWithSingle(HistoryData.createLoading())
-            .onErrorReturn { onSnack(it) }
+            .onErrorReturn { onError(it) }
 
     internal fun intentRefreshData(param: Unit): Observable<HistoryData> = intentGetItems(param)
             .delay(200, TimeUnit.MILLISECONDS)
-            .onErrorReturn { onSnack(it) }
+            .onErrorReturn { onError(it) }
 
     internal fun intentRetryData(param: Unit): Observable<HistoryData> = intentGetItems(param)
             .startWithSingle(HistoryData.createRetryLoading())
             .onErrorResumeNext(DelayFunction<HistoryData>(scheduler))
-            .onErrorReturn { onSnack(it) }
+            .onErrorReturn { onError(it) }
 
     internal fun intentDeleteItem(param: Color): Observable<HistoryData> =
             deleteColor.execute(param)
@@ -46,7 +46,7 @@ class HistoryViewModel(
                     .map { HistoryData.createDeletedItem(param) }
                     .delay(450, TimeUnit.MILLISECONDS)
                     .startWithSingle(HistoryData.createLoading())
-                    .onErrorReturn { onSnack(it) }
+                    .onErrorReturn { onError(it) }
 
     internal fun intentDeleteAllItems(param: Unit): Observable<HistoryData> =
             deleteAllColors.execute(param)
@@ -55,13 +55,14 @@ class HistoryViewModel(
                     .map { HistoryData.createDeletedAllItem() }
                     .delay(450, TimeUnit.MILLISECONDS)
                     .startWithSingle(HistoryData.createLoading())
-                    .onErrorReturn { onSnack(it) }
+                    .onErrorReturn { onError(it) }
 
     internal fun gotoCamera() = router.routeToCamera()
 
     internal fun gotoPreview(color: Color) = router.routeToPreview(color)
 
-    private fun onSnack(error: Throwable): HistoryData =
-            HistoryData.createSnack(getErrorMessage(error), error is PersistenceException)
+    private fun onError(e: Throwable): HistoryData =
+        HistoryData.createIsPersistenceException(e is PersistenceException)
+            .also { postEvent(getErrorMessage(e)) }
 
 }

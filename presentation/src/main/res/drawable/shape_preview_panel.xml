@@ -3,7 +3,7 @@
     <solid android:color="@color/transparent" />
     <stroke
         android:width="2dp"
-        android:color="@color/dialog_inverse_background" />
+        android:color="@color/text_color" />
     <size
         android:width="@dimen/color_picker_dimens_big"
         android:height="@dimen/color_picker_dimens_big" />

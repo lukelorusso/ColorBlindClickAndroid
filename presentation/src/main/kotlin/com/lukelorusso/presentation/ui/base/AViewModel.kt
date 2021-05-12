@@ -22,6 +22,11 @@ abstract class AViewModel<Data>(private val errorMessageFactory: ErrorMessageFac
     }
     protected val data = liveData.value
 
+    private val liveEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData()
+    }
+    private val event = liveEvent.value
+
     protected val composite = CompositeDisposable()
     open val router: ARouter? = null
 
@@ -29,12 +34,21 @@ abstract class AViewModel<Data>(private val errorMessageFactory: ErrorMessageFac
         liveData.postValue(data)
     }
 
-    fun initRouter(activity: AppCompatActivity, fragment: Fragment?) {
-        router?.init(activity, fragment)
+    protected fun postEvent(message: String) {
+        liveEvent.postValue(Event(message))
     }
 
-    fun observe(owner: LifecycleOwner, observer: Observer<in Data>) {
-        liveData.observe(owner, observer)
+    fun observe(
+        owner: LifecycleOwner,
+        eventObserver: Observer<in Event<String>>? = null,
+        dataObserver: Observer<in Data>
+    ) {
+        liveData.observe(owner, dataObserver)
+        eventObserver?.also { liveEvent.observe(owner, it) }
+    }
+
+    fun initRouter(activity: AppCompatActivity, fragment: Fragment?) {
+        router?.init(activity, fragment)
     }
 
     fun subscribe(vararg observables: Observable<Data>) {

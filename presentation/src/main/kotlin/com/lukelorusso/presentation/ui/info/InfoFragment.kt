@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.Snackbar
 import com.lukelorusso.presentation.BuildConfig
 import com.lukelorusso.presentation.R
 import com.lukelorusso.presentation.databinding.FragmentInfoBinding
@@ -17,7 +16,6 @@ import com.lukelorusso.presentation.ui.base.ARenderFragment
 import com.lukelorusso.presentation.view.VerticalSpaceItemDecoration
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
-
 
 class InfoFragment : ARenderFragment<InfoData>() {
 
@@ -63,28 +61,19 @@ class InfoFragment : ARenderFragment<InfoData>() {
         super.onViewCreated(view, savedInstanceState)
         initView()
 
-        viewModel.observe(viewLifecycleOwner) { data -> data?.also { render(it) } }
+        viewModel.observe(
+            viewLifecycleOwner,
+            dataObserver = { data -> data?.also { render(it) } },
+            eventObserver = { event -> event?.also { renderSnack(it.contentIfNotHandled()) } }
+        )
     }
 
     //region RENDER
     override fun render(data: InfoData) {
         renderUrl(data.url)
-        renderSnack(data.snackMessage)
     }
 
     private fun renderUrl(url: String?) = url?.also { viewModel.gotoBrowser(it) }
-
-    override fun renderSnack(messageError: String?) {
-        messageError?.also { message ->
-            activity?.also { activity ->
-                Snackbar.make(
-                    activity.findViewById(android.R.id.content),
-                    message,
-                    Snackbar.LENGTH_LONG
-                ).show()
-            }
-        }
-    }
     // endregion
 
     private fun initView() {

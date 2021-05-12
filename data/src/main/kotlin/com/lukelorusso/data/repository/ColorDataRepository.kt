@@ -37,7 +37,16 @@ class ColorDataRepository(
         Single.just(sessionManager.getLastLensPosition())
 
     override fun setLastLensPosition(position: Int): Completable =
-        Single.just(sessionManager.setLastLensPosition(position)).ignoreElement()
+        Single.just(sessionManager.setLastLensPosition(position))
+            .doAfterSuccess { sessionManager.deleteLastZoomValue() }
+            .ignoreElement()
+
+    override fun getLastZoomValue(): Single<Int> =
+        Single.just(sessionManager.getLastZoomValue())
+
+    override fun setLastZoomValue(position: Int): Completable =
+        Single.just(sessionManager.setLastZoomValue(position))
+            .ignoreElement()
 
     override fun getHelpUrl(): Single<String> = Single.just(
         String.format(

@@ -20,6 +20,7 @@
 
     <!--Day-->
     <color name="text_color">@color/gray_373737</color>
+    <color name="progress_background">@color/white_50</color>
     <color name="fragment_background">@color/white_FFFFFF</color>
     <color name="fragment_separation_view">@color/gray_1A1A1A</color>
     <color name="item_background_evens">#14000000</color>

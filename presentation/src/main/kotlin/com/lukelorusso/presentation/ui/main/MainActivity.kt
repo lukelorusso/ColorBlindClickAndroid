@@ -25,20 +25,11 @@ import com.mikhaellopez.ratebottomsheet.RateBottomSheetManager
 import org.koin.android.ext.android.inject
 
 
-class MainActivity() : AppCompatActivity(), AskRateBottomSheet.ActionListener {
+class MainActivity : AppCompatActivity(), AskRateBottomSheet.ActionListener {
 
     // View
     private lateinit var binding: ActivityMainBinding
-    private val adapter by lazy {
-        MainPagerAdapter(
-            supportFragmentManager,
-            listOf(
-                InfoFragment.TAG,
-                CameraFragment.TAG,
-                HistoryFragment.TAG
-            ) // this is usually a list of tab labels
-        )
-    }
+    private val adapter by lazy { MainPagerAdapter(supportFragmentManager) }
 
     // Properties
     private val trackerHelper by inject<TrackerHelper>()
@@ -83,16 +74,16 @@ class MainActivity() : AppCompatActivity(), AskRateBottomSheet.ActionListener {
         }
         val duration = resources.getInteger(R.integer.splash_screen_duration)
         binding.splashScreenLogo.setAlphaWithAnimation(0F, 1F, duration.toLong()) {
-            initializationActivity(
-                savedInstanceState
-            )
+            initializeActivity(savedInstanceState)
         }
     }
 
-    private fun initializationActivity(savedInstanceState: Bundle?) {
-        if (savedInstanceState == null) {
-            checkPermission()
+    private fun initializeActivity(savedInstanceState: Bundle?) {
+        savedInstanceState?.also {
+            adapter.updateFragmentManager(supportFragmentManager)
         }
+
+        checkPermission()
 
         RateBottomSheetManager(this)
             .setInstallDays(2)
@@ -111,7 +102,7 @@ class MainActivity() : AppCompatActivity(), AskRateBottomSheet.ActionListener {
                     Manifest.permission.CAMERA
                 )
             ) {
-                showBrokenView()
+                runOnUiThread { showBrokenView() }
 
             } else { // we can request the permission
                 ActivityCompat.requestPermissions(
@@ -122,7 +113,7 @@ class MainActivity() : AppCompatActivity(), AskRateBottomSheet.ActionListener {
             }
 
         } else { // permission granted
-            hideBrokenView()
+            runOnUiThread { hideBrokenView() }
         }
     }
 
@@ -137,9 +128,9 @@ class MainActivity() : AppCompatActivity(), AskRateBottomSheet.ActionListener {
                 if (resultArray.isNotEmpty() // if the request is cancelled, resultArray is empty
                     && resultArray[0] == PackageManager.PERMISSION_GRANTED
                 ) {
-                    hideBrokenView()
+                    runOnUiThread { hideBrokenView() }
                 } else {
-                    showBrokenView()
+                    runOnUiThread { showBrokenView() }
                 }
             }
         }
@@ -188,7 +179,7 @@ class MainActivity() : AppCompatActivity(), AskRateBottomSheet.ActionListener {
                     immersiveMode = newPage == 1 // only camera page is immersive
                     if (newPage == 2 && newPage != lastPage) {
                         val f = adapter.getItem(newPage)
-                        (f as? HistoryFragment)?.intentLoadData?.onNext(Unit)
+                        (f as? HistoryFragment)?.reloadData()
                     }
                     when (newPage) {
                         0 -> binding.activityViewpager.direction =

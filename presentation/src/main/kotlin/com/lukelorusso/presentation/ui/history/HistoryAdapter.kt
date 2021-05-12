@@ -59,7 +59,7 @@ class HistoryAdapter(
     }
 
     override fun getItemView(inflater: LayoutInflater, parent: ViewGroup): RecyclerView.ViewHolder =
-        ViewHolder.ItemViewHolder(inflater.inflate(R.layout.item_color, parent, false))
+        ViewHolder.ItemViewHolder(inflater.inflate(R.layout.item_history, parent, false))
 
     override fun getHeaderView(
         inflater: LayoutInflater,
@@ -92,7 +92,7 @@ class HistoryAdapter(
                     else
                         R.color.item_background_odds
                     val color = ContextCompat.getColor(context, colorRes)
-                    setBackgroundColor(color)
+                    findViewById<ViewGroup>(R.id.content).setBackgroundColor(color)
 
                     val itemPreviewPanel = findViewById<View>(R.id.itemPreviewPanel)
                     (itemPreviewPanel.background as? GradientDrawable)

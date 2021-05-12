@@ -10,6 +10,10 @@ interface ColorRepository {
 
     fun setLastLensPosition(position: Int): Completable
 
+    fun getLastZoomValue(): Single<Int>
+
+    fun setLastZoomValue(position: Int): Completable
+
     fun getHelpUrl(): Single<String>
 
     fun getHomeUrl(): Single<String>

@@ -35,7 +35,7 @@ class HistoryFragment : ARenderFragment<HistoryData>() {
     }
 
     // Intents
-    val intentLoadData: PublishSubject<Unit> = PublishSubject.create()
+    private val intentLoadData: PublishSubject<Unit> = PublishSubject.create()
     private val intentDeleteItem = PublishSubject.create<Color>()
     private val intentDeleteAllItem = PublishSubject.create<Unit>()
 
@@ -100,7 +100,11 @@ class HistoryFragment : ARenderFragment<HistoryData>() {
         super.onViewCreated(view, savedInstanceState)
         initView()
 
-        viewModel.observe(viewLifecycleOwner) { data -> data?.also { render(it) } }
+        viewModel.observe(
+            viewLifecycleOwner,
+            dataObserver = { data -> data?.also { render(it) } },
+            eventObserver = { event -> event?.also { renderSnack(it.contentIfNotHandled()) } }
+        )
     }
 
     // region RENDER
@@ -116,9 +120,12 @@ class HistoryFragment : ARenderFragment<HistoryData>() {
         showError(binding.inclError.viewError, data.contentState == ContentState.ERROR)
 
         renderData(data.list, data.deletedItem, data.deletedAllItems)
-        renderError(binding.inclError.textErrorDescription, data.errorMessage)
-        renderSnack(data.snackMessage)
+        //renderError(binding.inclError.textErrorDescription, data.errorMessage)
         renderPersistenceException(data.isPersistenceException)
+    }
+
+    override fun showContent(content: View, visible: Boolean) {
+        content.isEnabled = visible
     }
 
     private fun renderData(
@@ -307,5 +314,7 @@ class HistoryFragment : ARenderFragment<HistoryData>() {
         }
         dialog.show()
     }
+
+    fun reloadData() = intentLoadData.onNext(Unit)
 
 }

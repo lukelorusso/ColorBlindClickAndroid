@@ -1,14 +1,17 @@
 package com.lukelorusso.presentation.ui.preview
 
+import com.lukelorusso.presentation.ui.base.ContentState
+
 data class PreviewDialogData(
-        val homeUrl: String? = null,
-        val snackMessage: String? = null
+    val contentState: ContentState = ContentState.NONE,
+    val homeUrl: String? = null
 ) {
 
     companion object {
-        fun createHomeUrl(homeUrl: String) = PreviewDialogData(homeUrl = homeUrl)
+        fun createHomeUrl(homeUrl: String) =
+            PreviewDialogData(contentState = ContentState.CONTENT, homeUrl = homeUrl)
 
-        fun createSnack(snackMessage: String) = PreviewDialogData(snackMessage = snackMessage)
+        fun createEmptyContent() = PreviewDialogData(contentState = ContentState.CONTENT)
     }
 
 }

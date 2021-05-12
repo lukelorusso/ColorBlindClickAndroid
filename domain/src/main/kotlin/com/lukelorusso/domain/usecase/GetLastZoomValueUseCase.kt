@@ -4,9 +4,9 @@ import com.lukelorusso.domain.repository.ColorRepository
 import com.lukelorusso.domain.usecase.base.SingleUseCase
 import io.reactivex.rxjava3.core.Single
 
-class GetAboutMeUrlUseCase(private val repository: ColorRepository) :
-    SingleUseCase<String, Unit>() {
+class GetLastZoomValueUseCase(private val repository: ColorRepository) :
+    SingleUseCase<Int, Unit>() {
 
-    override fun build(param: Unit): Single<String> = repository.getAboutMeUrl()
+    override fun build(param: Unit): Single<Int> = repository.getLastZoomValue()
 
 }

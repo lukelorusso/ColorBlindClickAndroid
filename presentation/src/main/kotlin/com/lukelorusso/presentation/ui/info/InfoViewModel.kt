@@ -34,7 +34,7 @@ class InfoViewModel(
 
     internal fun gotoCamera() = router.routeToCamera()
 
-    private fun onError(error: Throwable): InfoData =
-        InfoData.createSnack(getErrorMessage(error))
+    private fun onError(e: Throwable): InfoData =
+        InfoData.createEmptyContent().also { postEvent(getErrorMessage(e)) }
 
 }

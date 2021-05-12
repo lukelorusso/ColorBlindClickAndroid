@@ -48,7 +48,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:listitem="@layout/item_color" />
+                    tools:listitem="@layout/item_history" />
 
             </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
@@ -68,7 +68,7 @@
 
     <include
         android:id="@+id/inclProgress"
-        layout="@layout/layout_progress"
+        layout="@layout/layout_progress_full"
         android:visibility="gone" />
 
     <include

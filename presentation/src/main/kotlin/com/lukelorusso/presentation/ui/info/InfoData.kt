@@ -1,14 +1,16 @@
 package com.lukelorusso.presentation.ui.info
 
+import com.lukelorusso.presentation.ui.base.ContentState
+
 data class InfoData(
-    val url: String? = null,
-    val snackMessage: String? = null
+    val contentState: ContentState = ContentState.NONE,
+    val url: String? = null
 ) {
 
     companion object {
-        fun createUrlToGoTo(url: String) = InfoData(url = url)
+        fun createUrlToGoTo(url: String) = InfoData(contentState = ContentState.CONTENT, url = url)
 
-        fun createSnack(snackMessage: String) = InfoData(snackMessage = snackMessage)
+        fun createEmptyContent() = InfoData(contentState = ContentState.CONTENT)
     }
 
 }
