@@ -51,7 +51,7 @@ ext {
 
     // RX
     rxAndroidVersion            = '3.0.0'
-    rxJavaVersion               = '3.0.11'
+    rxJavaVersion               = '3.0.12'
     rxKotlinVersion             = '3.0.1'
     rxBindingVersion            = '4.0.0'
     rxAndroid                   = "io.reactivex.rxjava3:rxandroid:$rxAndroidVersion"
@@ -103,9 +103,9 @@ ext {
     rateBottomSheet             = 'com.mikhaellopez:ratebottomsheet:1.1.0'
 
     // CRASHLYTICS
-    firebaseAnalytics           = 'com.google.firebase:firebase-analytics:18.0.3'
-    firebaseCore                = 'com.google.firebase:firebase-core:18.0.3'
-    firebaseCrashlyticsNew      = 'com.google.firebase:firebase-crashlytics:17.4.1'
+    firebaseAnalytics           = 'com.google.firebase:firebase-analytics:19.0.0'
+    firebaseCore                = 'com.google.firebase:firebase-core:19.0.0'
+    firebaseCrashlyticsNew      = 'com.google.firebase:firebase-crashlytics:18.0.0'
 
 
     // DEPENDENCY CHECK STRATEGY
