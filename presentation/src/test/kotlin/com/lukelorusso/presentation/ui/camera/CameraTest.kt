@@ -25,7 +25,7 @@ class CameraTest : ABaseTest() {
             .await()
             .assertNoErrors()
             .assertComplete()
-            .assertValue { it.similarColor == "#6B8E23" }
+            .assertValue { it.colorHex == "#6B8E23" }
     }
 
     class CameraTestViewModel(private val getColor: GetColorUseCase) : ViewModel() {

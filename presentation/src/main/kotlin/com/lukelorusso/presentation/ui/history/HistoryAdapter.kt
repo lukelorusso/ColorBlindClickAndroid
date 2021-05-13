@@ -96,13 +96,13 @@ class HistoryAdapter(
 
                     val itemPreviewPanel = findViewById<View>(R.id.itemPreviewPanel)
                     (itemPreviewPanel.background as? GradientDrawable)
-                        ?.setColor(item.similarColor.hashColorToPixel())
+                        ?.setColor(item.colorHex.hashColorToPixel())
 
                     val itemName = findViewById<TextView>(R.id.itemName)
                     itemName.text = item.colorName
 
                     val itemPicker = findViewById<TextView>(R.id.itemPicker)
-                    itemPicker.text = item.similarColor
+                    itemPicker.text = item.colorHex
 
                     val itemDescription = findViewById<TextView>(R.id.itemDescription)
                     itemDescription.text = context.getLocalizedDateTime(item.timestamp)

@@ -15,15 +15,14 @@ class ColorMapper {
      * @param dto  Object to be transformed.
      * @return [Color] if valid [ColorResponseDTO]
      */
-    fun transform(dto: ColorResponseDTO): Color =
-            Color(
-                    dto.sourceColorHexCode,
-                    dto.rowsColors.first().colorHexCode,
-                    dto.rowsColors.first().colorName,
-                    dto.returnMsg,
-                    dto.rowsColors.first().similarityPercentage,
-                    System.currentTimeMillis()
-            )
+    fun transform(dto: ColorResponseDTO): Color = Color(
+        colorHex = dto.rowsColors.first().colorHexCode,
+        colorName = dto.rowsColors.first().colorName,
+        returnMsg = dto.returnMsg,
+        similarity = dto.rowsColors.first().similarityPercentage,
+        timestamp = System.currentTimeMillis(),
+        originalColor = dto.sourceColorHexCode
+    )
     //endregion
 
 }

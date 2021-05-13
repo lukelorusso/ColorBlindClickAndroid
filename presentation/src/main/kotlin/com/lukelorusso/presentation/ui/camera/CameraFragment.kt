@@ -338,13 +338,13 @@ class CameraFragment : ARenderFragment<CameraData>() {
         binding.inclToolbarColor.colorPreviewPanel.visibility = View.VISIBLE
 
         (binding.inclToolbarColor.colorPreviewPanel.background as? GradientDrawable)
-            ?.setColor(color.similarColor.hashColorToPixel())
+            ?.setColor(color.colorHex.hashColorToPixel())
 
         binding.inclToolbarColor.colorMainLine.visibility = View.VISIBLE
         binding.inclToolbarColor.colorMainLine.text = color.colorName
 
         binding.inclToolbarColor.colorTopLine.visibility = View.VISIBLE
-        val topLineText = color.similarColor
+        val topLineText = color.colorHex
         binding.inclToolbarColor.colorTopLine.text = topLineText
 
         binding.inclToolbarColor.colorBottomLine.visibility = View.VISIBLE

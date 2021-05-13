@@ -1,29 +1,30 @@
 package com.lukelorusso.domain.model
 
 data class Color(
-        val originalColor: String,
-        var similarColor: String,
+        var colorHex: String,
         var colorName: String,
         var returnMsg: String,
         var similarity: String,
-        var timestamp: Long
+        var timestamp: Long,
+        val originalColor: String?
 ) {
 
     /**
      * For searching purposes
      */
     override fun toString(): String {
-        return "$colorName #$similarColor"
+        return "$colorName #$colorHex"
     }
 
-    override fun equals(other: Any?) = other is Color && similarColor == other.similarColor
+    override fun equals(other: Any?) = other is Color && colorHex == other.colorHex
 
     override fun hashCode(): Int {
-        var result = similarColor.hashCode()
+        var result = colorHex.hashCode()
         result = 31 * result + colorName.hashCode()
         result = 31 * result + returnMsg.hashCode()
         result = 31 * result + similarity.hashCode()
         result = 31 * result + timestamp.hashCode()
+        originalColor?.also { result = 31 * result + it.hashCode() }
         return result
     }
 

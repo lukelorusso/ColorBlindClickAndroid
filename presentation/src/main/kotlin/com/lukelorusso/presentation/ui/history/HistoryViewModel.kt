@@ -27,7 +27,7 @@ class HistoryViewModel(
             .map { HistoryData.createData(it) }
 
     internal fun intentLoadData(param: Unit): Observable<HistoryData> = intentGetItems(param)
-            .startWithSingle(HistoryData.createLoading())
+            //.startWithSingle(HistoryData.createLoading())
             .onErrorReturn { onError(it) }
 
     internal fun intentRefreshData(param: Unit): Observable<HistoryData> = intentGetItems(param)

@@ -121,7 +121,7 @@ class PreviewDialogFragment : ARenderBottomSheetDialogFragment<PreviewDialogData
 
     private fun setColor(color: Color) =
         (binding.vPreviewPanel.background as? GradientDrawable)
-            ?.setColor(color.similarColor.hashColorToPixel())
+            ?.setColor(color.colorHex.hashColorToPixel())
 
     private val fabClickListener = View.OnClickListener {
         if (activity != null && this@PreviewDialogFragment.isAdded) sharePNG()
@@ -133,7 +133,7 @@ class PreviewDialogFragment : ARenderBottomSheetDialogFragment<PreviewDialogData
         binding.inclToolbarColor.colorPreviewPanel.visibility = View.GONE
 
         binding.inclToolbarColor.colorTopLine.visibility = View.VISIBLE
-        val topLineText = extraColor.similarColor
+        val topLineText = extraColor.colorHex
         binding.inclToolbarColor.colorTopLine.text = topLineText
 
         binding.inclToolbarColor.colorMainLine.visibility = View.VISIBLE
