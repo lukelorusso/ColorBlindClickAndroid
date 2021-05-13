@@ -21,7 +21,7 @@ In this project you can find
 
 * [AndroidX packages](https://developer.android.com/jetpack/androidx)
 
-* [Dagger for dependency injection](https://github.com/google/dagger)
+* [Koin for dependency injection](https://insert-koin.io/)
 
 * [RxJava and RxAndroid for reactive programming](https://github.com/ReactiveX/RxJava)
 
