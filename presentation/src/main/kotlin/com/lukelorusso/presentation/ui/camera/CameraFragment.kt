@@ -131,8 +131,8 @@ class CameraFragment : ARenderFragment<CameraData>() {
 
     // region RENDER
     override fun render(data: CameraData) {
-        showProgress(
-            data.contentState == ContentState.LOADING ||
+        showLoading(
+            show = data.contentState == ContentState.LOADING ||
                     data.contentState == ContentState.RETRY
         )
 
@@ -209,8 +209,8 @@ class CameraFragment : ARenderFragment<CameraData>() {
         subscribeIntents()
 
         binding.inclToolbarCameraBottom.toolbarCameraButton.setOnClickListener {
-            showProgress(true)
             camera?.also { camera ->
+                showLoading(true)
                 camera.takePicture().toBitmap().whenAvailable { bitmapPhoto ->
                     bitmapPhoto?.also { result ->
                         Handler(Looper.getMainLooper()).post {
@@ -381,13 +381,16 @@ class CameraFragment : ARenderFragment<CameraData>() {
         }
     }
 
-    private fun showProgress(show: Boolean) {
-        if (show) {
+    private fun showLoading(show: Boolean) =
+        showLoading(binding.inclToolbarCameraBottom.toolbarProgressBar.root, show)
+
+    override fun showLoading(loading: View, visible: Boolean) {
+        if (visible) {
             hideToolbarColor()
             binding.inclToolbarCameraBottom.toolbarCameraButton.visibility = View.GONE
-            binding.inclToolbarCameraBottom.toolbarProgressBar.visibility = View.VISIBLE
+            loading.visibility = View.VISIBLE
         } else {
-            binding.inclToolbarCameraBottom.toolbarProgressBar.visibility = View.GONE
+            loading.visibility = View.GONE
             binding.inclToolbarCameraBottom.toolbarCameraButton.visibility = View.VISIBLE
         }
     }

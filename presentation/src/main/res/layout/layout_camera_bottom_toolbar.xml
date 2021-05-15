@@ -30,8 +30,9 @@
         android:background="@color/transparent"
         app:srcCompat="@drawable/camera_big_white" />
 
-    <ProgressBar
+    <include
         android:id="@+id/toolbarProgressBar"
+        layout="@layout/layout_progress"
         android:layout_width="@dimen/progress_bar_dimens"
         android:layout_height="@dimen/progress_bar_dimens"
         android:layout_centerInParent="true"
