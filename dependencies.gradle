@@ -11,8 +11,8 @@ ext {
     androidApplicationId        = 'com.lukelorusso.colorblindclick'
 
     // APP VERSION
-    androidVersionCode          = 46
-    androidVersionName          = '2.4.1'
+    androidVersionCode          = 47
+    androidVersionName          = '2.4.2'
 
     // ANDROID VERSION
     androidCompileSdkVersion    = 30

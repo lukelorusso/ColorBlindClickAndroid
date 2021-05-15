@@ -1,6 +1,7 @@
 package com.lukelorusso.presentation.ui.main
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
@@ -64,6 +65,10 @@ class MainActivity : AppCompatActivity(), AskRateBottomSheet.ActionListener {
 
     fun applyImmersiveMode() {
         immersiveMode = isPageVisible(1)
+    }
+
+    @SuppressLint("MissingSuperCall") // No call for super(): bug on API Level > 11
+    override fun onSaveInstanceState(outState: Bundle) {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
