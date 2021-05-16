@@ -118,8 +118,8 @@ class CameraFragment : ARenderFragment<CameraData>() {
 
         viewModel.observe(
             viewLifecycleOwner,
-            dataObserver = { data -> data?.also { render(it) } },
-            eventObserver = { event -> event?.also { renderSnack(it.contentIfNotHandled()) } }
+            dataObserver = { data -> data?.let(::render) },
+            eventObserver = { event -> event?.let(::renderEvent) }
         )
 
         if (savedInstanceState != null) {

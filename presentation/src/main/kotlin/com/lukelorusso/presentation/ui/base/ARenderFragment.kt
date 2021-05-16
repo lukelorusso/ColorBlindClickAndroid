@@ -42,6 +42,9 @@ abstract class ARenderFragment<Data> : Fragment(), ADataView<Data> {
         messageError?.also { textErrorDescription.text = it }
     }
 
+    protected open fun renderEvent(event: Event<String>) =
+        renderSnack(event.contentIfNotHandled())
+
     protected open fun renderSnack(messageError: String?) {
         messageError?.also { message ->
             activity?.also { activity ->

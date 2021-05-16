@@ -41,6 +41,9 @@ abstract class ARenderBottomSheetDialogFragment<Data>(
         viewError.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
+    protected open fun renderEvent(event: Event<String>) =
+        renderSnack(event.contentIfNotHandled())
+
     protected open fun renderSnack(messageError: String?) {
         messageError?.also { message ->
             activity?.also { activity ->
@@ -77,7 +80,7 @@ abstract class ARenderBottomSheetDialogFragment<Data>(
                     with(behavior) {
                         isFitToContents = false
                         state =
-                            com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
+                            BottomSheetBehavior.STATE_EXPANDED
                     }
                     view.viewTreeObserver.removeOnGlobalLayoutListener(this)
                 }
