@@ -2,9 +2,7 @@ package com.lukelorusso.presentation.ui.history
 
 import android.app.Dialog
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.Window
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -21,12 +19,13 @@ import com.lukelorusso.presentation.ui.base.ARenderFragment
 import com.lukelorusso.presentation.ui.base.ContentState
 import com.lukelorusso.presentation.view.SwipeToDeleteHelperCallback
 import com.lukelorusso.presentation.view.VerticalSpaceItemDecoration
+import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class HistoryFragment : ARenderFragment<HistoryData>() {
+class HistoryFragment : ARenderFragment<HistoryData>(R.layout.fragment_history) {
 
     companion object {
         val TAG: String = HistoryFragment::class.java.simpleName
@@ -40,7 +39,7 @@ class HistoryFragment : ARenderFragment<HistoryData>() {
     private val intentDeleteAllItem = PublishSubject.create<Unit>()
 
     // View
-    private lateinit var binding: FragmentHistoryBinding // This property is only valid between onCreateView and onDestroyView
+    private val binding by viewBinding(FragmentHistoryBinding::bind)
     private val viewModel: HistoryViewModel by viewModel()
 
     // Properties
@@ -85,25 +84,14 @@ class HistoryFragment : ARenderFragment<HistoryData>() {
         ) // If there's a router, initialize it here
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        FragmentHistoryBinding.inflate(inflater, container, false).also { inflated ->
-            binding = inflated
-            return binding.root
-        }
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
 
         viewModel.observe(
             viewLifecycleOwner,
-            dataObserver = { data -> data?.also { render(it) } },
-            eventObserver = { event -> event?.also { renderSnack(it.contentIfNotHandled()) } }
+            dataObserver = { data -> data?.let(::render) },
+            eventObserver = { event -> event?.let(::renderEvent) }
         )
     }
 

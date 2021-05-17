@@ -2,6 +2,7 @@ package com.lukelorusso.presentation.ui.base
 
 import android.view.View
 import android.widget.TextView
+import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.snackbar.Snackbar
@@ -10,7 +11,8 @@ import com.google.android.material.snackbar.Snackbar
  * Copyright (C) 2021 Luke Lorusso
  * Licensed under the Apache License Version 2.0
  */
-abstract class ARenderFragment<Data> : Fragment(), ADataView<Data> {
+abstract class ARenderFragment<Data>(@LayoutRes contentLayoutId: Int = 0) :
+    Fragment(contentLayoutId), ADataView<Data> {
 
     //region RENDER
     protected open fun showLoading(loading: View, visible: Boolean) {
@@ -41,6 +43,9 @@ abstract class ARenderFragment<Data> : Fragment(), ADataView<Data> {
     fun renderError(textErrorDescription: TextView, messageError: String?) {
         messageError?.also { textErrorDescription.text = it }
     }
+
+    protected open fun renderEvent(event: Event<String>) =
+        renderSnack(event.contentIfNotHandled())
 
     protected open fun renderSnack(messageError: String?) {
         messageError?.also { message ->
