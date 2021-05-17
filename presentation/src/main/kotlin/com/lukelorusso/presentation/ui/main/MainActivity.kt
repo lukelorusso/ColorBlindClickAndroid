@@ -29,7 +29,7 @@ import org.koin.android.ext.android.inject
 class MainActivity : AppCompatActivity(), AskRateBottomSheet.ActionListener {
 
     // View
-    private lateinit var binding: ActivityMainBinding
+    private val binding by viewBinding(ActivityMainBinding::inflate)
     private val adapter by lazy { MainPagerAdapter(supportFragmentManager) }
 
     // Properties
@@ -73,10 +73,7 @@ class MainActivity : AppCompatActivity(), AskRateBottomSheet.ActionListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        ActivityMainBinding.inflate(layoutInflater).also { inflated ->
-            binding = inflated
-            setContentView(binding.root)
-        }
+        setContentView(binding.root)
         val duration = resources.getInteger(R.integer.splash_screen_duration)
         binding.splashScreenLogo.setAlphaWithAnimation(0F, 1F, duration.toLong()) {
             initializeActivity(savedInstanceState)

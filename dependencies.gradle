@@ -3,6 +3,7 @@ allprojects {
         google()
         mavenCentral()
         gradlePluginPortal()
+        maven { url 'https://jitpack.io' }
     }
 }
 
@@ -99,8 +100,9 @@ ext {
     // UI
     picasso                     = 'com.squareup.picasso:picasso:2.71828'
     fotoapparat                 = 'io.fotoapparat:fotoapparat:2.7.0'
-    verticalSeekBar             = 'com.lukelorusso:verticalseekbar:1.2.4'
+    verticalSeekBar             = 'com.github.lukelorusso:VerticalSeekBar:1.2.7'
     rateBottomSheet             = 'com.mikhaellopez:ratebottomsheet:1.1.0'
+    fragmentViewBinding         = 'com.github.Zhuinden:fragmentviewbindingdelegate-kt:1.0.0'
 
     // CRASHLYTICS
     firebaseAnalytics           = 'com.google.firebase:firebase-analytics:19.0.0'

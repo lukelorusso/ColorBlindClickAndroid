@@ -1,9 +1,7 @@
 package com.lukelorusso.presentation.ui.info
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.lukelorusso.presentation.BuildConfig
@@ -14,10 +12,11 @@ import com.lukelorusso.presentation.extensions.dpToPixel
 import com.lukelorusso.presentation.helper.TrackerHelper
 import com.lukelorusso.presentation.ui.base.ARenderFragment
 import com.lukelorusso.presentation.view.VerticalSpaceItemDecoration
+import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class InfoFragment : ARenderFragment<InfoData>() {
+class InfoFragment : ARenderFragment<InfoData>(R.layout.fragment_info) {
 
     companion object {
         val TAG: String = InfoFragment::class.java.simpleName
@@ -26,7 +25,7 @@ class InfoFragment : ARenderFragment<InfoData>() {
     }
 
     // View
-    private lateinit var binding: FragmentInfoBinding // This property is only valid between onCreateView and onDestroyView
+    private val binding by viewBinding(FragmentInfoBinding::bind)
     private val viewModel: InfoViewModel by viewModel()
 
     // Properties
@@ -44,17 +43,6 @@ class InfoFragment : ARenderFragment<InfoData>() {
             requireActivity() as AppCompatActivity,
             fragment = this
         ) // If there's a router, initialize it here
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        FragmentInfoBinding.inflate(inflater, container, false).also { inflated ->
-            binding = inflated
-            return binding.root
-        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

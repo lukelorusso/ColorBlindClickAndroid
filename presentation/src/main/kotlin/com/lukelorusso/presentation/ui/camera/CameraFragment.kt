@@ -5,9 +5,7 @@ import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import com.lukelorusso.domain.model.Color
 import com.lukelorusso.domain.usecase.GetColorUseCase
@@ -19,6 +17,7 @@ import com.lukelorusso.presentation.helper.TrackerHelper
 import com.lukelorusso.presentation.ui.base.ARenderFragment
 import com.lukelorusso.presentation.ui.base.ContentState
 import com.lukelorusso.presentation.ui.main.MainActivity
+import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import io.fotoapparat.Fotoapparat
 import io.fotoapparat.configuration.CameraConfiguration
 import io.fotoapparat.parameter.Flash
@@ -30,7 +29,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 import io.fotoapparat.log.Logger as FotoApparatLogger
 
-class CameraFragment : ARenderFragment<CameraData>() {
+class CameraFragment : ARenderFragment<CameraData>(R.layout.fragment_camera) {
 
     companion object {
         val TAG: String = CameraFragment::class.java.simpleName
@@ -48,7 +47,7 @@ class CameraFragment : ARenderFragment<CameraData>() {
     private val intentSetLastLensPosition = PublishSubject.create<Int>()
 
     // View
-    private lateinit var binding: FragmentCameraBinding // This property is only valid between onCreateView and onDestroyView
+    private val binding by viewBinding(FragmentCameraBinding::bind)
     private val viewModel: CameraViewModel by viewModel()
     private val logger by inject<Logger>()
 
@@ -99,17 +98,6 @@ class CameraFragment : ARenderFragment<CameraData>() {
             requireActivity() as AppCompatActivity,
             fragment = this
         ) // If there's a router, initialize it here
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        FragmentCameraBinding.inflate(inflater, container, false).also { inflated ->
-            binding = inflated
-            return binding.root
-        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

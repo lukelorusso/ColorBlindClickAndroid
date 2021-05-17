@@ -112,6 +112,7 @@ dependencies {
     implementation verticalSeekBar
     implementation rateBottomSheet
     implementation hfRecyclerView
+    implementation fragmentViewBinding
 
     // CRASHLYTICS
     implementation firebaseCore
