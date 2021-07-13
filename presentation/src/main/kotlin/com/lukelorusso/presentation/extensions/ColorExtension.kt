@@ -3,7 +3,6 @@ package com.lukelorusso.presentation.extensions
 import com.lukelorusso.domain.model.Color
 import java.math.BigDecimal
 import java.math.RoundingMode
-import java.util.*
 
 const val LINE_BREAK = "\n"
 
@@ -27,7 +26,7 @@ fun Int.pixelColorToHash(): String {
  * HASH: #5D362F -> PIXEL: -10668497
  */
 fun String.hashColorToPixel(): Int =
-        android.graphics.Color.parseColor(this)
+    android.graphics.Color.parseColor(this)
 
 /**
  * HASH: #5D362F -> [36.470588235294116, 21.176470588235293, 18.431372549019606]
@@ -42,7 +41,7 @@ fun String.hashColorToPercent(): List<Double> {
 
 fun Color.sharableDescription(credits: String): String {
     return (this.colorName + LINE_BREAK
-            + this.colorHex.toUpperCase(Locale.getDefault()) + LINE_BREAK
+            + this.colorHex.uppercase() + LINE_BREAK
             + this.toRGBPercentString() + LINE_BREAK
             + LINE_BREAK
             + credits)
