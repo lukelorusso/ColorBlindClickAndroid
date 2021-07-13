@@ -57,7 +57,7 @@ abstract class ARenderBottomSheetDialogFragment<Data>(
     }
     //endregion
 
-    override fun getTheme(): Int = R.style.BottomSheetDialogTheme
+    override fun getTheme(): Int = R.style.BottomSheetDialog
 
     protected val behavior by lazy {
         (dialog as BottomSheetDialog).behavior
