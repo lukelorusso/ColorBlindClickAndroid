@@ -2,8 +2,8 @@
 apply from: 'dependencies.gradle'
 
 buildscript {
-    ext.gradle_version = '4.2.1'
-    ext.kotlin_version = '1.5.0'
+    ext.gradle_version = '4.2.2'
+    ext.kotlin_version = '1.5.20'
     repositories {
         google()
         mavenCentral()
@@ -13,8 +13,8 @@ buildscript {
         classpath "com.android.tools.build:gradle:$gradle_version"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-android-extensions:$kotlin_version"
-        classpath 'com.google.gms:google-services:4.3.5'
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.6.0'
+        classpath 'com.google.gms:google-services:4.3.8'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.7.1'
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.38.0'
     }
 }
