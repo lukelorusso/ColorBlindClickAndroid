@@ -60,13 +60,13 @@
                     android:id="@+id/tvToolbarTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/history_white"
                     android:drawablePadding="5dp"
                     android:padding="5dp"
                     android:text="@string/color_history"
                     android:textColor="@color/gray_E5E5E5"
                     android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    app:drawableStartCompat="@drawable/history_white" />
 
             </LinearLayout>
 
