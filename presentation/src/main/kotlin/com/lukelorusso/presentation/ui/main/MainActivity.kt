@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity(), AskRateBottomSheet.ActionListener {
 
     // View
     private val binding by viewBinding(ActivityMainBinding::inflate)
-    private val adapter by lazy { MainPagerAdapter(supportFragmentManager) }
+    private val pagerAdapter by lazy { MainPagerAdapter(supportFragmentManager) }
 
     // Properties
     private val trackerHelper by inject<TrackerHelper>()
@@ -45,11 +45,12 @@ class MainActivity : AppCompatActivity(), AskRateBottomSheet.ActionListener {
 
     companion object {
         private const val PERMISSIONS_REQUEST_CAMERA = 10107
+        private const val OFFSCREEN_PAGE_LIMIT = 3
     }
 
     override fun onBackPressed() {
         when (val f =
-            adapter.getItem(binding.activityViewpager.currentItem)) { // pick the current fragment
+            pagerAdapter.getItem(binding.viewPager.currentItem)) { // pick the current fragment
             is InfoFragment -> if (!f.backPressHandled()) finish()
             is CameraFragment -> if (!f.backPressHandled()) finish()
             is HistoryFragment -> if (!f.backPressHandled()) finish()
@@ -75,14 +76,14 @@ class MainActivity : AppCompatActivity(), AskRateBottomSheet.ActionListener {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         val duration = resources.getInteger(R.integer.splash_screen_duration)
-        binding.splashScreenLogo.setAlphaWithAnimation(0F, 1F, duration.toLong()) {
+        binding.splash.logo.setAlphaWithAnimation(0F, 1F, duration.toLong()) {
             initializeActivity(savedInstanceState)
         }
     }
 
     private fun initializeActivity(savedInstanceState: Bundle?) {
         savedInstanceState?.also {
-            adapter.updateFragmentManager(supportFragmentManager)
+            pagerAdapter.updateFragmentManager(supportFragmentManager)
         }
 
         checkPermission()
@@ -140,65 +141,65 @@ class MainActivity : AppCompatActivity(), AskRateBottomSheet.ActionListener {
 
     @Suppress("SameParameterValue")
     private fun isPageVisible(position: Int): Boolean =
-        !isBrokenViewVisible() && binding.activityViewpager.currentItem == position
+        !isBrokenViewVisible() && binding.viewPager.currentItem == position
 
     private fun isBrokenViewVisible(): Boolean =
-        binding.activityBrokenView.visibility == View.VISIBLE
-                && binding.activityViewpager.visibility == View.GONE
+        binding.brokenScreen.root.visibility == View.VISIBLE
+                && binding.viewPager.visibility == View.GONE
 
     private fun showBrokenView() {
         immersiveMode = false
-        binding.splashScreen.visibility = View.GONE
-        binding.activityViewpager.visibility = View.GONE
-        binding.activityBrokenView.visibility = View.VISIBLE
-        binding.activityPermissionsLabel.text =
-            resources.getString(R.string.permissions_label).toHtml()
-        binding.activityBrokenView.setOnClickListener { v ->
-            if (ContextCompat.checkSelfPermission(v.context, Manifest.permission.CAMERA)
-                == PackageManager.PERMISSION_GRANTED
-            ) { // permission is granted
-                hideBrokenView()
-            } else {
-                gotoAppDetailsSettings()
+        binding.splash.root.visibility = View.GONE
+        binding.viewPager.visibility = View.GONE
+        binding.brokenScreen.apply {
+            description.text = resources.getString(R.string.permissions_label).toHtml()
+            root.visibility = View.VISIBLE
+            root.setOnClickListener { view ->
+                if (ContextCompat.checkSelfPermission(view.context, Manifest.permission.CAMERA)
+                    == PackageManager.PERMISSION_GRANTED
+                ) { // permission is granted
+                    hideBrokenView()
+                } else {
+                    gotoAppDetailsSettings()
+                }
             }
         }
     }
 
     private fun hideBrokenView() {
         immersiveMode = true
-        binding.activityBrokenView.visibility = View.GONE
-        binding.activityViewpager.visibility = View.VISIBLE
-        initViewPager()
+        binding.brokenScreen.root.visibility = View.GONE
+        binding.viewPager.visibility = View.VISIBLE
+        initializeViewPager()
     }
 
-    private fun initViewPager() {
-        binding.activityViewpager.adapter = adapter
-        binding.activityViewpager.offscreenPageLimit = 3
-        binding.activityViewpager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrollStateChanged(state: Int) {
-                if (state == ViewPager.SCROLL_STATE_IDLE) { // if scroll is finished
-                    val newPage = binding.activityViewpager.currentItem
-                    immersiveMode = newPage == 1 // only camera page is immersive
-                    if (newPage == 2 && newPage != lastPage) {
-                        val f = adapter.getItem(newPage)
-                        (f as? HistoryFragment)?.reloadData()
+    private fun initializeViewPager() {
+        binding.viewPager.apply {
+            adapter = pagerAdapter
+            offscreenPageLimit = OFFSCREEN_PAGE_LIMIT
+            addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+                override fun onPageScrollStateChanged(state: Int) {
+                    if (state == ViewPager.SCROLL_STATE_IDLE) { // if scroll is finished
+                        val newPage = currentItem
+                        immersiveMode = newPage == 1 // only camera page is immersive
+                        if (newPage == 2 && newPage != lastPage) {
+                            val f = pagerAdapter.getItem(newPage)
+                            (f as? HistoryFragment)?.reloadData()
+                        }
+                        direction = when (newPage) {
+                            0 -> MaybeScrollableViewPager.SwipeDirection.RIGHT // info page cannot scroll left... this will hide the swiping feedback when you can't scroll anymore
+                            pagerAdapter.count - 1 -> MaybeScrollableViewPager.SwipeDirection.LEFT // history page cannot scroll right, because swipe right gesture is set to delete an item from history
+                            else -> MaybeScrollableViewPager.SwipeDirection.ALL
+                        }
+                        lastPage = newPage
                     }
-                    when (newPage) {
-                        0 -> binding.activityViewpager.direction =
-                            MaybeScrollableViewPager.SwipeDirection.RIGHT // info page cannot scroll left... this will hide the swiping feedback when you can't scroll anymore
-                        adapter.count - 1 -> binding.activityViewpager.direction =
-                            MaybeScrollableViewPager.SwipeDirection.LEFT // history page cannot scroll right, because swipe right gesture is set to delete an item from history
-                        else -> binding.activityViewpager.direction =
-                            MaybeScrollableViewPager.SwipeDirection.ALL
-                    }
-                    lastPage = newPage
                 }
-            }
 
-            override fun onPageScrolled(p: Int, pOffset: Float, pOffsetPixels: Int) {}
+                override fun onPageScrolled(p: Int, pOffset: Float, pOffsetPixels: Int) {}
 
-            override fun onPageSelected(p: Int) {}
-        })
+                override fun onPageSelected(p: Int) {}
+            })
+        }
         gotoCamera()
 
         // Show bottom sheet if meets conditions
@@ -209,19 +210,19 @@ class MainActivity : AppCompatActivity(), AskRateBottomSheet.ActionListener {
     }
 
     fun hideSplashScreen() {
-        binding.splashScreen.visibility = View.GONE
+        binding.splash.root.visibility = View.GONE
     }
 
     fun gotoInfo() {
-        binding.activityViewpager.currentItem = 0
+        binding.viewPager.currentItem = 0
     }
 
     fun gotoCamera() {
-        binding.activityViewpager.currentItem = 1
+        binding.viewPager.currentItem = 1
     }
 
     fun gotoHistory() {
-        binding.activityViewpager.currentItem = 2
+        binding.viewPager.currentItem = 2
     }
 
     fun showColorPreviewDialog(color: Color) =
