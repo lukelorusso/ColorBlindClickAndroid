@@ -74,7 +74,7 @@ class CameraFragment : ARenderFragment<CameraData>(R.layout.fragment_camera) {
 
     fun backPressHandled(): Boolean {
         return when {
-            isToolbarColorVisible() -> {
+            !isDetached && isToolbarColorVisible() -> {
                 hideToolbarColor()
                 true
             }

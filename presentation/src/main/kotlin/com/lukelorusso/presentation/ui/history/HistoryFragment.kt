@@ -65,14 +65,15 @@ class HistoryFragment : ARenderFragment<HistoryData>(R.layout.fragment_history) 
 
     fun backPressHandled(): Boolean {
         return when {
-            isSearchingMode -> {
+            !isDetached && isSearchingMode -> {
                 isSearchingMode = false
                 true
             }
-            else -> {
+            !isDetached -> {
                 viewModel.gotoCamera()
                 true
             }
+            else -> false
         }
     }
 

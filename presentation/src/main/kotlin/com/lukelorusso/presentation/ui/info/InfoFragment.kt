@@ -33,8 +33,13 @@ class InfoFragment : ARenderFragment<InfoData>(R.layout.fragment_info) {
     private val infoAdapter = InfoAdapter(withHeader = false, withFooter = false)
 
     fun backPressHandled(): Boolean {
-        viewModel.gotoCamera()
-        return true
+        return when {
+            !isDetached -> {
+                viewModel.gotoCamera()
+                true
+            }
+            else -> false
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

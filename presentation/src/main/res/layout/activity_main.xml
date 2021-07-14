@@ -54,7 +54,7 @@
             android:layout_width="192dp"
             android:layout_height="192dp"
             android:contentDescription="@string/app_name"
-            app:srcCompat="@drawable/ic_launcher_splash" />
+            android:src="@drawable/ic_launcher_splash" />
 
     </LinearLayout>
 

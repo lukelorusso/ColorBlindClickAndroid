@@ -12,12 +12,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:src="@drawable/error_view_cloud"
         app:layout_constraintBottom_toTopOf="@+id/textErrorOops"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed"
-        app:srcCompat="@drawable/error_view_cloud"
         app:tint="@color/color_accent" />
 
     <TextView
