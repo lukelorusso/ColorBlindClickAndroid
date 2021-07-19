@@ -16,9 +16,9 @@ import java.util.*
 
 @SuppressLint("ObsoleteSdkInt")
 fun Activity.enableImmersiveMode(
-        hideNavBar: Boolean,
-        hideStatusBar: Boolean,
-        resize: Boolean
+    hideNavBar: Boolean,
+    hideStatusBar: Boolean,
+    resize: Boolean
 ) {
     if (!hideNavBar && !hideStatusBar) {
         disableImmersiveMode()
@@ -48,10 +48,10 @@ fun Context.startActivityWithFlagNewTask(intent: Intent) {
 }
 
 fun Context.dpToPixel(dp: Float): Float =
-        dp * (resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
+    dp * (resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
 
 fun Context.pixelToDp(px: Int): Float =
-        px / (resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
+    px / (resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
 
 fun Context.isPermissionGranted(permission: String): Boolean {
     val rc = ActivityCompat.checkSelfPermission(this, permission)
@@ -61,8 +61,8 @@ fun Context.isPermissionGranted(permission: String): Boolean {
 fun Context?.getDeviceUdid(): String {
     return this?.run {
         Settings.System.getString(
-                this.contentResolver,
-                Settings.Secure.ANDROID_ID
+            this.contentResolver,
+            Settings.Secure.ANDROID_ID
         )
     } ?: ""
 
@@ -81,7 +81,7 @@ fun Context.gotoAppDetailsSettings() {
 
 fun Context.getStatusBarHeight(): Int {
     return resources.getDimensionPixelSize(
-            resources.getIdentifier("status_bar_height", "dimen", "android")
+        resources.getIdentifier("status_bar_height", "dimen", "android")
     )
 }
 

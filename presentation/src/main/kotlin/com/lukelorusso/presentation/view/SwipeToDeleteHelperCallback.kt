@@ -7,13 +7,13 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 
 abstract class SwipeToDeleteHelperCallback(
-        private val hasHeader: Boolean,
-        private val hasFooter: Boolean
+    private val hasHeader: Boolean,
+    private val hasFooter: Boolean
 ) : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
 
     override fun getMovementFlags(
-            recyclerView: RecyclerView,
-            viewHolder: RecyclerView.ViewHolder
+        recyclerView: RecyclerView,
+        viewHolder: RecyclerView.ViewHolder
     ): Int {
         /**
          * To disable "swipe" for specific item return 0 here.
@@ -27,30 +27,30 @@ abstract class SwipeToDeleteHelperCallback(
     }
 
     override fun onMove(
-            recyclerView: RecyclerView,
-            viewHolder: RecyclerView.ViewHolder,
-            target: RecyclerView.ViewHolder
+        recyclerView: RecyclerView,
+        viewHolder: RecyclerView.ViewHolder,
+        target: RecyclerView.ViewHolder
     ): Boolean {
         return true
     }
 
     override fun onChildDrawOver(
-            c: Canvas,
-            recyclerView: RecyclerView,
-            viewHolder: RecyclerView.ViewHolder,
-            dX: Float,
-            dY: Float,
-            actionState: Int,
-            isCurrentlyActive: Boolean
+        c: Canvas,
+        recyclerView: RecyclerView,
+        viewHolder: RecyclerView.ViewHolder,
+        dX: Float,
+        dY: Float,
+        actionState: Int,
+        isCurrentlyActive: Boolean
     ) {
         ItemTouchHelper.Callback.getDefaultUIUtil().onDrawOver(
-                c,
-                recyclerView,
-                viewHolder.getForegroundView(),
-                dX,
-                dY,
-                actionState,
-                isCurrentlyActive
+            c,
+            recyclerView,
+            viewHolder.getForegroundView(),
+            dX,
+            dY,
+            actionState,
+            isCurrentlyActive
         )
     }
 
@@ -60,24 +60,24 @@ abstract class SwipeToDeleteHelperCallback(
 
     // Let's draw our delete view
     override fun onChildDraw(
-            canvas: Canvas,
-            recyclerView: RecyclerView,
-            viewHolder: RecyclerView.ViewHolder,
-            dX: Float,
-            dY: Float,
-            actionState: Int,
-            isCurrentlyActive: Boolean
+        canvas: Canvas,
+        recyclerView: RecyclerView,
+        viewHolder: RecyclerView.ViewHolder,
+        dX: Float,
+        dY: Float,
+        actionState: Int,
+        isCurrentlyActive: Boolean
     ) {
         val isCancelled = dX == 0f && !isCurrentlyActive
         viewHolder.getBackgroundView().visibility = if (isCancelled) View.GONE else View.VISIBLE
         ItemTouchHelper.Callback.getDefaultUIUtil().onDraw(
-                canvas,
-                recyclerView,
-                viewHolder.getForegroundView(),
-                dX,
-                dY,
-                actionState,
-                isCurrentlyActive
+            canvas,
+            recyclerView,
+            viewHolder.getForegroundView(),
+            dX,
+            dY,
+            actionState,
+            isCurrentlyActive
         )
     }
 
@@ -92,13 +92,13 @@ abstract class SwipeToDeleteHelperCallback(
      * If you need to change layout's views position, remember to update this code!
      */
     private fun RecyclerView.ViewHolder.getBackgroundView() =
-            (this as? DoubleGroundViewHolder)?.viewBackground
-                    ?: ((this.itemView as ViewGroup).getChildAt(0) as ViewGroup)
+        (this as? DoubleGroundViewHolder)?.viewBackground
+            ?: ((this.itemView as ViewGroup).getChildAt(0) as ViewGroup)
 
     /**
      * Same as before
      */
     private fun RecyclerView.ViewHolder.getForegroundView() =
-            (this as? DoubleGroundViewHolder)?.viewForeground
-                    ?: ((this.itemView as ViewGroup).getChildAt(1) as ViewGroup)
+        (this as? DoubleGroundViewHolder)?.viewForeground
+            ?: ((this.itemView as ViewGroup).getChildAt(1) as ViewGroup)
 }

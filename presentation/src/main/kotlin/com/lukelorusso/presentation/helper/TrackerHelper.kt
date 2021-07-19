@@ -36,8 +36,8 @@ class TrackerHelper
             activity?.also {
                 //firebaseAnalytics.setCurrentScreen(it, action, null)
                 firebaseAnalytics.logEvent(
-                        FirebaseAnalytics.Event.SCREEN_VIEW,
-                        Bundle().apply { putString(FirebaseAnalytics.Param.SCREEN_NAME, action) }
+                    FirebaseAnalytics.Event.SCREEN_VIEW,
+                    Bundle().apply { putString(FirebaseAnalytics.Param.SCREEN_NAME, action) }
                 )
             }
         }

@@ -23,39 +23,39 @@ class HistoryViewModel(
 ) : AViewModel<HistoryData>(errorMessageFactory) {
 
     private fun intentGetItems(param: Unit): Observable<HistoryData> = getColorList.execute(param)
-            .toObservable()
-            .map { HistoryData.createData(it) }
+        .toObservable()
+        .map { HistoryData.createData(it) }
 
     internal fun intentLoadData(param: Unit): Observable<HistoryData> = intentGetItems(param)
-            //.startWithSingle(HistoryData.createLoading())
-            .onErrorReturn { onError(it) }
+        //.startWithSingle(HistoryData.createLoading())
+        .onErrorReturn { onError(it) }
 
     internal fun intentRefreshData(param: Unit): Observable<HistoryData> = intentGetItems(param)
-            .delay(200, TimeUnit.MILLISECONDS)
-            .onErrorReturn { onError(it) }
+        .delay(200, TimeUnit.MILLISECONDS)
+        .onErrorReturn { onError(it) }
 
     internal fun intentRetryData(param: Unit): Observable<HistoryData> = intentGetItems(param)
-            .startWithSingle(HistoryData.createRetryLoading())
-            .onErrorResumeNext(DelayFunction<HistoryData>(scheduler))
-            .onErrorReturn { onError(it) }
+        .startWithSingle(HistoryData.createRetryLoading())
+        .onErrorResumeNext(DelayFunction<HistoryData>(scheduler))
+        .onErrorReturn { onError(it) }
 
     internal fun intentDeleteItem(param: Color): Observable<HistoryData> =
-            deleteColor.execute(param)
-                    .toSingleDefault(Unit)
-                    .toObservable()
-                    .map { HistoryData.createDeletedItem(param) }
-                    .delay(450, TimeUnit.MILLISECONDS)
-                    .startWithSingle(HistoryData.createLoading())
-                    .onErrorReturn { onError(it) }
+        deleteColor.execute(param)
+            .toSingleDefault(Unit)
+            .toObservable()
+            .map { HistoryData.createDeletedItem(param) }
+            .delay(450, TimeUnit.MILLISECONDS)
+            .startWithSingle(HistoryData.createLoading())
+            .onErrorReturn { onError(it) }
 
     internal fun intentDeleteAllItems(param: Unit): Observable<HistoryData> =
-            deleteAllColors.execute(param)
-                    .toSingleDefault(Unit)
-                    .toObservable()
-                    .map { HistoryData.createDeletedAllItem() }
-                    .delay(450, TimeUnit.MILLISECONDS)
-                    .startWithSingle(HistoryData.createLoading())
-                    .onErrorReturn { onError(it) }
+        deleteAllColors.execute(param)
+            .toSingleDefault(Unit)
+            .toObservable()
+            .map { HistoryData.createDeletedAllItem() }
+            .delay(450, TimeUnit.MILLISECONDS)
+            .startWithSingle(HistoryData.createLoading())
+            .onErrorReturn { onError(it) }
 
     internal fun gotoCamera() = router.routeToCamera()
 

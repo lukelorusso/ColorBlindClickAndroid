@@ -20,13 +20,13 @@ import java.util.concurrent.Executors
  * Licensed under the Apache License Version 2.0
  */
 class SharePNGTask(
-        private val context: Context,
-        private val colorPreview: View,
-        private val applicationId: String,
-        private val dimen: Int,
-        private val description: String,
-        private val popupLabel: String,
-        private val listener: ActionListener?
+    private val context: Context,
+    private val colorPreview: View,
+    private val applicationId: String,
+    private val dimen: Int,
+    private val description: String,
+    private val popupLabel: String,
+    private val listener: ActionListener?
 ) {
 
     interface ActionListener {
@@ -55,19 +55,19 @@ class SharePNGTask(
     private fun doInBackground(): Boolean {
         try {
             val cachePath = File(
-                    context.externalCacheDir,
-                    CACHE_DIR
+                context.externalCacheDir,
+                CACHE_DIR
             )
             val mkdirs = cachePath.mkdirs()
             val sharableBitmap: Bitmap?
             if (mkdirs || cachePath.exists()) {
                 val stream = FileOutputStream(
-                        "$cachePath/${SHARED_COLOR_FILENAME}"
+                    "$cachePath/${SHARED_COLOR_FILENAME}"
                 )
                 sharableBitmap = generateSharablePNG(
-                        stream,
-                        colorPreview,
-                        dimen
+                    stream,
+                    colorPreview,
+                    dimen
                 )
                 stream.close()
             } else
@@ -76,22 +76,22 @@ class SharePNGTask(
             val contentUri: Uri?
             if (sharableBitmap != null) {
                 val file = File(
-                        cachePath,
-                        SHARED_COLOR_FILENAME
+                    cachePath,
+                    SHARED_COLOR_FILENAME
                 )
                 contentUri = FileProvider.getUriForFile(
-                        context,
-                        applicationId,
-                        file
+                    context,
+                    applicationId,
+                    file
                 )
             } else
                 return false
 
             if (contentUri != null) {
                 context.shareImageAndText(
-                        contentUri,
-                        description,
-                        popupLabel
+                    contentUri,
+                    description,
+                    popupLabel
                 )
             } else
                 return false
@@ -104,9 +104,9 @@ class SharePNGTask(
     }
 
     private fun generateSharablePNG(
-            stream: FileOutputStream,
-            colorPreview: View,
-            dimen: Int
+        stream: FileOutputStream,
+        colorPreview: View,
+        dimen: Int
     ): Bitmap? {
         var bitmap = colorPreview.getBitmap()
         if (bitmap.height > dimen) bitmap = bitmap.getScaled(dimen, dimen, false)

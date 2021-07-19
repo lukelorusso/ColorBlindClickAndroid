@@ -20,10 +20,10 @@ data class HistoryData(
             HistoryData(contentState = ContentState.CONTENT, list = data)
 
         fun createDeletedItem(item: Color) =
-                HistoryData(contentState = ContentState.CONTENT, deletedItem = item)
+            HistoryData(contentState = ContentState.CONTENT, deletedItem = item)
 
         fun createDeletedAllItem() =
-                HistoryData(contentState = ContentState.CONTENT, deletedAllItems = true)
+            HistoryData(contentState = ContentState.CONTENT, deletedAllItems = true)
 
         fun createIsPersistenceException(isPersistenceException: Boolean? = null) = HistoryData(
             contentState = ContentState.CONTENT,

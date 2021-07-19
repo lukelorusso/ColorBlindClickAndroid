@@ -48,7 +48,7 @@ class CameraFragment : ARenderFragment<CameraData>(R.layout.fragment_camera) {
 
     // View
     private val binding by viewBinding(FragmentCameraBinding::bind)
-    private val viewModel: CameraViewModel by viewModel()
+    private val viewModel by viewModel<CameraViewModel>()
     private val logger by inject<Logger>()
 
     // Properties
@@ -74,7 +74,7 @@ class CameraFragment : ARenderFragment<CameraData>(R.layout.fragment_camera) {
 
     fun backPressHandled(): Boolean {
         return when {
-            !isDetached && isToolbarColorVisible() -> {
+            isActive() && isToolbarColorVisible() -> {
                 hideToolbarColor()
                 true
             }

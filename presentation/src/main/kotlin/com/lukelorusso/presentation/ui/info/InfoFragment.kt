@@ -9,6 +9,7 @@ import com.lukelorusso.presentation.R
 import com.lukelorusso.presentation.databinding.FragmentInfoBinding
 import com.lukelorusso.presentation.extensions.applyStatusBarMarginTopOnToolbar
 import com.lukelorusso.presentation.extensions.dpToPixel
+import com.lukelorusso.presentation.extensions.isActive
 import com.lukelorusso.presentation.helper.TrackerHelper
 import com.lukelorusso.presentation.ui.base.ARenderFragment
 import com.lukelorusso.presentation.view.VerticalSpaceItemDecoration
@@ -26,7 +27,7 @@ class InfoFragment : ARenderFragment<InfoData>(R.layout.fragment_info) {
 
     // View
     private val binding by viewBinding(FragmentInfoBinding::bind)
-    private val viewModel: InfoViewModel by viewModel()
+    private val viewModel by viewModel<InfoViewModel>()
 
     // Properties
     private val trackerHelper by inject<TrackerHelper>()
@@ -34,7 +35,7 @@ class InfoFragment : ARenderFragment<InfoData>(R.layout.fragment_info) {
 
     fun backPressHandled(): Boolean {
         return when {
-            !isDetached -> {
+            isActive() -> {
                 viewModel.gotoCamera()
                 true
             }

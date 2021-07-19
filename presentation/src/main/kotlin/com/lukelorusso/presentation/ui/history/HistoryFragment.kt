@@ -40,7 +40,7 @@ class HistoryFragment : ARenderFragment<HistoryData>(R.layout.fragment_history) 
 
     // View
     private val binding by viewBinding(FragmentHistoryBinding::bind)
-    private val viewModel: HistoryViewModel by viewModel()
+    private val viewModel by viewModel<HistoryViewModel>()
 
     // Properties
     private val trackerHelper by inject<TrackerHelper>()
@@ -65,11 +65,11 @@ class HistoryFragment : ARenderFragment<HistoryData>(R.layout.fragment_history) 
 
     fun backPressHandled(): Boolean {
         return when {
-            !isDetached && isSearchingMode -> {
+            isActive() && isSearchingMode -> {
                 isSearchingMode = false
                 true
             }
-            !isDetached -> {
+            isActive() -> {
                 viewModel.gotoCamera()
                 true
             }

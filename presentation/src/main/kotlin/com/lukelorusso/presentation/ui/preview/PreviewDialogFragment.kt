@@ -45,7 +45,7 @@ class PreviewDialogFragment : ARenderBottomSheetDialogFragment<PreviewDialogData
 
     // View
     private lateinit var binding: DialogFragmentPreviewBinding // This property is only valid between onCreateView and onDestroyView
-    private val viewModel: PreviewDialogViewModel by viewModel()
+    private val viewModel by viewModel<PreviewDialogViewModel>()
 
     // Properties
     private val gson = Gson()
