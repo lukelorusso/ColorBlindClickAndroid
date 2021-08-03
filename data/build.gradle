@@ -5,15 +5,18 @@ apply plugin: 'com.github.ben-manes.versions'
 
 android {
     compileSdkVersion androidCompileSdkVersion
+
     defaultConfig {
         minSdkVersion androidMinSdkVersion
         testInstrumentationRunner packageAndroidJUnitRunner
     }
+
     sourceSets {
         androidTest.java.srcDirs += 'src/androidTest/kotlin'
         main.java.srcDirs += 'src/main/kotlin'
         test.java.srcDirs += 'src/test/kotlin'
     }
+
     buildTypes {
         debug {
             minifyEnabled true
@@ -29,6 +32,15 @@ android {
             minifyEnabled false
         }
         testBuildType 'debugTest'
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_11
     }
 }
 
