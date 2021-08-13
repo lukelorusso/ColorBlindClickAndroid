@@ -1,6 +1,7 @@
 package com.lukelorusso.presentation.extensions
 
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.graphics.Matrix
 
 private var scaleMatrix: Matrix? = null
@@ -48,4 +49,36 @@ fun Bitmap.getScaled(
     }
 
     return b
+}
+
+/**
+ * @param averageNeighbourhood is the number of pixel to average next to the central pixel:
+ * - if 0 only the central pixel will determine the color
+ * - if 1 the color will be determined by the 3x3 pixel matrix = average of 9 pixel colors
+ * - if 2 the color will be determined by the 5x5 pixel matrix = average of 25 pixel colors
+ * ... and so on
+ */
+fun Bitmap.getAveragePixel(averageNeighbourhood: Int = 0): Int {
+    var redBucket: Long = 0
+    var greenBucket: Long = 0
+    var blueBucket: Long = 0
+    var pixelCount: Long = 0
+    val centralWidth = width / 2
+    val centralHeight = height / 2
+
+    for (width in (centralWidth - averageNeighbourhood)..(centralWidth + averageNeighbourhood)) {
+        for (height in (centralHeight - averageNeighbourhood)..(centralHeight + averageNeighbourhood)) {
+            pixelCount++
+            val pixel = getPixel(width, height)
+            redBucket += Color.red(pixel)
+            greenBucket += Color.green(pixel)
+            blueBucket += Color.blue(pixel)
+        }
+    }
+
+    return Color.rgb(
+        (redBucket / pixelCount).toInt(),
+        (greenBucket / pixelCount).toInt(),
+        (blueBucket / pixelCount).toInt()
+    )
 }

@@ -203,10 +203,7 @@ class CameraFragment : ARenderFragment<CameraData>(R.layout.fragment_camera) {
                     bitmapPhoto?.also { result ->
                         Handler(Looper.getMainLooper()).post {
                             val bitmap = result.bitmap
-                            val pixel = bitmap.getPixel(
-                                bitmap.width / 2,
-                                bitmap.height / 2
-                            )
+                            val pixel = bitmap.getAveragePixel(1)
                             intentGetColor.onNext(
                                 GetColorUseCase.Param(
                                     colorHex = pixel.pixelColorToHash(),
