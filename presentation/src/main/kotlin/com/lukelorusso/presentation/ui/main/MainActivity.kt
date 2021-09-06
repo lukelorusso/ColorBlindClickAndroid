@@ -15,6 +15,7 @@ import com.lukelorusso.presentation.R
 import com.lukelorusso.presentation.databinding.ActivityMainBinding
 import com.lukelorusso.presentation.extensions.*
 import com.lukelorusso.presentation.helper.TrackerHelper
+import com.lukelorusso.presentation.ui.settings.SettingsDialogFragment
 import com.lukelorusso.presentation.ui.camera.CameraFragment
 import com.lukelorusso.presentation.ui.history.HistoryFragment
 import com.lukelorusso.presentation.ui.info.InfoFragment
@@ -182,9 +183,10 @@ class MainActivity : AppCompatActivity(), AskRateBottomSheet.ActionListener {
                     if (state == ViewPager.SCROLL_STATE_IDLE) { // if scroll is finished
                         val newPage = currentItem
                         immersiveMode = newPage == 1 // only camera page is immersive
-                        if (newPage == 2 && newPage != lastPage) {
+                        if (newPage != lastPage) {
                             val f = pagerAdapter.getItem(newPage)
                             (f as? HistoryFragment)?.reloadData()
+                            (f as? CameraFragment)?.reloadData()
                         }
                         direction = when (newPage) {
                             0 -> MaybeScrollableViewPager.SwipeDirection.RIGHT // info page cannot scroll left... this will hide the swiping feedback when you can't scroll anymore
@@ -228,6 +230,10 @@ class MainActivity : AppCompatActivity(), AskRateBottomSheet.ActionListener {
     fun showColorPreviewDialog(color: Color) =
         PreviewDialogFragment.newInstance(gson.toJson(color), !isPageVisible(1))
             .show(supportFragmentManager, PreviewDialogFragment.TAG)
+
+    fun showSettingsDialog() =
+        SettingsDialogFragment.newInstance()
+            .show(supportFragmentManager, SettingsDialogFragment.TAG)
 
     //region RateBottomSheet.ActionListener
     override fun onRateClickListener() =

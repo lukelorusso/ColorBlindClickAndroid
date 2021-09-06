@@ -34,6 +34,10 @@ class InfoViewModel(
 
     internal fun gotoCamera() = router.routeToCamera()
 
+    internal fun gotoSettings(): Observable<InfoData> = Observable.just(Unit)
+        .map { InfoData.createEmptyContent() }
+        .doAfterNext { router.routeToSettings() }
+
     private fun onError(e: Throwable): InfoData =
         InfoData.createEmptyContent().also { postEvent(getErrorMessage(e)) }
 

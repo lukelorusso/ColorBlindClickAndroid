@@ -5,18 +5,18 @@ import com.lukelorusso.presentation.exception.ErrorMessageFactory
 import com.lukelorusso.presentation.ui.base.AViewModel
 import io.reactivex.rxjava3.core.Observable
 
-class PreviewDialogViewModel(
+class PreviewViewModel(
     private val getHomeUrl: GetHomeUrlUseCase,
     errorMessageFactory: ErrorMessageFactory
-) : AViewModel<PreviewDialogData>(errorMessageFactory) {
+) : AViewModel<PreviewData>(errorMessageFactory) {
 
-    internal fun intentGetHomeUrl(param: Unit): Observable<PreviewDialogData> =
+    internal fun intentGetHomeUrl(param: Unit): Observable<PreviewData> =
         getHomeUrl.execute(param)
             .toObservable()
-            .map { PreviewDialogData.createHomeUrl(it) }
+            .map { PreviewData.createHomeUrl(it) }
             .onErrorReturn { onError(it) }
 
-    private fun onError(e: Throwable): PreviewDialogData =
-        PreviewDialogData.createEmptyContent().also { postEvent(getErrorMessage(e)) }
+    private fun onError(e: Throwable): PreviewData =
+        PreviewData.createEmptyContent().also { postEvent(getErrorMessage(e)) }
 
 }

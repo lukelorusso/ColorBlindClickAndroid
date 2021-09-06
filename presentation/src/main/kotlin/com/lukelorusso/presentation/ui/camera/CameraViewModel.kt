@@ -7,6 +7,7 @@ import com.lukelorusso.domain.usecase.*
 import com.lukelorusso.presentation.exception.ErrorMessageFactory
 import com.lukelorusso.presentation.ui.base.AViewModel
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
 class CameraViewModel
@@ -16,10 +17,27 @@ class CameraViewModel
     private val setLastLensPosition: SetLastLensPositionUseCase,
     private val getLastZoomValue: GetLastZoomValueUseCase,
     private val setLastZoomValue: SetLastZoomValueUseCase,
+    private val getPixelNeighbourhood: GetPixelNeighbourhoodUseCase,
     private val getColor: GetColorUseCase,
     override val router: CameraRouter,
     errorMessageFactory: ErrorMessageFactory
 ) : AViewModel<CameraData>(errorMessageFactory) {
+
+    internal fun intentLoadData(param: Unit): Observable<CameraData> =
+        Single.zip(
+            getLastLensPosition.execute(param),
+            getLastZoomValue.execute(param),
+            getPixelNeighbourhood.execute(param),
+            getHomeUrl.execute(param),
+            { lensPosition, zoomValue, pixelNeighbourhood, homeUrl ->
+                CameraData.createContent(
+                    lensPosition = lensPosition,
+                    zoomValue = zoomValue,
+                    pixelNeighbourhood = pixelNeighbourhood,
+                    homeUrl = homeUrl
+                )
+            }
+        ).toObservable().onErrorReturn { onError(it) }
 
     internal fun intentGetColor(param: GetColorUseCase.Param): Observable<CameraData> =
         getColor.execute(param)
@@ -27,19 +45,6 @@ class CameraViewModel
             .map { CameraData.createColor(it) }
             .startWithSingle(CameraData.createLoading())
             .onErrorReturn { onError(it) }
-
-    internal fun intentGetHomeUrl(param: Unit): Observable<CameraData> = getHomeUrl.execute(param)
-        .toObservable()
-        .map { CameraData.createHomeUrl(it) }
-        .onErrorReturn { onError(it) }
-
-    internal fun intentGetLastLensPositionAndZoomValue(param: Unit): Observable<CameraData> =
-        getLastLensPosition.execute(param).zipWith(
-            getLastZoomValue.execute(param),
-            { lensPosition, zoomValue ->
-                CameraData.createContent(lensPosition = lensPosition, zoomValue = zoomValue)
-            }
-        ).toObservable().onErrorReturn { onError(it) }
 
     internal fun intentSetLastLensPosition(param: Int): Observable<CameraData> =
         setLastLensPosition.execute(param)
@@ -59,6 +64,12 @@ class CameraViewModel
             .toSingleDefault(Unit)
             .toObservable()
             .map { CameraData.createEmptyContent() }
+            .onErrorReturn { onError(it) }
+
+    internal fun intentGetPixelNeighbourhood(param: Unit): Observable<CameraData> =
+        getPixelNeighbourhood.execute(param)
+            .toObservable()
+            .map { CameraData.createContent(pixelNeighbourhood = it) }
             .onErrorReturn { onError(it) }
 
     internal fun gotoInfo() = router.routeToInfo()

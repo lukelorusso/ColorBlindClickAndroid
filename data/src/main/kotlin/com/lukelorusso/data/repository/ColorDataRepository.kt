@@ -33,6 +33,13 @@ class ColorDataRepository(
         )
     }
 
+    override fun getPixelNeighbourhood(): Single<Int> =
+        Single.just(sessionManager.getPixelNeighbourhood())
+
+    override fun setPixelNeighbourhood(count: Int): Completable =
+        Single.just(sessionManager.setPixelNeighbourhood(count))
+            .ignoreElement()
+
     override fun getLastLensPosition(): Single<Int> =
         Single.just(sessionManager.getLastLensPosition())
 

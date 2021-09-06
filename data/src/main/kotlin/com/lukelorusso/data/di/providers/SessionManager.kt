@@ -7,9 +7,19 @@ package com.lukelorusso.data.di.providers
 class SessionManager(private val sharedPrefProvider: SharedPrefProvider) {
 
     companion object {
+        private const val PREF_PIXEL_NEIGHBOURHOOD_VALUE = "pref_pixel_neighbourhood_value"
         private const val PREF_LAST_LENS_POSITION = "pref_last_lens_position"
         private const val PREF_LAST_ZOOM_VALUE = "pref_last_zoom_value"
     }
+
+    //region Pixel Neighbourhood
+    fun getPixelNeighbourhood(): Int =
+        sharedPrefProvider.get(PREF_PIXEL_NEIGHBOURHOOD_VALUE, 1)
+
+    fun setPixelNeighbourhood(value: Int) {
+        sharedPrefProvider.set(PREF_PIXEL_NEIGHBOURHOOD_VALUE, value)
+    }
+    //endregion
 
     //region Lens Position
     fun getLastLensPosition(): Int =

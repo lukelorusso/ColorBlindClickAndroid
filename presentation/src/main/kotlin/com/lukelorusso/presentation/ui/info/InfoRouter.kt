@@ -10,4 +10,6 @@ class InfoRouter : ARouter() {
 
     fun routeToCamera() = (activity as? MainActivity)?.gotoCamera()
 
+    fun routeToSettings() = (activity as? MainActivity)?.showSettingsDialog()
+
 }

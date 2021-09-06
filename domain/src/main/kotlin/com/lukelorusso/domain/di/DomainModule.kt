@@ -16,5 +16,7 @@ val domainModule = module {
     factory { SetLastLensPositionUseCase(get()) }
     factory { GetLastZoomValueUseCase(get()) }
     factory { SetLastZoomValueUseCase(get()) }
+    factory { GetPixelNeighbourhoodUseCase(get()) }
+    factory { SetPixelNeighbourhoodUseCase(get()) }
     //endregion
 }

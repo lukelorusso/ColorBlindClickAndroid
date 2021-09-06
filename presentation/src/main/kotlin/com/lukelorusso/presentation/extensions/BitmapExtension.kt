@@ -52,7 +52,8 @@ fun Bitmap.getScaled(
 }
 
 /**
- * @param averageNeighbourhood is the number of pixel to average next to the central pixel:
+ * @param averageNeighbourhood is the number of pixel next to the central one;
+ * the goal is to create a grid in the center of the bitmap used to determine the average color:
  * - if 0 only the central pixel will determine the color
  * - if 1 the color will be determined by the 3x3 pixel matrix = average of 9 pixel colors
  * - if 2 the color will be determined by the 5x5 pixel matrix = average of 25 pixel colors

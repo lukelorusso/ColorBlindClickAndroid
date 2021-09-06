@@ -42,9 +42,10 @@ class CameraFragment : ARenderFragment<CameraData>(R.layout.fragment_camera) {
     // Intents
     private val intentGetColor = PublishSubject.create<GetColorUseCase.Param>()
 
+    private val intentSetLastLensPosition = PublishSubject.create<Int>()
     private val intentGetLastZoomValue = PublishSubject.create<Unit>()
     private val intentSetLastZoomValue = PublishSubject.create<Int>()
-    private val intentSetLastLensPosition = PublishSubject.create<Int>()
+    private val intentGetPixelNeighbourhood = PublishSubject.create<Unit>()
 
     // View
     private val binding by viewBinding(FragmentCameraBinding::bind)
@@ -71,6 +72,7 @@ class CameraFragment : ARenderFragment<CameraData>(R.layout.fragment_camera) {
         )
     }
     private var camera: Fotoapparat? = null
+    private var pixelNeighbourhood: Int = -1
 
     fun backPressHandled(): Boolean {
         return when {
@@ -125,7 +127,7 @@ class CameraFragment : ARenderFragment<CameraData>(R.layout.fragment_camera) {
         )
 
         renderHomeUrl(data.homeUrl)
-        renderInitCamera(data.lastLensPosition, data.lastZoomValue)
+        renderInitCamera(data.lastLensPosition, data.lastZoomValue, data.pixelNeighbourhood)
         renderColorResult(data.color)
         //renderError(binding.inclError.textErrorDescription, data.errorMessage)
         renderPersistenceException(data.isPersistenceException)
@@ -139,7 +141,11 @@ class CameraFragment : ARenderFragment<CameraData>(R.layout.fragment_camera) {
         homeUrl?.also { this.homeUrl = it }
     }
 
-    private fun renderInitCamera(lastLensPosition: Int?, lastZoomValue: Int?) {
+    private fun renderInitCamera(
+        lastLensPosition: Int?,
+        lastZoomValue: Int?,
+        pixelNeighbourhood: Int?
+    ) {
         lastLensPosition?.also { position ->
             if (camera == null) {
                 camera = Fotoapparat(
@@ -180,6 +186,10 @@ class CameraFragment : ARenderFragment<CameraData>(R.layout.fragment_camera) {
         lastZoomValue?.also {
             binding.cameraZoomSeekBar.progress = if (it == -1) INIT_ZOOM_VALUE else it
         }
+
+        pixelNeighbourhood?.also {
+            this.pixelNeighbourhood = pixelNeighbourhood
+        }
     }
 
     private fun renderColorResult(color: Color?) {
@@ -203,7 +213,7 @@ class CameraFragment : ARenderFragment<CameraData>(R.layout.fragment_camera) {
                     bitmapPhoto?.also { result ->
                         Handler(Looper.getMainLooper()).post {
                             val bitmap = result.bitmap
-                            val pixel = bitmap.getAveragePixel(1)
+                            val pixel = bitmap.getAveragePixel(pixelNeighbourhood)
                             intentGetColor.onNext(
                                 GetColorUseCase.Param(
                                     colorHex = pixel.pixelColorToHash(),
@@ -254,12 +264,8 @@ class CameraFragment : ARenderFragment<CameraData>(R.layout.fragment_camera) {
     }
 
     private fun subscribeIntents() {
-        val loadData = Observable.just(Unit).flatMap { unit ->
-            Observable.merge(
-                viewModel.intentGetHomeUrl(unit),
-                viewModel.intentGetLastLensPositionAndZoomValue(unit)
-            )
-        }
+        val loadData = Observable.just(Unit)
+            .flatMap { viewModel.intentLoadData(it) }
         val getColor = intentGetColor
             .flatMap { viewModel.intentGetColor(it) }
         val setLastLensPosition = intentSetLastLensPosition
@@ -268,13 +274,16 @@ class CameraFragment : ARenderFragment<CameraData>(R.layout.fragment_camera) {
             .flatMap { viewModel.intentGetLastZoomValue(it) }
         val setLastZoomValue = intentSetLastZoomValue
             .flatMap { viewModel.intentSetLastZoomValue(it) }
+        val getPixelNeighbourhood = intentGetPixelNeighbourhood
+            .flatMap { viewModel.intentGetPixelNeighbourhood(it) }
 
         viewModel.subscribe(
             loadData,
             getColor,
             setLastLensPosition,
             getLastZoomValue,
-            setLastZoomValue
+            setLastZoomValue,
+            getPixelNeighbourhood
         )
     }
 
@@ -379,5 +388,7 @@ class CameraFragment : ARenderFragment<CameraData>(R.layout.fragment_camera) {
             binding.inclToolbarCameraBottom.toolbarCameraButton.visibility = View.VISIBLE
         }
     }
+
+    fun reloadData() = intentGetPixelNeighbourhood.onNext(Unit)
 
 }

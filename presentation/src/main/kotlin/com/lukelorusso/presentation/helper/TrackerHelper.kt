@@ -21,6 +21,7 @@ class TrackerHelper
         const val GOTO_HOME_PAGE = "GOTO_HOME_PAGE"
         const val GOTO_HELP_PAGE = "GOTO_HELP_PAGE"
         const val GOTO_ABOUT_ME_PAGE = "GOTO_ABOUT_ME_PAGE"
+        const val GOTO_SETTINGS = "GOTO_SETTINGS"
         const val SHARED_TEXT = "SHARED_TEXT"
         const val SHARED_PREVIEW = "SHARED_PREVIEW"
         const val PERSISTENCE_EXCEPTION = "PERSISTENCE_EXCEPTION"

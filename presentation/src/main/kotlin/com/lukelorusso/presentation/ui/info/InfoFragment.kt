@@ -140,7 +140,14 @@ class InfoFragment : ARenderFragment<InfoData>(R.layout.fragment_info) {
             }
             .flatMap { viewModel.intentGetAboutMeUrl() }
 
-        viewModel.subscribe(getHomeUrl, getHelpUrl, getAboutMeUrl)
+        val gotoSettings = infoAdapter.intentItemClick
+            .filter { position -> position == 3 }
+            .doOnNext {
+                trackerHelper.track(activity, TrackerHelper.Actions.GOTO_SETTINGS)
+            }
+            .flatMap { viewModel.gotoSettings() }
+
+        viewModel.subscribe(getHomeUrl, getHelpUrl, getAboutMeUrl, gotoSettings)
     }
 
 }

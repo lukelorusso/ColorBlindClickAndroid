@@ -23,7 +23,7 @@ import io.reactivex.rxjava3.core.Observable
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class PreviewDialogFragment : ARenderBottomSheetDialogFragment<PreviewDialogData>(
+class PreviewDialogFragment : ARenderBottomSheetDialogFragment<PreviewData>(
     isFullScreen = false
 ) {
 
@@ -45,7 +45,7 @@ class PreviewDialogFragment : ARenderBottomSheetDialogFragment<PreviewDialogData
 
     // View
     private lateinit var binding: DialogFragmentPreviewBinding // This property is only valid between onCreateView and onDestroyView
-    private val viewModel by viewModel<PreviewDialogViewModel>()
+    private val viewModel by viewModel<PreviewViewModel>()
 
     // Properties
     private val gson = Gson()
@@ -84,7 +84,7 @@ class PreviewDialogFragment : ARenderBottomSheetDialogFragment<PreviewDialogData
     }
 
     // region RENDER
-    override fun render(data: PreviewDialogData) {
+    override fun render(data: PreviewData) {
         renderHomeUrl(data.homeUrl)
     }
 
