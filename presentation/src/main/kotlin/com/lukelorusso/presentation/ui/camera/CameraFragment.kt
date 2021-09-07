@@ -41,7 +41,6 @@ class CameraFragment : ARenderFragment<CameraData>(R.layout.fragment_camera) {
 
     // Intents
     private val intentGetColor = PublishSubject.create<GetColorUseCase.Param>()
-
     private val intentSetLastLensPosition = PublishSubject.create<Int>()
     private val intentGetLastZoomValue = PublishSubject.create<Unit>()
     private val intentSetLastZoomValue = PublishSubject.create<Int>()

@@ -5,13 +5,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.lukelorusso.presentation.R
 import com.lukelorusso.presentation.databinding.DialogFragmentSettingsBinding
+import com.lukelorusso.presentation.extensions.showListDialog
 import com.lukelorusso.presentation.ui.base.ARenderBottomSheetDialogFragment
 import com.lukelorusso.presentation.ui.main.MainActivity
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.subjects.PublishSubject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsDialogFragment : ARenderBottomSheetDialogFragment<SettingsData>(
-    isFullScreen = false
+    isFullScreen = true
 ) {
 
     companion object {
@@ -21,12 +25,15 @@ class SettingsDialogFragment : ARenderBottomSheetDialogFragment<SettingsData>(
             SettingsDialogFragment()
     }
 
+    // Intents
+    private val intentSetPixelNeighbourhood = PublishSubject.create<Int>()
+
     // View
     private lateinit var binding: DialogFragmentSettingsBinding // This property is only valid between onCreateView and onDestroyView
     private val viewModel by viewModel<SettingsViewModel>()
 
     // Properties
-    // TODO
+    private lateinit var settingsViewfinderPixelsValueList: List<String>
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,18 +64,50 @@ class SettingsDialogFragment : ARenderBottomSheetDialogFragment<SettingsData>(
 
     // region RENDER
     override fun render(data: SettingsData) {
+        renderSettings(data.pixelNeighbourhood)
+    }
 
+    private fun renderSettings(
+        pixelNeighbourhood: Int?
+    ) {
+        pixelNeighbourhood?.also {
+            binding.tvSettingsViewfinderPixels.text =
+                settingsViewfinderPixelsValueList[it]
+        }
     }
     // endregion
 
     private fun initView() {
         subscribeIntents()
+
+        settingsViewfinderPixelsValueList =
+            resources.getStringArray(R.array.settings_viewfinder_pixels_values).asList()
+
+        binding.itemSettingsViewfinderPixels.setOnClickListener {
+            val currentPosition = settingsViewfinderPixelsValueList
+                .indexOfFirst { label -> label == binding.tvSettingsViewfinderPixels.text }
+
+            settingsViewfinderPixelsValueList.showListDialog(
+                context = requireContext(),
+                title = getString(R.string.settings_viewfinder_pixels),
+                currentSelectedPosition = currentPosition
+            ) { newLabel, value ->
+                binding.tvSettingsViewfinderPixels.text = newLabel
+                intentSetPixelNeighbourhood.onNext(value)
+            }
+        }
     }
 
     private fun subscribeIntents() {
-        /*val getHomeUrl = Observable.just(Unit).flatMap { viewModel.intentGetHomeUrl(it) }
+        val loadData = Observable.just(Unit)
+            .flatMap { viewModel.intentLoadData(it) }
+        val setPixelNeighbourhood = intentSetPixelNeighbourhood
+            .flatMap { viewModel.intentSetPixelNeighbourhood(it) }
 
-        viewModel.subscribe(getHomeUrl)*/
+        viewModel.subscribe(
+            loadData,
+            setPixelNeighbourhood
+        )
     }
 
 }
