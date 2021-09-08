@@ -81,7 +81,7 @@ class SettingsDialogFragment : ARenderBottomSheetDialogFragment<SettingsData>(
         subscribeIntents()
 
         settingsViewfinderPixelsValueList =
-            resources.getStringArray(R.array.settings_viewfinder_pixels_values).asList()
+            labelStringResList.map { labelStringRes -> getString(labelStringRes) }
 
         binding.itemSettingsViewfinderPixels.setOnClickListener {
             val currentPosition = settingsViewfinderPixelsValueList

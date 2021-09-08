@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -9,14 +8,16 @@
     tools:background="@color/fragment_background">
 
     <TextView
-        android:id="@+id/itemName"
+        android:id="@+id/tvItemInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
+        android:drawablePadding="10dp"
         android:ellipsize="end"
         android:maxLines="1"
         android:textSize="16sp"
-        app:drawableEndCompat="@drawable/keyboard_arrow_right"
+        tools:drawableEndCompat="@drawable/keyboard_arrow_right"
+        tools:drawableStartCompat="@drawable/info_settings"
         tools:text="Info" />
 
 </FrameLayout>

@@ -94,7 +94,9 @@ class InfoFragment : ARenderFragment<InfoData>(R.layout.fragment_info) {
 
     private fun populateAdapter() {
         activity?.also {
-            infoAdapter.data = resources.getStringArray(R.array.info_adapter_items).asList()
+            infoAdapter.data = labelStringResList.mapIndexed { position, labelStringRes ->
+                Pair(iconDrawableResList[position], getString(labelStringRes))
+            }
             binding.rvInfoList.adapter = infoAdapter
             binding.rvInfoList.addItemDecoration(
                 VerticalSpaceItemDecoration(

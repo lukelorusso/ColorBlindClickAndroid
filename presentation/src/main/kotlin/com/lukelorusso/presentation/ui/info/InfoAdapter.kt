@@ -18,7 +18,7 @@ import io.reactivex.rxjava3.subjects.PublishSubject
  * Copyright 2018 Mikhael LOPEZ - http://mikhaellopez.com/
  */
 class InfoAdapter(private val withHeader: Boolean, private val withFooter: Boolean) :
-    HFRecyclerView<String>(withHeader, withFooter) {
+    HFRecyclerView<Pair<Int, String>>(withHeader, withFooter) { // Pair of DrawableRes Int (icon) and String (label)
 
     val intentItemClick: PublishSubject<Int> = PublishSubject.create()
 
@@ -49,7 +49,7 @@ class InfoAdapter(private val withHeader: Boolean, private val withFooter: Boole
     sealed class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         class ItemViewHolder(view: View) : DoubleGroundViewHolder(view) {
-            fun bind(item: String, position: Int, intentItemClick: PublishSubject<Int>) =
+            fun bind(item: Pair<Int, String>, position: Int, intentItemClick: PublishSubject<Int>) =
                 with(itemView) {
                     val even = position % 2 == 0
                     val colorRes = if (even)
@@ -59,8 +59,14 @@ class InfoAdapter(private val withHeader: Boolean, private val withFooter: Boole
                     val color = ContextCompat.getColor(context, colorRes)
                     setBackgroundColor(color)
 
-                    val itemName = findViewById<TextView>(R.id.itemName)
-                    itemName.text = item
+                    val tvItem = findViewById<TextView>(R.id.tvItemInfo)
+                    tvItem.setCompoundDrawablesWithIntrinsicBounds(
+                        item.first, // left icon, custom
+                        0,
+                        R.drawable.keyboard_arrow_right, // right icon, always the same
+                        0
+                    )
+                    tvItem.text = item.second
 
                     setOnClickListener { intentItemClick.onNext(position) }
                 }
