@@ -40,6 +40,8 @@ class CameraFragment : ARenderFragment<CameraData>(R.layout.fragment_camera) {
     }
 
     // Intents
+    private val intentReloadData =
+        PublishSubject.create<Pair<Int, Int>>() // LastLensPosition and LastZoomValue are needed to eventually save their values
     private val intentGetColor = PublishSubject.create<GetColorUseCase.Param>()
     private val intentSetLastLensPosition = PublishSubject.create<Int>()
     private val intentGetLastZoomValue = PublishSubject.create<Unit>()
@@ -232,7 +234,7 @@ class CameraFragment : ARenderFragment<CameraData>(R.layout.fragment_camera) {
                     cameraConfiguration = CameraConfiguration()
                 )
                 isFrontCamera = !isFrontCamera
-                intentSetLastLensPosition.onNext(if (isFrontCamera) 1 else 0)
+                intentSetLastLensPosition.onNext(isFrontCamera.toInt())
                 initToolbarTop()
                 checkCameraCapabilities()
                 camera.setZoom(binding.cameraZoomSeekBar.progress.toFloat().div(MAX_ZOOM_VALUE))
@@ -265,6 +267,8 @@ class CameraFragment : ARenderFragment<CameraData>(R.layout.fragment_camera) {
     private fun subscribeIntents() {
         val loadData = Observable.just(Unit)
             .flatMap { viewModel.intentLoadData(it) }
+        val reloadData = intentReloadData
+            .flatMap { viewModel.intentReloadData(it) }
         val getColor = intentGetColor
             .flatMap { viewModel.intentGetColor(it) }
         val setLastLensPosition = intentSetLastLensPosition
@@ -278,6 +282,7 @@ class CameraFragment : ARenderFragment<CameraData>(R.layout.fragment_camera) {
 
         viewModel.subscribe(
             loadData,
+            reloadData,
             getColor,
             setLastLensPosition,
             getLastZoomValue,
@@ -388,6 +393,8 @@ class CameraFragment : ARenderFragment<CameraData>(R.layout.fragment_camera) {
         }
     }
 
-    fun reloadData() = intentGetPixelNeighbourhood.onNext(Unit)
+    fun reloadData() {
+        intentReloadData.onNext(Pair(isFrontCamera.toInt(), binding.cameraZoomSeekBar.progress))
+    }
 
 }

@@ -10,6 +10,10 @@ interface ColorRepository {
 
     fun setPixelNeighbourhood(count: Int): Completable
 
+    fun getSaveCameraOptions(): Single<Boolean>
+
+    fun setSaveCameraOptions(shouldSave: Boolean): Completable
+
     fun getLastLensPosition(): Single<Int>
 
     fun setLastLensPosition(position: Int): Completable

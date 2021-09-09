@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import com.lukelorusso.presentation.R
 import com.lukelorusso.presentation.databinding.DialogFragmentSettingsBinding
 import com.lukelorusso.presentation.extensions.showListDialog
+import com.lukelorusso.presentation.extensions.toBoolean
+import com.lukelorusso.presentation.extensions.toInt
 import com.lukelorusso.presentation.ui.base.ARenderBottomSheetDialogFragment
 import com.lukelorusso.presentation.ui.main.MainActivity
 import io.reactivex.rxjava3.core.Observable
@@ -27,6 +29,7 @@ class SettingsDialogFragment : ARenderBottomSheetDialogFragment<SettingsData>(
 
     // Intents
     private val intentSetPixelNeighbourhood = PublishSubject.create<Int>()
+    private val intentSetSaveCameraOption = PublishSubject.create<Boolean>()
 
     // View
     private lateinit var binding: DialogFragmentSettingsBinding // This property is only valid between onCreateView and onDestroyView
@@ -34,6 +37,7 @@ class SettingsDialogFragment : ARenderBottomSheetDialogFragment<SettingsData>(
 
     // Properties
     private lateinit var settingsViewfinderPixelsValueList: List<String>
+    private lateinit var settingsSaveCameraOptionsList: List<String>
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -64,15 +68,24 @@ class SettingsDialogFragment : ARenderBottomSheetDialogFragment<SettingsData>(
 
     // region RENDER
     override fun render(data: SettingsData) {
-        renderSettings(data.pixelNeighbourhood)
+        renderSettings(
+            data.pixelNeighbourhood,
+            data.saveCameraOption
+        )
     }
 
     private fun renderSettings(
-        pixelNeighbourhood: Int?
+        pixelNeighbourhood: Int?,
+        saveCameraOption: Boolean?
     ) {
         pixelNeighbourhood?.also {
             binding.tvSettingsViewfinderPixels.text =
                 settingsViewfinderPixelsValueList[it]
+        }
+
+        saveCameraOption?.also {
+            binding.tvSettingsSaveCameraOptions.text =
+                settingsSaveCameraOptionsList[it.toInt()]
         }
     }
     // endregion
@@ -81,7 +94,7 @@ class SettingsDialogFragment : ARenderBottomSheetDialogFragment<SettingsData>(
         subscribeIntents()
 
         settingsViewfinderPixelsValueList =
-            labelStringResList.map { labelStringRes -> getString(labelStringRes) }
+            viewfinderPixelsValueStringResList.map { labelStringRes -> getString(labelStringRes) }
 
         binding.itemSettingsViewfinderPixels.setOnClickListener {
             val currentPosition = settingsViewfinderPixelsValueList
@@ -96,6 +109,23 @@ class SettingsDialogFragment : ARenderBottomSheetDialogFragment<SettingsData>(
                 intentSetPixelNeighbourhood.onNext(value)
             }
         }
+
+        settingsSaveCameraOptionsList =
+            saveCameraOptionsStringResList.map { labelStringRes -> getString(labelStringRes) }
+
+        binding.itemSettingsSaveCameraOptions.setOnClickListener {
+            val currentPosition = settingsSaveCameraOptionsList
+                .indexOfFirst { label -> label == binding.tvSettingsSaveCameraOptions.text }
+
+            settingsSaveCameraOptionsList.showListDialog(
+                context = requireContext(),
+                title = getString(R.string.settings_save_camera_options),
+                currentSelectedPosition = currentPosition
+            ) { newLabel, value ->
+                binding.tvSettingsSaveCameraOptions.text = newLabel
+                intentSetSaveCameraOption.onNext(value.toBoolean())
+            }
+        }
     }
 
     private fun subscribeIntents() {
@@ -103,10 +133,13 @@ class SettingsDialogFragment : ARenderBottomSheetDialogFragment<SettingsData>(
             .flatMap { viewModel.intentLoadData(it) }
         val setPixelNeighbourhood = intentSetPixelNeighbourhood
             .flatMap { viewModel.intentSetPixelNeighbourhood(it) }
+        val setSaveCameraOption = intentSetSaveCameraOption
+            .flatMap { viewModel.intentSetSaveCameraOption(it) }
 
         viewModel.subscribe(
             loadData,
-            setPixelNeighbourhood
+            setPixelNeighbourhood,
+            setSaveCameraOption
         )
     }
 

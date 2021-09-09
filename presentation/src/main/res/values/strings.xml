@@ -20,4 +20,5 @@
     <string name="settings_viewfinder_pixels_value_0">"1x1 (precise but more subject to vibrations)"</string>
     <string name="settings_viewfinder_pixels_value_1">"3x3 (default)"</string>
     <string name="settings_viewfinder_pixels_value_2">"5x5 (more stable but a little less precise)"</string>
+    <string name="settings_save_camera_options">Save camera selection and zoom level</string>
 </resources>

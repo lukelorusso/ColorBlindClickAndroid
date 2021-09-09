@@ -14,6 +14,7 @@ import com.lukelorusso.presentation.R
 import com.lukelorusso.presentation.extensions.containsWords
 import com.lukelorusso.presentation.extensions.getLocalizedDateTime
 import com.lukelorusso.presentation.extensions.hashColorToPixel
+import com.lukelorusso.presentation.extensions.toInt
 import com.lukelorusso.presentation.view.DoubleGroundViewHolder
 import com.mikhaellopez.hfrecyclerviewkotlin.HFRecyclerView
 
@@ -76,7 +77,7 @@ class HistoryAdapter(
     fun removeAllItems() = (data as? MutableList)?.clear()
 
     fun getItemAtPosition(position: Int): Color {
-        val header = if (withHeader) 1 else 0
+        val header = withHeader.toInt()
         return getItem(position - header) //(position - 1) in case of header
     }
 

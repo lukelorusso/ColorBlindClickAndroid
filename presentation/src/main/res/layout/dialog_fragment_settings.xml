@@ -32,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="15dp"
                 android:text="@string/info_settings"
-                android:textSize="28sp" />
+                android:textSize="30sp" />
 
             <FrameLayout
                 android:id="@+id/itemSettingsViewfinderPixels"
@@ -65,6 +65,42 @@
                         android:gravity="end"
                         android:textSize="16sp"
                         tools:text="@string/settings_viewfinder_pixels_value_2" />
+
+                </LinearLayout>
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/itemSettingsSaveCameraOptions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:foreground="?android:attr/selectableItemBackground">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="top"
+                    android:orientation="horizontal"
+                    tools:ignore="UselessParent">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="15dp"
+                        android:layout_weight="1"
+                        android:text="@string/settings_save_camera_options"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvSettingsSaveCameraOptions"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="15dp"
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        android:textSize="16sp"
+                        tools:text="@string/yes" />
 
                 </LinearLayout>
 

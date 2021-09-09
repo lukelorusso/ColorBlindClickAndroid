@@ -12,6 +12,7 @@ import com.lukelorusso.data.net.api.ColorApi
 import com.lukelorusso.domain.model.Color
 import com.lukelorusso.domain.repository.ColorRepository
 import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 import java.util.*
 
@@ -33,6 +34,37 @@ class ColorDataRepository(
         )
     }
 
+    /**
+     * Back camera = 0; Front camera = 1
+     */
+    override fun getLastLensPosition(): Single<Int> =
+        Single.just(sessionManager.getLastLensPosition())
+
+    /**
+     * First, check if the user wants to save the camera options
+     */
+    override fun setLastLensPosition(position: Int): Completable =
+        Single.just(sessionManager.getSaveCameraOptions())
+            .filter { it }
+            .flatMap { Maybe.just(sessionManager.setLastLensPosition(position)) }
+            .doAfterSuccess { sessionManager.deleteLastZoomValue() }
+            .ignoreElement()
+
+    /**
+     * Min zoom value = 0; Max zoom value = 100
+     */
+    override fun getLastZoomValue(): Single<Int> =
+        Single.just(sessionManager.getLastZoomValue())
+
+    /**
+     * First, check if the user wants to save the camera options
+     */
+    override fun setLastZoomValue(position: Int): Completable =
+        Single.just(sessionManager.getSaveCameraOptions())
+            .filter { it }
+            .flatMap { Maybe.just(sessionManager.setLastZoomValue(position)) }
+            .ignoreElement()
+
     override fun getPixelNeighbourhood(): Single<Int> =
         Single.just(sessionManager.getPixelNeighbourhood())
 
@@ -40,19 +72,20 @@ class ColorDataRepository(
         Single.just(sessionManager.setPixelNeighbourhood(count))
             .ignoreElement()
 
-    override fun getLastLensPosition(): Single<Int> =
-        Single.just(sessionManager.getLastLensPosition())
+    override fun getSaveCameraOptions(): Single<Boolean> =
+        Single.just(sessionManager.getSaveCameraOptions())
 
-    override fun setLastLensPosition(position: Int): Completable =
-        Single.just(sessionManager.setLastLensPosition(position))
-            .doAfterSuccess { sessionManager.deleteLastZoomValue() }
-            .ignoreElement()
-
-    override fun getLastZoomValue(): Single<Int> =
-        Single.just(sessionManager.getLastZoomValue())
-
-    override fun setLastZoomValue(position: Int): Completable =
-        Single.just(sessionManager.setLastZoomValue(position))
+    /**
+     * If the user does NOT save the camera options, you should delete them
+     */
+    override fun setSaveCameraOptions(shouldSave: Boolean): Completable =
+        Single.just(sessionManager.setSaveCameraOptions(shouldSave))
+            .doAfterSuccess {
+                if (!shouldSave) {
+                    sessionManager.deleteLastLensPosition()
+                    sessionManager.deleteLastZoomValue()
+                }
+            }
             .ignoreElement()
 
     override fun getHelpUrl(): Single<String> = Single.just(

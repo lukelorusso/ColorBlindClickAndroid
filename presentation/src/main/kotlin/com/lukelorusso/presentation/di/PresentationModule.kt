@@ -45,7 +45,7 @@ val presentationModule = module {
     viewModel { HistoryViewModel(get(), get(), get(), get(), get(), get()) }
     viewModel { InfoViewModel(get(), get(), get(), get(), get()) }
     viewModel { PreviewViewModel(get(), get()) }
-    viewModel { SettingsViewModel(get(), get(), get()) }
+    viewModel { SettingsViewModel(get(), get(), get(), get(), get()) }
     //endregion
 
     //region Router

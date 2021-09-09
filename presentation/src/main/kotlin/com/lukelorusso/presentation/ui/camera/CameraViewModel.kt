@@ -39,6 +39,20 @@ class CameraViewModel
             }
         ).toObservable().onErrorReturn { onError(it) }
 
+    /**
+     * param.first = LastLensPosition;
+     * param.second = LastZoomValue
+     */
+    internal fun intentReloadData(param: Pair<Int, Int>): Observable<CameraData> =
+        Single.zip(
+            setLastLensPosition.execute(param.first).toSingle {},
+            setLastZoomValue.execute(param.second).toSingle {},
+            getPixelNeighbourhood.execute(Unit),
+            { _, _, pixelNeighbourhood ->
+                CameraData.createContent(pixelNeighbourhood = pixelNeighbourhood)
+            }
+        ).toObservable().onErrorReturn { onError(it) }
+
     internal fun intentGetColor(param: GetColorUseCase.Param): Observable<CameraData> =
         getColor.execute(param)
             .toObservable()
