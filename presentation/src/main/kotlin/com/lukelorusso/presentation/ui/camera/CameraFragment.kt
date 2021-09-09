@@ -217,7 +217,7 @@ class CameraFragment : ARenderFragment<CameraData>(R.layout.fragment_camera) {
                             val pixel = bitmap.getAveragePixel(pixelNeighbourhood)
                             intentGetColor.onNext(
                                 GetColorUseCase.Param(
-                                    colorHex = pixel.pixelColorToHash(),
+                                    hex = pixel.pixelColorToHash(),
                                     deviceUdid = activity.getDeviceUdid()
                                 )
                             )
@@ -336,13 +336,13 @@ class CameraFragment : ARenderFragment<CameraData>(R.layout.fragment_camera) {
         binding.inclToolbarColor.colorPreviewPanel.visibility = View.VISIBLE
 
         (binding.inclToolbarColor.colorPreviewPanel.background as? GradientDrawable)
-            ?.setColor(color.colorHex.hashColorToPixel())
+            ?.setColor(color.originalColorHex().hashColorToPixel())
 
         binding.inclToolbarColor.colorMainLine.visibility = View.VISIBLE
         binding.inclToolbarColor.colorMainLine.text = color.colorName
 
         binding.inclToolbarColor.colorTopLine.visibility = View.VISIBLE
-        val topLineText = color.colorHex
+        val topLineText = color.originalColorHex()
         binding.inclToolbarColor.colorTopLine.text = topLineText
 
         binding.inclToolbarColor.colorBottomLine.visibility = View.VISIBLE
