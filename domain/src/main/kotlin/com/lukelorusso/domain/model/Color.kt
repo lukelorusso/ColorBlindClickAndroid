@@ -6,7 +6,7 @@ data class Color(
         var returnMsg: String,
         var similarity: String,
         var timestamp: Long,
-        val originalColor: String?
+        private val originalColor: String?
 ) {
 
     /**
@@ -16,7 +16,8 @@ data class Color(
         return "$colorName #$colorHex"
     }
 
-    override fun equals(other: Any?) = other is Color && colorHex == other.colorHex
+    override fun equals(other: Any?) = other is Color
+            && originalColorHex() == other.originalColorHex()
 
     override fun hashCode(): Int {
         var result = colorHex.hashCode()
@@ -27,5 +28,7 @@ data class Color(
         originalColor?.also { result = 31 * result + it.hashCode() }
         return result
     }
+
+    fun originalColorHex(): String = originalColor ?: colorHex
 
 }

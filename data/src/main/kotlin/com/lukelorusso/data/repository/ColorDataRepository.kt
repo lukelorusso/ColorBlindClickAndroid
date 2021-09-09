@@ -125,7 +125,9 @@ class ColorDataRepository(
         ).flatMap { model ->
             Single.fromCallable {
                 persistenceManager.getColorList().toMutableList().apply {
-                    val existent = find { oldModel -> oldModel.colorHex == model.colorHex }
+                    val existent = find { oldModel ->
+                        oldModel.originalColorHex() == model.originalColorHex()
+                    }
                     existent?.also { remove(it) }
                     add(0, model)
                     persistenceManager.saveColorList(this)
@@ -140,7 +142,7 @@ class ColorDataRepository(
     override fun deleteColor(color: Color): Completable = Single
         .fromCallable {
             persistenceManager.getColorList().toMutableList().apply {
-                val existent = find { c -> c.colorHex == color.colorHex }
+                val existent = find { c -> c.originalColorHex() == color.originalColorHex() }
                 existent?.also { remove(it) }
                 persistenceManager.saveColorList(this)
             }

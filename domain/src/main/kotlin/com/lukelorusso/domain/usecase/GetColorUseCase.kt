@@ -9,10 +9,10 @@ class GetColorUseCase(private val repository: ColorRepository) :
     SingleUseCase<Color, GetColorUseCase.Param>() {
 
     override fun build(param: Param): Single<Color> =
-        repository.getColor(param.colorHex, param.deviceUdid)
+        repository.getColor(param.hex, param.deviceUdid)
 
     data class Param(
-        val colorHex: String,
+        val hex: String,
         val deviceUdid: String
     )
 

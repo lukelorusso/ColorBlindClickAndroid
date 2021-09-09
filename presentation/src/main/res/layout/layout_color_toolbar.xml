@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/white_FFFFFF"
             android:textSize="14sp"
-            tools:text="17/09/1988 14h50 - #RRGGBB" />
+            tools:text="#RRGGBB" />
 
         <TextView
             android:id="@+id/colorBottomLine"
