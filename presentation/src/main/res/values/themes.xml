@@ -9,7 +9,7 @@
         <item name="android:windowBackground">@color/color_primary_dark</item>
     </style>
 
-    <style name="ActivityNoActionBar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Base.ThemeNoActionBar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorPrimaryDark">@color/color_primary_dark</item>
         <item name="colorAccent">@color/color_accent</item>
