@@ -73,12 +73,12 @@ ext {
     // DEBUG
     timberVersion               = '5.0.1'
     stethoVersion               = '1.6.0'
-    chuckVersion                = '1.1.0'
+    chuckerVersion              = '3.5.2'
     timber                      = "com.jakewharton.timber:timber:$timberVersion"
     stetho                      = "com.facebook.stetho:stetho:$stethoVersion"
     stethoOkHttp                = "com.facebook.stetho:stetho-okhttp3:$stethoVersion"
-    chuckDebug                  = "com.readystatesoftware.chuck:library:$chuckVersion"
-    chuckRelease                = "com.readystatesoftware.chuck:library-no-op:$chuckVersion"
+    chuckerDebug                = "com.github.chuckerteam.chucker:library:$chuckerVersion"
+    chuckerRelease              = "com.github.chuckerteam.chucker:library-no-op:$chuckerVersion"
 
     // ANDROID TEST
     androidXTestVersion         = '1.4.0'

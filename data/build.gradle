@@ -74,9 +74,9 @@ dependencies {
     // DEBUG TOOLS
     implementation timber
     implementation stethoOkHttp
-    debugImplementation chuckDebug
-    debugTestImplementation chuckRelease
-    releaseImplementation chuckRelease
+    debugImplementation chuckerDebug
+    debugTestImplementation chuckerDebug
+    releaseImplementation chuckerRelease
 
     // DEPENDENCY CHECK STRATEGY
     dependencyUpdates.resolutionStrategy dependencyUpdatesStrategy
