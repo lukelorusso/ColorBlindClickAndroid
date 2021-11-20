@@ -12,11 +12,11 @@ ext {
     androidApplicationId        = 'com.lukelorusso.colorblindclick'
 
     // APP VERSION
-    androidVersionCode          = 53
-    androidVersionName          = '2.5.1'
+    androidVersionCode          = 54
+    androidVersionName          = '2.5.2'
 
     // ANDROID VERSION
-    androidCompileSdkVersion    = 30
+    androidCompileSdkVersion    = 31
     androidMinSdkVersion        = 21
 
     // DEFAULT INFO
@@ -28,15 +28,15 @@ ext {
 
     // ANDROID LIB
     androidXVersion             = '1.2.1'
-    androidXCore                = "androidx.core:core-ktx:1.6.0"
+    androidXCore                = "androidx.core:core-ktx:1.7.0"
     androidXCardView            = "androidx.cardview.widget.CardView:$androidXVersion"
     androidXRecyclerView        = "androidx.recyclerview:recyclerview:$androidXVersion"
     androidXPreference          = "androidx.preference:preference:1.1.1"
-    androidXAppCompat           = "androidx.appcompat:appcompat:1.3.1"
+    androidXAppCompat           = "androidx.appcompat:appcompat:1.4.0"
     androidXArch                = "androidx.arch.core:core-runtime:2.1.0"
-    androidXLifecycleViewModel  = "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1"
+    androidXLifecycleViewModel  = "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0"
     materialDesign              = "com.google.android.material:material:1.4.0"
-    constraintLayout            = "androidx.constraintlayout:constraintlayout:2.1.0"
+    constraintLayout            = "androidx.constraintlayout:constraintlayout:2.1.2"
     multidex                    = "androidx.multidex:multidex:2.0.1"
     hfRecyclerView              = "com.mikhaellopez:hfrecyclerview-kotlin:1.1.1"
 
@@ -52,7 +52,7 @@ ext {
 
     // RX
     rxAndroidVersion            = '3.0.0'
-    rxJavaVersion               = '3.1.1'
+    rxJavaVersion               = '3.1.2'
     rxKotlinVersion             = '3.0.1'
     rxBindingVersion            = '4.0.0'
     rxAndroid                   = "io.reactivex.rxjava3:rxandroid:$rxAndroidVersion"
@@ -62,7 +62,7 @@ ext {
     rxBindingSwipeRefreshLayout = "com.jakewharton.rxbinding4:rxbinding-swiperefreshlayout:$rxBindingVersion"
 
     // WEBSERVICES
-    gsonVersion                 = '2.8.8'
+    gsonVersion                 = '2.8.9'
     retrofitVersion             = '2.9.0'
     okHttpVersion               = '3.11.0'
     gson                        = "com.google.code.gson:gson:$gsonVersion"
@@ -105,9 +105,10 @@ ext {
     fragmentViewBinding         = 'com.github.Zhuinden:fragmentviewbindingdelegate-kt:1.0.0'
 
     // CRASHLYTICS
-    firebaseAnalytics           = 'com.google.firebase:firebase-analytics:19.0.1'
-    firebaseCore                = 'com.google.firebase:firebase-core:19.0.1'
-    firebaseCrashlyticsNew      = 'com.google.firebase:firebase-crashlytics:18.2.1'
+    firebaseAnalytics           = 'com.google.firebase:firebase-analytics-ktx:20.0.0'
+    firebaseBom                 = 'com.google.firebase:firebase-bom:29.0.0'
+    firebaseCore                = 'com.google.firebase:firebase-core:20.0.0'
+    firebaseCrashlyticsNew      = 'com.google.firebase:firebase-crashlytics:18.2.4'
 
 
     // DEPENDENCY CHECK STRATEGY

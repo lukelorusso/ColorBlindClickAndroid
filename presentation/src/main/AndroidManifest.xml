@@ -25,7 +25,8 @@
             android:name=".ui.main.MainActivity"
             android:alwaysRetainTaskState="true"
             android:screenOrientation="portrait"
-            android:theme="@style/Base.ThemeNoActionBar">
+            android:theme="@style/Base.ThemeNoActionBar"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.MAIN" />
