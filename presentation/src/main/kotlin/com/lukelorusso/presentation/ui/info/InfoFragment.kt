@@ -126,14 +126,14 @@ class InfoFragment : ARenderFragment<InfoData>(R.layout.fragment_info) {
             .doOnNext {
                 trackerHelper.track(activity, TrackerHelper.Actions.GOTO_HOME_PAGE)
             }
-            .flatMap { viewModel.intentGetHelpUrl() }
+            .flatMap { viewModel.intentGetHomeUrl() }
 
         val getHelpUrl = infoAdapter.intentItemClick
             .filter { position -> position == 1 }
             .doOnNext {
                 trackerHelper.track(activity, TrackerHelper.Actions.GOTO_HELP_PAGE)
             }
-            .flatMap { viewModel.intentGetHomeUrl() }
+            .flatMap { viewModel.intentGetHelpUrl() }
 
         val getAboutMeUrl = infoAdapter.intentItemClick
             .filter { position -> position == 2 }

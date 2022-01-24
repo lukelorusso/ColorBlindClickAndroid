@@ -55,7 +55,6 @@ class CameraFragment : ARenderFragment<CameraData>(R.layout.fragment_camera) {
 
     // Properties
     private val trackerHelper by inject<TrackerHelper>()
-    private var homeUrl: String = ""
     private var isFrontCamera = false
     private val cameraConfiguration by lazy {
         CameraConfiguration(
@@ -127,7 +126,6 @@ class CameraFragment : ARenderFragment<CameraData>(R.layout.fragment_camera) {
                     data.contentState == ContentState.RETRY
         )
 
-        renderHomeUrl(data.homeUrl)
         renderInitCamera(data.lastLensPosition, data.lastZoomValue, data.pixelNeighbourhood)
         renderColorResult(data.color)
         //renderError(binding.inclError.textErrorDescription, data.errorMessage)
@@ -136,10 +134,6 @@ class CameraFragment : ARenderFragment<CameraData>(R.layout.fragment_camera) {
 
     override fun renderSnack(messageError: String?) {
         showToolbarColor(messageError)
-    }
-
-    private fun renderHomeUrl(homeUrl: String?) {
-        homeUrl?.also { this.homeUrl = it }
     }
 
     private fun renderInitCamera(
