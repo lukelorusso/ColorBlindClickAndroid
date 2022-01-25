@@ -6,6 +6,7 @@ import io.reactivex.rxjava3.core.Single
 
 class GetHomeUrlUseCase(private val repository: ColorRepository) : SingleUseCase<String, Unit>() {
 
-    override fun build(param: Unit): Single<String> = repository.getHomeUrl()
+    override fun build(param: Unit): Single<String> =
+        repository.getHomeUrl()
 
 }

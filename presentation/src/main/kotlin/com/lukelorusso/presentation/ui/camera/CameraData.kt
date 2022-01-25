@@ -5,7 +5,6 @@ import com.lukelorusso.presentation.ui.base.ContentState
 
 data class CameraData(
     val contentState: ContentState = ContentState.NONE,
-    val homeUrl: String? = null,
     val lastLensPosition: Int? = null,
     val lastZoomValue: Int? = null,
     val pixelNeighbourhood: Int? = null,
@@ -19,13 +18,11 @@ data class CameraData(
         fun createLoading() = CameraData(contentState = ContentState.LOADING)
 
         fun createContent(
-            homeUrl: String? = null,
             lensPosition: Int? = null,
             zoomValue: Int? = null,
             pixelNeighbourhood: Int? = null
         ) = CameraData(
             contentState = ContentState.CONTENT,
-            homeUrl = homeUrl,
             lastLensPosition = lensPosition,
             lastZoomValue = zoomValue,
             pixelNeighbourhood = pixelNeighbourhood

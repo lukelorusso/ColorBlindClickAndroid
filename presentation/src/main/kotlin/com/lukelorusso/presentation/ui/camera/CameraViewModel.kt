@@ -12,7 +12,6 @@ import javax.inject.Inject
 
 class CameraViewModel
 @Inject constructor(
-    private val getHomeUrl: GetHomeUrlUseCase,
     private val getLastLensPosition: GetLastLensPositionUseCase,
     private val setLastLensPosition: SetLastLensPositionUseCase,
     private val getLastZoomValue: GetLastZoomValueUseCase,
@@ -28,13 +27,11 @@ class CameraViewModel
             getLastLensPosition.execute(param),
             getLastZoomValue.execute(param),
             getPixelNeighbourhood.execute(param),
-            getHomeUrl.execute(param),
-            { lensPosition, zoomValue, pixelNeighbourhood, homeUrl ->
+            { lensPosition, zoomValue, pixelNeighbourhood ->
                 CameraData.createContent(
                     lensPosition = lensPosition,
                     zoomValue = zoomValue,
-                    pixelNeighbourhood = pixelNeighbourhood,
-                    homeUrl = homeUrl
+                    pixelNeighbourhood = pixelNeighbourhood
                 )
             }
         ).toObservable().onErrorReturn { onError(it) }
