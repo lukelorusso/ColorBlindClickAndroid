@@ -125,7 +125,7 @@ dependencies {
 
     // CRASHLYTICS
     implementation firebaseCore
-    implementation(firebaseCrashlyticsNew) { transitive = true }
+    implementation(firebaseCrashlytics) { transitive = true }
     implementation firebaseAnalytics
 
     // DEPENDENCY CHECK STRATEGY
