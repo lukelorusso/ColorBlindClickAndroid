@@ -20,7 +20,7 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="15dp"
-            app:srcCompat="@drawable/clear_item_white" />
+            app:srcCompat="@drawable/delete_item_white" />
 
     </RelativeLayout>
 

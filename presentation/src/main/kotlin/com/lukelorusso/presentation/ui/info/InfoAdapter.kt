@@ -15,7 +15,7 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 
 /**
  * Based on https://github.com/lopspower/HFRecyclerView
- * Copyright 2018 Mikhael LOPEZ - http://mikhaellopez.com/
+ * Copyright 2018 Mikhael LOPEZ - https://mikhaellopez.com/
  */
 class InfoAdapter(private val withHeader: Boolean, private val withFooter: Boolean) :
     HFRecyclerView<Pair<Int, String>>(withHeader, withFooter) { // Pair of DrawableRes Int (icon) and String (label)

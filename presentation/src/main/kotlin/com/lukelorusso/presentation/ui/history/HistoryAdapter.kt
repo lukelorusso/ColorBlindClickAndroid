@@ -20,7 +20,7 @@ import com.mikhaellopez.hfrecyclerviewkotlin.HFRecyclerView
 
 /**
  * Based on https://github.com/lopspower/HFRecyclerView
- * Copyright 2018 Mikhael LOPEZ - http://mikhaellopez.com/
+ * Copyright 2018 Mikhael LOPEZ - https://mikhaellopez.com/
  */
 class HistoryAdapter(
     private val withHeader: Boolean,
