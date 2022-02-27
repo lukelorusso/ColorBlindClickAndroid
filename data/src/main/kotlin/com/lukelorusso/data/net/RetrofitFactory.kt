@@ -20,14 +20,14 @@ object RetrofitFactory {
     private const val COLOR_API_BASE_URL =
         "https://savedev.altervista.org/SD-Frontend/colorblindness/"
     private const val COLOR_BLIND_SITE =
-        "http://www.savedev.altervista.org/" //"http://www.colorblindclick.com/"
+        "https://savedev.altervista.org/" //"http://www.colorblindclick.com/"
     const val COLOR_API_OS = "android"
     const val COLOR_API_VERSION = "1"
     const val COLOR_BLIND_SITE_HELP =
         COLOR_BLIND_SITE + "SD-Frontend/colorblindclick/help.php?lang=%s"
     const val COLOR_BLIND_SITE_HOME =
         COLOR_BLIND_SITE + "SD-Frontend/colorblindclick/index.php?setlang=%s"
-    const val COLOR_BLIND_SITE_ABOUT_ME = "http://www.lukelorusso.com/"
+    const val COLOR_BLIND_SITE_ABOUT_ME = "https://www.lukelorusso.com/"
 
     /**
      * Get [Retrofit] instance for main webservice.
