@@ -65,10 +65,11 @@ android {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_11
     }
-
-    lintOptions {
+    lint {
         disable 'ContentDescription'
     }
+    namespace 'com.lukelorusso.presentation'
+
 }
 
 dependencies {
