@@ -12,7 +12,7 @@ import io.reactivex.rxjava3.core.SingleSource
  * and the appropriate [SingleSource] is subscribed to.
  * @param <T> the common value type of the Single
  */
-class SingleIfThen<T>(
+class SingleIfThen<T : Any>(
     private val condition: Boolean,
     private val then: SingleSource<out T>,
     private val orElse: SingleSource<out T>

@@ -27,7 +27,7 @@ interface PersistenceProvider {
         override fun <Model> getList(key: String): List<Model> {
             for (i in 1..EXCEPTION_RETRY_TIMES) {
                 try {
-                    return Paper.book().read(key, emptyList())
+                    return Paper.book().read<List<Model>>(key, emptyList()).orEmpty()
                 } catch (error: RuntimeException) {
                     logger.logError { error }
                     if (i == EXCEPTION_RETRY_TIMES) throw RuntimeException("getColorList()", error)

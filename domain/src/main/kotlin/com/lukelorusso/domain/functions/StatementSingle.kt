@@ -25,7 +25,7 @@ object StatementSingle {
      * @param orElse the Single sequence to emit to if `condition` is `false`
      * @return an Single that mimics either the `then` or `orElse` Single depending on a condition function
      */
-    fun <R> ifThen(
+    fun <R : Any> ifThen(
         condition: Boolean,
         then: SingleSource<out R>,
         orElse: Single<out R>
