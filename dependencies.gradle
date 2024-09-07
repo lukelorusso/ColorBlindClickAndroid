@@ -12,11 +12,11 @@ ext {
     androidApplicationId        = 'com.lukelorusso.colorblindclick'
 
     // APP VERSION
-    androidVersionCode          = 57
-    androidVersionName          = '2.5.5'
+    androidVersionCode          = 58
+    androidVersionName          = '2.5.6'
 
     // ANDROID VERSION
-    androidCompileSdkVersion    = 33
+    androidCompileSdkVersion    = 34
     androidMinSdkVersion        = 21
 
     // DEFAULT INFO
@@ -38,17 +38,16 @@ ext {
     materialDesign              = "com.google.android.material:material:1.6.1"
     constraintLayout            = "androidx.constraintlayout:constraintlayout:2.1.4"
     multidex                    = "androidx.multidex:multidex:2.0.1"
-    hfRecyclerView              = "com.mikhaellopez:hfrecyclerview-kotlin:1.1.1"
 
     // DATABASE
-    paperDBVersion              = "2.7.1"
-    paperDB                     = "io.paperdb:paperdb:$paperDBVersion"
+    paperDBVersion              = "2.7.2"
+    paperDB                     = "io.github.pilgr:paperdb:$paperDBVersion"
 
     // DEPENDENCY INJECTION
-    koinVersion                 = '2.2.2'
-    koinCore                    = "org.koin:koin-core:$koinVersion"
-    koinAndroidxViewmodel       = "org.koin:koin-androidx-viewmodel:$koinVersion"
-    koinTest                    = "org.koin:koin-test:$koinVersion"
+    koinVersion                 = '2.2.3'
+    koinCore                    = "io.insert-koin:koin-core:$koinVersion"
+    koinAndroidxViewmodel       = "io.insert-koin:koin-androidx-viewmodel:$koinVersion"
+    koinTest                    = "io.insert-koin:koin-test:$koinVersion"
 
     // RX
     rxAndroidVersion            = '3.0.0'
@@ -101,14 +100,13 @@ ext {
     picasso                     = 'com.squareup.picasso:picasso:2.71828'
     fotoapparat                 = 'io.fotoapparat:fotoapparat:2.7.0'
     verticalSeekBar             = 'com.github.lukelorusso:VerticalSeekBar:1.2.7'
-    rateBottomSheet             = 'com.mikhaellopez:ratebottomsheet:1.1.0'
     fragmentViewBinding         = 'com.github.Zhuinden:fragmentviewbindingdelegate-kt:1.0.1'
 
     // CRASHLYTICS
-    firebaseAnalytics           = 'com.google.firebase:firebase-analytics-ktx:21.1.1'
-    firebaseBom                 = 'com.google.firebase:firebase-bom:29.0.0'
+    firebaseAnalytics           = 'com.google.firebase:firebase-analytics-ktx:21.4.0'
+    firebaseBom                 = 'com.google.firebase:firebase-bom:32.2.3'
     firebaseCore                = 'com.google.firebase:firebase-core:21.1.1'
-    firebaseCrashlytics         = 'com.google.firebase:firebase-crashlytics:18.2.13'
+    firebaseCrashlytics         = 'com.google.firebase:firebase-crashlytics:18.4.1'
 
 
     // DEPENDENCY CHECK STRATEGY
