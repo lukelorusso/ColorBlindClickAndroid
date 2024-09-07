@@ -14,27 +14,21 @@ import com.lukelorusso.domain.model.Color
 import com.lukelorusso.presentation.R
 import com.lukelorusso.presentation.databinding.ActivityMainBinding
 import com.lukelorusso.presentation.extensions.*
-import com.lukelorusso.presentation.helper.TrackerHelper
 import com.lukelorusso.presentation.ui.settings.SettingsDialogFragment
 import com.lukelorusso.presentation.ui.camera.CameraFragment
 import com.lukelorusso.presentation.ui.history.HistoryFragment
 import com.lukelorusso.presentation.ui.info.InfoFragment
 import com.lukelorusso.presentation.ui.preview.PreviewDialogFragment
 import com.lukelorusso.presentation.view.MaybeScrollableViewPager
-import com.mikhaellopez.ratebottomsheet.AskRateBottomSheet
-import com.mikhaellopez.ratebottomsheet.RateBottomSheet
-import com.mikhaellopez.ratebottomsheet.RateBottomSheetManager
-import org.koin.android.ext.android.inject
 
 
-class MainActivity : AppCompatActivity(), AskRateBottomSheet.ActionListener {
+class MainActivity : AppCompatActivity() {
 
     // View
     private val binding by viewBinding(ActivityMainBinding::inflate)
     private val pagerAdapter by lazy { MainPagerAdapter(supportFragmentManager) }
 
     // Properties
-    private val trackerHelper by inject<TrackerHelper>()
     private val gson = Gson()
     private var immersiveMode: Boolean = false
         set(value) {
@@ -88,15 +82,6 @@ class MainActivity : AppCompatActivity(), AskRateBottomSheet.ActionListener {
         }
 
         checkPermission()
-
-        RateBottomSheetManager(this)
-            .setInstallDays(2)
-            .setLaunchTimes(4)
-            .setRemindInterval(1)
-            .setShowAskBottomSheet(false)
-            .setShowLaterButton(true)
-            .setShowCloseButtonIcon(false)
-            .monitor()
     }
 
     private fun checkPermission() {
@@ -203,12 +188,6 @@ class MainActivity : AppCompatActivity(), AskRateBottomSheet.ActionListener {
             })
         }
         gotoCamera()
-
-        // Show bottom sheet if meets conditions
-        RateBottomSheet.showRateBottomSheetIfMeetsConditions(
-            this,
-            this
-        )
     }
 
     fun hideSplashScreen() {
@@ -234,13 +213,4 @@ class MainActivity : AppCompatActivity(), AskRateBottomSheet.ActionListener {
     fun showSettingsDialog() =
         SettingsDialogFragment.newInstance()
             .show(supportFragmentManager, SettingsDialogFragment.TAG)
-
-    //region RateBottomSheet.ActionListener
-    override fun onRateClickListener() =
-        trackerHelper.track(this, TrackerHelper.Actions.RATING_YES_CLICKED)
-
-    override fun onNoClickListener() =
-        trackerHelper.track(this, TrackerHelper.Actions.RATING_NO_CLICKED)
-    //endregion
-
 }

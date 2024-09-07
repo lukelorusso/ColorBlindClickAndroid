@@ -74,6 +74,7 @@ android {
 
 dependencies {
     // MODULE
+    implementation files('libs/hfrecyclerview-kotlin-1.1.1.aar')
     implementation project(':data')
     implementation project(':domain')
 
@@ -120,8 +121,6 @@ dependencies {
     implementation picasso
     implementation fotoapparat
     implementation verticalSeekBar
-    implementation rateBottomSheet
-    implementation hfRecyclerView
     implementation fragmentViewBinding
 
     // CRASHLYTICS

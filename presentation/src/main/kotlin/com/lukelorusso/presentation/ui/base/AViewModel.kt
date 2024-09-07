@@ -14,7 +14,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
  * Copyright (C) 2021 Luke Lorusso
  * Licensed under the Apache License Version 2.0
  */
-abstract class AViewModel<Data>(private val errorMessageFactory: ErrorMessageFactory) :
+abstract class AViewModel<Data : Any>(private val errorMessageFactory: ErrorMessageFactory) :
     ViewModel() {
 
     private val liveData: MutableLiveData<Data> by lazy {
@@ -62,5 +62,4 @@ abstract class AViewModel<Data>(private val errorMessageFactory: ErrorMessageFac
         router?.clear()
         composite.clear()
     }
-
 }

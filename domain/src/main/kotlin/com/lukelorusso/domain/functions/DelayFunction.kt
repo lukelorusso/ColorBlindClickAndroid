@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit
  *
  * [Function] that adds a delay to receiving the onComplete when a [Single] return an error
  */
-class DelayFunction<T>(private val scheduler: UseCaseScheduler) :
+class DelayFunction<T : Any>(private val scheduler: UseCaseScheduler) :
     Function<Throwable, ObservableSource<out T>> {
     private val delay: Int = 1
     private val timeUnit: TimeUnit = TimeUnit.SECONDS

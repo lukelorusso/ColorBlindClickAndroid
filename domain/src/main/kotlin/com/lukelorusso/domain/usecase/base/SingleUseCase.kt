@@ -6,7 +6,7 @@ import io.reactivex.rxjava3.core.Single
  * Copyright (C) 2020 Mikhael LOPEZ
  * Licensed under the Apache License Version 2.0
  */
-abstract class SingleUseCase<R, in P> : UseCase<Single<R>, P>() {
+abstract class SingleUseCase<R : Any, in P> : UseCase<Single<R>, P>() {
 
     override fun execute(param: P, fromUseCase: Boolean): Single<R> =
         super.execute(param, fromUseCase)
@@ -18,5 +18,4 @@ abstract class SingleUseCase<R, in P> : UseCase<Single<R>, P>() {
             }
             .doOnError { logger.logError { it } }
             .doOnSuccess { logger.log { "${javaClass.simpleName} : $param => $it" } }
-
 }

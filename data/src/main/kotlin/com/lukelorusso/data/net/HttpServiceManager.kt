@@ -14,7 +14,7 @@ class HttpServiceManager(
     private val networkChecker: NetworkChecker? = null
 ) {
     @Suppress("ThrowsCount")
-    fun <DTO, Entity> execute(
+    fun <DTO : Any, Entity : Any> execute(
         call: Single<DTO>,
         mapper: (DTO) -> Entity
     ): Single<Entity> =
