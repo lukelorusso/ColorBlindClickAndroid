@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
@@ -12,7 +13,14 @@ import android.text.format.DateFormat
 import android.util.DisplayMetrics
 import android.view.View
 import androidx.core.app.ActivityCompat
+import androidx.core.content.FileProvider
+import com.lukelorusso.presentation.BuildConfig
+import java.io.*
 import java.util.*
+
+
+const val CACHE_DIR = "images"
+const val SHARED_IMAGE_FILENAME = "shared_color.png"
 
 @SuppressLint("ObsoleteSdkInt")
 fun Activity.enableImmersiveMode(
@@ -91,14 +99,54 @@ fun Context.redirectToBrowser(url: String) {
     startActivityWithFlagNewTask(browserIntent)
 }
 
-fun Context.shareImageAndText(content: Uri, text: String, popupLabel: String?) {
+fun Context.shareBitmap(
+    bitmap: Bitmap,
+    description: String,
+    popupLabel: String? = null
+) {
+    try {
+        val cachePath = File(
+            this.externalCacheDir,
+            CACHE_DIR
+        )
+        val mkdirs = cachePath.mkdirs()
+
+        if (mkdirs || cachePath.exists()) {
+            bitmap.compressToPNG(
+                stream = FileOutputStream("$cachePath/${SHARED_IMAGE_FILENAME}")
+            )
+        }
+
+        val file = File(
+            cachePath,
+            SHARED_IMAGE_FILENAME
+        )
+        val contentUri = FileProvider.getUriForFile(
+            this,
+            BuildConfig.APPLICATION_ID,
+            file
+        )
+
+        if (contentUri != null) {
+            this.shareUri(
+                contentUri,
+                description,
+                popupLabel
+            )
+        }
+
+    } catch (ignored: IOException) {
+    }
+}
+
+fun Context.shareUri(content: Uri, description: String, popupLabel: String? = null) {
     var intent = Intent()
     intent.action = Intent.ACTION_SEND
     intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
     intent.setDataAndType(content, this.contentResolver.getType(content))
     intent.putExtra(Intent.EXTRA_STREAM, content)
-    if (text.isNotEmpty()) {
-        intent.putExtra(Intent.EXTRA_TEXT, text)
+    if (description.isNotEmpty()) {
+        intent.putExtra(Intent.EXTRA_TEXT, description)
     }
     popupLabel?.also { intent = Intent.createChooser(intent, it) }
     startActivityWithFlagNewTask(intent)

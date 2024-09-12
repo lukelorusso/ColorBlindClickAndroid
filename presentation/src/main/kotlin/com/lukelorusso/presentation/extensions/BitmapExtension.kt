@@ -3,6 +3,7 @@ package com.lukelorusso.presentation.extensions
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Matrix
+import java.io.FileOutputStream
 
 private var scaleMatrix: Matrix? = null
 
@@ -82,4 +83,9 @@ fun Bitmap.getAveragePixel(averageNeighbourhood: Int = 0): Int {
         (greenBucket / pixelCount).toInt(),
         (blueBucket / pixelCount).toInt()
     )
+}
+
+fun Bitmap.compressToPNG(stream: FileOutputStream) {
+    this.compress(Bitmap.CompressFormat.PNG, 0, stream)
+    stream.close()
 }
