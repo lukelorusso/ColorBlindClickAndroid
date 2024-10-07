@@ -1,13 +1,15 @@
 package com.lukelorusso.data.di
 
 import com.google.gson.Gson
-import com.lukelorusso.data.di.providers.*
+import com.lukelorusso.data.datasource.*
+import com.lukelorusso.data.datasource.impl.PersistenceDataSourceImpl
+import com.lukelorusso.data.datasource.impl.SharedPrefDataSourceImpl
 import com.lukelorusso.data.extensions.api
 import com.lukelorusso.data.mapper.ColorMapper
-import com.lukelorusso.data.net.HttpServiceManager
+import com.lukelorusso.data.datasource.HttpManager
 import com.lukelorusso.data.net.OkHttpClientFactory
 import com.lukelorusso.data.net.RetrofitFactory
-import com.lukelorusso.data.repository.ColorDataRepository
+import com.lukelorusso.data.repository.ColorRepositoryImpl
 import com.lukelorusso.domain.repository.ColorRepository
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -19,7 +21,7 @@ import retrofit2.Retrofit
 val dataModule = module {
     //region Net
     factory { NetworkChecker(get()) }
-    factory { HttpServiceManager(get()) }
+    factory { HttpManager(get()) }
     factory { OkHttpClientFactory() }
     factory { RetrofitFactory.getRetrofitBuilder(get(), get(), get()) }
     //endregion
@@ -31,7 +33,7 @@ val dataModule = module {
 
     //region Repository
     factory<ColorRepository> {
-        ColorDataRepository(
+        ColorRepositoryImpl(
             (get() as Retrofit).api(),
             get(),
             get(),
@@ -42,12 +44,11 @@ val dataModule = module {
     //endregion
 
     //region Session
-    factory<SharedPrefProvider> { SharedPrefProvider.Impl(get()) }
-    factory { SessionManager(get()) }
+    factory<SharedPrefDataSource> { SharedPrefDataSourceImpl(get()) }
+    factory { SettingsManager(get()) }
     //endregion
 
     //region Database
-    factory<PersistenceProvider> { PersistenceProvider.Impl(get()) }
-    factory { PersistenceManager(get()) }
+    factory<PersistenceDataSource> { PersistenceDataSourceImpl(get()) }
     //endregion
 }

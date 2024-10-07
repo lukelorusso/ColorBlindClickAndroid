@@ -1,11 +1,10 @@
-package com.lukelorusso.data.di.providers
+package com.lukelorusso.data.datasource
 
 /**
  * Copyright (C) 2021 Luke Lorusso
  * Licensed under the Apache License Version 2.0
  */
-class SessionManager(private val sharedPrefProvider: SharedPrefProvider) {
-
+class SettingsManager(private val sharedPrefDataSource: SharedPrefDataSource) {
     companion object {
         private const val PREF_LAST_LENS_POSITION = "pref_last_lens_position"
         private const val PREF_LAST_ZOOM_VALUE = "pref_last_zoom_value"
@@ -19,44 +18,43 @@ class SessionManager(private val sharedPrefProvider: SharedPrefProvider) {
 
     //region Lens Position
     fun getLastLensPosition(): Int =
-        sharedPrefProvider.get(PREF_LAST_LENS_POSITION, DEFAULT_LAST_LENS_POSITION)
+        sharedPrefDataSource.get(PREF_LAST_LENS_POSITION, DEFAULT_LAST_LENS_POSITION)
 
     fun setLastLensPosition(value: Int) {
-        sharedPrefProvider.set(PREF_LAST_LENS_POSITION, value)
+        sharedPrefDataSource.set(PREF_LAST_LENS_POSITION, value)
     }
 
     fun deleteLastLensPosition() =
-        sharedPrefProvider.delete(PREF_LAST_LENS_POSITION)
+        sharedPrefDataSource.delete(PREF_LAST_LENS_POSITION)
     //endregion
 
     //region Zoom Value
     fun getLastZoomValue(): Int =
-        sharedPrefProvider.get(PREF_LAST_ZOOM_VALUE, DEFAULT_LAST_ZOOM_VALUE)
+        sharedPrefDataSource.get(PREF_LAST_ZOOM_VALUE, DEFAULT_LAST_ZOOM_VALUE)
 
     fun setLastZoomValue(value: Int) {
-        sharedPrefProvider.set(PREF_LAST_ZOOM_VALUE, value)
+        sharedPrefDataSource.set(PREF_LAST_ZOOM_VALUE, value)
     }
 
     fun deleteLastZoomValue() =
-        sharedPrefProvider.delete(PREF_LAST_ZOOM_VALUE)
+        sharedPrefDataSource.delete(PREF_LAST_ZOOM_VALUE)
     //endregion
 
     //region Pixel Neighbourhood
     fun getPixelNeighbourhood(): Int =
-        sharedPrefProvider.get(PREF_PIXEL_NEIGHBOURHOOD_VALUE, DEFAULT_PIXEL_NEIGHBOURHOOD_VALUE)
+        sharedPrefDataSource.get(PREF_PIXEL_NEIGHBOURHOOD_VALUE, DEFAULT_PIXEL_NEIGHBOURHOOD_VALUE)
 
     fun setPixelNeighbourhood(value: Int) {
-        sharedPrefProvider.set(PREF_PIXEL_NEIGHBOURHOOD_VALUE, value)
+        sharedPrefDataSource.set(PREF_PIXEL_NEIGHBOURHOOD_VALUE, value)
     }
     //endregion
 
     //region Save Camera Options
     fun getSaveCameraOptions(): Boolean =
-        sharedPrefProvider.get(PREF_SAVE_CAMERA_OPTIONS, DEFAULT_SAVE_CAMERA_OPTIONS)
+        sharedPrefDataSource.get(PREF_SAVE_CAMERA_OPTIONS, DEFAULT_SAVE_CAMERA_OPTIONS)
 
     fun setSaveCameraOptions(shouldSave: Boolean) {
-        sharedPrefProvider.set(PREF_SAVE_CAMERA_OPTIONS, shouldSave)
+        sharedPrefDataSource.set(PREF_SAVE_CAMERA_OPTIONS, shouldSave)
     }
     //endregion
-
 }

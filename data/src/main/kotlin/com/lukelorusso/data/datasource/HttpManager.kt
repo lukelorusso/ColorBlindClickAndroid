@@ -1,6 +1,5 @@
-package com.lukelorusso.data.net
+package com.lukelorusso.data.datasource
 
-import com.lukelorusso.data.di.providers.NetworkChecker
 import com.lukelorusso.data.extensions.catchPersistenceException
 import com.lukelorusso.data.extensions.catchWebServiceException
 import com.lukelorusso.domain.exception.NotConnectedException
@@ -10,7 +9,7 @@ import io.reactivex.rxjava3.core.Single
  * Copyright (C) 2021 Luke Lorusso
  * Licensed under the Apache License Version 2.0
  */
-class HttpServiceManager(
+class HttpManager(
     private val networkChecker: NetworkChecker? = null
 ) {
     @Suppress("ThrowsCount")

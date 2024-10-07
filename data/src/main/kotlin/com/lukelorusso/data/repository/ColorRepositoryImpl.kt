@@ -1,10 +1,8 @@
 package com.lukelorusso.data.repository
 
-import com.lukelorusso.data.di.providers.PersistenceManager
-import com.lukelorusso.data.di.providers.SessionManager
+import com.lukelorusso.data.datasource.*
 import com.lukelorusso.data.extensions.catchPersistenceException
 import com.lukelorusso.data.mapper.ColorMapper
-import com.lukelorusso.data.net.HttpServiceManager
 import com.lukelorusso.data.net.RetrofitFactory.COLOR_BLIND_SITE_ABOUT_ME
 import com.lukelorusso.data.net.RetrofitFactory.COLOR_BLIND_SITE_HELP
 import com.lukelorusso.data.net.RetrofitFactory.COLOR_BLIND_SITE_HOME
@@ -16,14 +14,13 @@ import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 import java.util.*
 
-class ColorDataRepository(
+class ColorRepositoryImpl(
     private val api: ColorApi,
     private val colorMapper: ColorMapper,
-    private val httpServiceManager: HttpServiceManager,
-    private val sessionManager: SessionManager,
-    private val persistenceManager: PersistenceManager
+    private val httpManager: HttpManager,
+    private val settingsManager: SettingsManager,
+    private val persistenceManager: PersistenceDataSource
 ) : ColorRepository {
-
     companion object {
         private val COLOR_API_SUPPORTED_LANGUAGES = arrayListOf(
             "en",
@@ -38,52 +35,52 @@ class ColorDataRepository(
      * Back camera = 0; Front camera = 1
      */
     override fun getLastLensPosition(): Single<Int> =
-        Single.just(sessionManager.getLastLensPosition())
+        Single.just(settingsManager.getLastLensPosition())
 
     /**
      * First, check if the user wants to save the camera options
      */
     override fun setLastLensPosition(position: Int): Completable =
-        Single.just(sessionManager.getSaveCameraOptions())
+        Single.just(settingsManager.getSaveCameraOptions())
             .filter { it }
-            .flatMap { Maybe.just(sessionManager.setLastLensPosition(position)) }
-            .doAfterSuccess { sessionManager.deleteLastZoomValue() }
+            .flatMap { Maybe.just(settingsManager.setLastLensPosition(position)) }
+            .doAfterSuccess { settingsManager.deleteLastZoomValue() }
             .ignoreElement()
 
     /**
      * Min zoom value = 0; Max zoom value = 100
      */
     override fun getLastZoomValue(): Single<Int> =
-        Single.just(sessionManager.getLastZoomValue())
+        Single.just(settingsManager.getLastZoomValue())
 
     /**
      * First, check if the user wants to save the camera options
      */
     override fun setLastZoomValue(position: Int): Completable =
-        Single.just(sessionManager.getSaveCameraOptions())
+        Single.just(settingsManager.getSaveCameraOptions())
             .filter { it }
-            .flatMap { Maybe.just(sessionManager.setLastZoomValue(position)) }
+            .flatMap { Maybe.just(settingsManager.setLastZoomValue(position)) }
             .ignoreElement()
 
     override fun getPixelNeighbourhood(): Single<Int> =
-        Single.just(sessionManager.getPixelNeighbourhood())
+        Single.just(settingsManager.getPixelNeighbourhood())
 
     override fun setPixelNeighbourhood(count: Int): Completable =
-        Single.just(sessionManager.setPixelNeighbourhood(count))
+        Single.just(settingsManager.setPixelNeighbourhood(count))
             .ignoreElement()
 
     override fun getSaveCameraOptions(): Single<Boolean> =
-        Single.just(sessionManager.getSaveCameraOptions())
+        Single.just(settingsManager.getSaveCameraOptions())
 
     /**
      * If the user does NOT save the camera options, you should delete them
      */
     override fun setSaveCameraOptions(shouldSave: Boolean): Completable =
-        Single.just(sessionManager.setSaveCameraOptions(shouldSave))
+        Single.just(settingsManager.setSaveCameraOptions(shouldSave))
             .doAfterSuccess {
                 if (!shouldSave) {
-                    sessionManager.deleteLastLensPosition()
-                    sessionManager.deleteLastZoomValue()
+                    settingsManager.deleteLastLensPosition()
+                    settingsManager.deleteLastZoomValue()
                 }
             }
             .ignoreElement()
@@ -110,7 +107,7 @@ class ColorDataRepository(
     )
 
     override fun getColor(colorHex: String, deviceUdid: String): Single<Color> =
-        httpServiceManager.execute(
+        httpManager.execute(
             call = api.getColor(
                 colorHex.let {
                     if (it.contains("#"))
@@ -162,5 +159,4 @@ class ColorDataRepository(
         }
         return language
     }
-
 }

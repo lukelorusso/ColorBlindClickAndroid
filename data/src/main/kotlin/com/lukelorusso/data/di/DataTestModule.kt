@@ -1,16 +1,17 @@
 package com.lukelorusso.data.di
 
 import com.google.gson.Gson
-import com.lukelorusso.data.di.providers.PersistenceManager
-import com.lukelorusso.data.di.providers.PersistenceProvider
-import com.lukelorusso.data.di.providers.SessionManager
-import com.lukelorusso.data.di.providers.SharedPrefProvider
+import com.lukelorusso.data.datasource.PersistenceDataSource
+import com.lukelorusso.data.datasource.SettingsManager
+import com.lukelorusso.data.datasource.SharedPrefDataSource
+import com.lukelorusso.data.datasource.impl.PersistenceDataSourceTestImpl
+import com.lukelorusso.data.datasource.impl.SharedPrefDataSourceTestImpl
 import com.lukelorusso.data.extensions.api
 import com.lukelorusso.data.mapper.ColorMapper
-import com.lukelorusso.data.net.HttpServiceManager
+import com.lukelorusso.data.datasource.HttpManager
 import com.lukelorusso.data.net.OkHttpClientFactory
 import com.lukelorusso.data.net.RetrofitFactory
-import com.lukelorusso.data.repository.ColorDataRepository
+import com.lukelorusso.data.repository.ColorRepositoryImpl
 import com.lukelorusso.domain.repository.ColorRepository
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -23,7 +24,7 @@ import retrofit2.Retrofit
  */
 val dataTestModule = module {
     //region Net
-    factory { HttpServiceManager() }
+    factory { HttpManager() }
     factory { OkHttpClientFactory() }
     factory { RetrofitFactory.getRetrofitTestBuilder(get(), get()) }
     //endregion
@@ -35,7 +36,7 @@ val dataTestModule = module {
 
     //region Repository
     factory<ColorRepository> {
-        ColorDataRepository(
+        ColorRepositoryImpl(
             (get() as Retrofit).api(),
             get(),
             get(),
@@ -46,12 +47,11 @@ val dataTestModule = module {
     //endregion
 
     //region Session
-    factory<SharedPrefProvider> { SharedPrefProvider.TestImpl(get()) }
-    factory { SessionManager(get()) }
+    factory<SharedPrefDataSource> { SharedPrefDataSourceTestImpl(get()) }
+    factory { SettingsManager(get()) }
     //endregion
 
     //region Persistence
-    factory<PersistenceProvider> { PersistenceProvider.TestImpl(get()) }
-    factory { PersistenceManager(get()) }
+    factory<PersistenceDataSource> { PersistenceDataSourceTestImpl(get()) }
     //endregion
 }

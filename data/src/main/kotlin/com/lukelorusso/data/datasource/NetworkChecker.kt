@@ -1,4 +1,4 @@
-package com.lukelorusso.data.di.providers
+package com.lukelorusso.data.datasource
 
 import android.content.Context
 import com.lukelorusso.data.extensions.isInternetAvailable
