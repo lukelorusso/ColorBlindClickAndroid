@@ -10,6 +10,11 @@ android {
 
     buildFeatures {
         viewBinding true
+        compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.4.8"
     }
 
     defaultConfig {
@@ -30,8 +35,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_18
+        targetCompatibility = JavaVersion.VERSION_18
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_18
     }
 
     buildTypes {
@@ -58,12 +67,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_18
+        targetCompatibility = JavaVersion.VERSION_18
     }
     
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11
+        jvmTarget = JavaVersion.VERSION_18
     }
     lint {
         disable 'ContentDescription'
@@ -89,6 +98,15 @@ dependencies {
     implementation materialDesign
     implementation constraintLayout
     implementation multidex
+
+    // COMPOSE
+    implementation androidXComposeBom
+    implementation androidXComposeFundation
+    implementation androidXComposeMaterial
+    implementation androidXComposeUi
+    implementation androidXComposeUiAndroid
+    implementation androidXComposeUiTooling
+    implementation androidXLifecycleRuntimeCompose
 
     // RX
     implementation rxAndroid
