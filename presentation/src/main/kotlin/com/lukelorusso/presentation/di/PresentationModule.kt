@@ -17,6 +17,7 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
+import com.lukelorusso.presentation.ui.v3.info.InfoViewModel as InfoViewModelV3
 
 /**
  * Copyright (C) 2021 Luke Lorusso
@@ -44,6 +45,7 @@ val presentationModule = module {
     viewModel { CameraViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { HistoryViewModel(get(), get(), get(), get(), get(), get()) }
     viewModel { InfoViewModel(get(), get(), get(), get(), get()) }
+    viewModel { InfoViewModelV3(get(), get(), get()) }
     viewModel { PreviewViewModel(get(), get()) }
     viewModel { SettingsViewModel(get(), get(), get(), get(), get()) }
     //endregion

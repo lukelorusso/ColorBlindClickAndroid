@@ -14,12 +14,12 @@ import com.lukelorusso.domain.model.Color
 import com.lukelorusso.presentation.R
 import com.lukelorusso.presentation.databinding.ActivityMainBinding
 import com.lukelorusso.presentation.extensions.*
-import com.lukelorusso.presentation.ui.settings.SettingsDialogFragment
 import com.lukelorusso.presentation.ui.camera.CameraFragment
 import com.lukelorusso.presentation.ui.history.HistoryFragment
-import com.lukelorusso.presentation.ui.info.InfoFragment
 import com.lukelorusso.presentation.ui.preview.PreviewDialogFragment
+import com.lukelorusso.presentation.ui.settings.SettingsDialogFragment
 import com.lukelorusso.presentation.view.MaybeScrollableViewPager
+import com.lukelorusso.presentation.ui.v3.info.InfoFragment as InfoFragmentV3
 
 
 class MainActivity : AppCompatActivity() {
@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
     override fun onBackPressed() {
         when (val f =
             pagerAdapter.getItem(binding.viewPager.currentItem)) { // pick the current fragment
-            is InfoFragment -> if (!f.backPressHandled()) finish()
+            is InfoFragmentV3 -> if (!f.backPressHandled()) finish()
             is CameraFragment -> if (!f.backPressHandled()) finish()
             is HistoryFragment -> if (!f.backPressHandled()) finish()
             else -> finish() // just quit

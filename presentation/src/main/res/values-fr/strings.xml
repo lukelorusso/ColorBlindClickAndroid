@@ -1,6 +1,6 @@
 <resources>
 
-    <string name="close_button">Bouton de fermeture</string>
+    <string name="action_label_dismiss">Annuler</string>
     <string name="permissions_label">"<![CDATA[Cette Appli a besoin de certaines <br />autorisations pour que \u00E7a marche!<br /><br /><b>Cliquer ici</b>, puis sélectionner<br /><b><i>Autorisations</i></b> pour donner les permis.]]>"</string>
     <string name="credits">Capturé avec </string>
     <string name="share_color">Partager la couleur</string>

@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name" translatable="false">ColorBlindClick</string>
-    <string name="close_button">Close button</string>
+    <string name="action_label_undefined_error" translatable="false">"Undefined error"</string>
+    <string name="action_label_ok" translatable="false">OK</string>
+    <string name="action_label_dismiss">Cancel</string>
     <string name="permissions_label">"<![CDATA[This app needs some<br />permissions to work correctly!<br /><br /><b>Click here</b> and then go to<br /><b><i>Permissions</i></b> to grant them]]>"</string>
     <string name="credits">Obtained with </string>
     <string name="share_color">Share color</string>

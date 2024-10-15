@@ -2,6 +2,9 @@ package com.lukelorusso.domain.di
 
 import com.lukelorusso.domain.usecase.*
 import org.koin.dsl.module
+import com.lukelorusso.domain.usecase.v3.GetAboutMeUrlUseCase as GetAboutMeUrlUseCaseV3
+import com.lukelorusso.domain.usecase.v3.GetHelpUrlUseCase as GetHelpUrlUseCaseV3
+import com.lukelorusso.domain.usecase.v3.GetHomeUrlUseCase as GetHomeUrlUseCaseV3
 
 val domainModule = module {
     //region Repository
@@ -20,5 +23,9 @@ val domainModule = module {
     factory { SetPixelNeighbourhoodUseCase(get()) }
     factory { GetSaveCameraOptionsUseCase(get()) }
     factory { SetSaveCameraOptionsUseCase(get()) }
+
+    factory { GetAboutMeUrlUseCaseV3(get()) }
+    factory { GetHelpUrlUseCaseV3(get()) }
+    factory { GetHomeUrlUseCaseV3(get()) }
     //endregion
 }
