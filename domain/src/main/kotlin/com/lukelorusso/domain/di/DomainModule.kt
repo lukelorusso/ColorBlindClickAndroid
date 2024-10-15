@@ -2,12 +2,15 @@ package com.lukelorusso.domain.di
 
 import com.lukelorusso.domain.usecase.*
 import org.koin.dsl.module
+import com.lukelorusso.domain.usecase.v3.DeleteAllSavedColorsUseCase as DeleteAllSavedColorsUseCaseV3
+import com.lukelorusso.domain.usecase.v3.DeleteSavedColorUseCase as DeleteSavedColorUseCaseV3
 import com.lukelorusso.domain.usecase.v3.GetAboutMeUrlUseCase as GetAboutMeUrlUseCaseV3
 import com.lukelorusso.domain.usecase.v3.GetHelpUrlUseCase as GetHelpUrlUseCaseV3
 import com.lukelorusso.domain.usecase.v3.GetHomeUrlUseCase as GetHomeUrlUseCaseV3
+import com.lukelorusso.domain.usecase.v3.GetSavedColorListUseCase as GetSavedColorListUseCaseV3
 
 val domainModule = module {
-    //region Repository
+    //region UseCase
     factory { DeleteAllColorsUseCase(get()) }
     factory { DeleteColorUseCase(get()) }
     factory { GetAboutMeUrlUseCase(get()) }
@@ -27,5 +30,9 @@ val domainModule = module {
     factory { GetAboutMeUrlUseCaseV3(get()) }
     factory { GetHelpUrlUseCaseV3(get()) }
     factory { GetHomeUrlUseCaseV3(get()) }
+
+    factory { GetSavedColorListUseCaseV3(get()) }
+    factory { DeleteSavedColorUseCaseV3(get()) }
+    factory { DeleteAllSavedColorsUseCaseV3(get()) }
     //endregion
 }

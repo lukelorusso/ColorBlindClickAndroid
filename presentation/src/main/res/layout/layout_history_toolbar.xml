@@ -71,11 +71,11 @@
             </LinearLayout>
 
             <ImageView
-                android:id="@+id/btnToolbarDeleteAll"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end|center_vertical"
-                app:srcCompat="@drawable/delete_sweep_white" />
+                    android:id="@+id/btnToolbarDeleteAll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end|center_vertical"
+                    app:srcCompat="@drawable/delete_sweep_white"/>
 
         </FrameLayout>
 

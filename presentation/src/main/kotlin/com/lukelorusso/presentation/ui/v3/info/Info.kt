@@ -89,7 +89,7 @@ fun Info(
 }
 
 @Composable
-fun Header(
+private fun Header(
     versionName: String
 ) {
     Column(
@@ -141,7 +141,7 @@ fun Header(
 }
 
 @Composable
-fun InfoLine(
+private fun InfoLine(
     isEven: Boolean,
     iconPainter: Painter,
     text: String,
@@ -191,7 +191,7 @@ fun InfoLine(
 }
 
 @Composable
-fun BoxScope.FAB(
+private fun BoxScope.FAB(
     onClick: () -> Unit
 ) {
     FloatingActionButton(

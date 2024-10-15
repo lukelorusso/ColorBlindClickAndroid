@@ -15,11 +15,11 @@ import com.lukelorusso.presentation.R
 import com.lukelorusso.presentation.databinding.ActivityMainBinding
 import com.lukelorusso.presentation.extensions.*
 import com.lukelorusso.presentation.ui.camera.CameraFragment
-import com.lukelorusso.presentation.ui.history.HistoryFragment
 import com.lukelorusso.presentation.ui.preview.PreviewDialogFragment
 import com.lukelorusso.presentation.ui.settings.SettingsDialogFragment
 import com.lukelorusso.presentation.view.MaybeScrollableViewPager
 import com.lukelorusso.presentation.ui.v3.info.InfoFragment as InfoFragmentV3
+import com.lukelorusso.presentation.ui.v3.history.HistoryFragment as HistoryFragmentV3
 
 
 class MainActivity : AppCompatActivity() {
@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
             pagerAdapter.getItem(binding.viewPager.currentItem)) { // pick the current fragment
             is InfoFragmentV3 -> if (!f.backPressHandled()) finish()
             is CameraFragment -> if (!f.backPressHandled()) finish()
-            is HistoryFragment -> if (!f.backPressHandled()) finish()
+            is HistoryFragmentV3 -> if (!f.backPressHandled()) finish()
             else -> finish() // just quit
         }
     }
@@ -170,7 +170,7 @@ class MainActivity : AppCompatActivity() {
                         immersiveMode = newPage == 1 // only camera page is immersive
                         if (newPage != lastPage) {
                             val f = pagerAdapter.getItem(newPage)
-                            (f as? HistoryFragment)?.reloadData()
+                            (f as? HistoryFragmentV3)?.reloadData()
                             (f as? CameraFragment)?.reloadData()
                         }
                         direction = when (newPage) {

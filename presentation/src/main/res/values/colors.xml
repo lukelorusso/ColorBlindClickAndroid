@@ -16,15 +16,15 @@
     <color name="black_000000">#000000</color>
     <color name="black_50">#88000000</color>
     <color name="transparent">#0000</color>
-    <color name="red_delete">#f44336</color>
 
     <!--Day-->
+    <color name="red_delete">#f44336</color>
     <color name="text_color">@color/gray_373737</color>
     <color name="progress_background">@color/white_50</color>
     <color name="fragment_background">@color/white_FFFFFF</color>
     <color name="fragment_separation_view">@color/gray_1A1A1A</color>
-    <color name="item_background_evens">#14000000</color>
-    <color name="item_background_odds">#06000000</color>
+    <color name="item_background_evens">#EAEAEA</color>
+    <color name="item_background_odds">#F8F8F8</color>
     <color name="dialog_background">@color/white_FFFFFF</color>
     <color name="dialog_line">@color/black_50</color>
     <color name="dialog_inverse_background">@color/black_000000</color>

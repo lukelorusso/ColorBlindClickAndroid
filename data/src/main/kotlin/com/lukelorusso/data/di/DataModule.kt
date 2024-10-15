@@ -10,8 +10,10 @@ import com.lukelorusso.data.datasource.HttpManager
 import com.lukelorusso.data.net.OkHttpClientFactory
 import com.lukelorusso.data.net.RetrofitFactory
 import com.lukelorusso.data.repository.ColorRepositoryImpl
+import com.lukelorusso.data.repository.v3.HistoryRepositoryImpl
 import com.lukelorusso.data.repository.v3.InfoRepositoryImpl
 import com.lukelorusso.domain.repository.ColorRepository
+import com.lukelorusso.domain.repository.v3.HistoryRepository
 import com.lukelorusso.domain.repository.v3.InfoRepository
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -45,14 +47,15 @@ val dataModule = module {
     }
 
     factory<InfoRepository> { InfoRepositoryImpl() }
+    factory<HistoryRepository> { HistoryRepositoryImpl(get()) }
     //endregion
 
-    //region Session
+    //region Settings
     factory<SharedPrefDataSource> { SharedPrefDataSourceImpl(get()) }
     factory { SettingsManager(get()) }
     //endregion
 
-    //region Database
+    //region Persistence
     factory<PersistenceDataSource> { PersistenceDataSourceImpl(get()) }
     //endregion
 }

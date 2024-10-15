@@ -6,6 +6,7 @@ import android.content.Context
 import android.os.Build
 import android.text.Html
 import android.text.Spanned
+import androidx.compose.ui.graphics.Color
 import androidx.core.content.ContextCompat
 import com.lukelorusso.presentation.R
 import java.util.*
@@ -59,4 +60,19 @@ fun String.containsWords(words: String?): Boolean {
     }
 
     return wordList.size == matchCounter
+}
+
+fun String.parseToColor(): Color {
+    val parsableColor = when (this.length) {
+        7 ->
+            this.replaceFirst("#", "FF")
+
+        9 ->
+            this.replaceFirst("#", "")
+
+        else ->
+            "FF000000"
+    }
+
+    return Color(parsableColor.toLong(radix = 16))
 }
