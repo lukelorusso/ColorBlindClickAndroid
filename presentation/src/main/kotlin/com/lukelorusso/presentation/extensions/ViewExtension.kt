@@ -5,8 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.KeyEvent
-import android.view.View
+import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
@@ -132,4 +131,15 @@ fun View.getBitmap(): Bitmap {
     this.layout(this.left, this.top, this.right, this.bottom)
     this.draw(c)
     return b
+}
+
+fun View.addOneTimeOnGlobalLayoutListener(listener: () -> Unit) {
+    var onGlobalLayoutListener: ViewTreeObserver.OnGlobalLayoutListener? = null
+    onGlobalLayoutListener = ViewTreeObserver.OnGlobalLayoutListener {
+        listener()
+        this.viewTreeObserver.removeOnGlobalLayoutListener(onGlobalLayoutListener)
+    }
+    this.viewTreeObserver.addOnGlobalLayoutListener(
+        onGlobalLayoutListener
+    )
 }

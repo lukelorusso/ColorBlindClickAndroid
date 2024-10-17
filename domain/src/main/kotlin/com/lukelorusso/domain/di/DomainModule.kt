@@ -7,7 +7,11 @@ import com.lukelorusso.domain.usecase.v3.DeleteSavedColorUseCase as DeleteSavedC
 import com.lukelorusso.domain.usecase.v3.GetAboutMeUrlUseCase as GetAboutMeUrlUseCaseV3
 import com.lukelorusso.domain.usecase.v3.GetHelpUrlUseCase as GetHelpUrlUseCaseV3
 import com.lukelorusso.domain.usecase.v3.GetHomeUrlUseCase as GetHomeUrlUseCaseV3
+import com.lukelorusso.domain.usecase.v3.GetPixelNeighbourhoodUseCase as GetPixelNeighbourhoodUseCaseV3
+import com.lukelorusso.domain.usecase.v3.GetSaveCameraOptionsUseCase as GetSaveCameraOptionsUseCaseV3
 import com.lukelorusso.domain.usecase.v3.GetSavedColorListUseCase as GetSavedColorListUseCaseV3
+import com.lukelorusso.domain.usecase.v3.SetPixelNeighbourhoodUseCase as SetPixelNeighbourhoodUseCaseV3
+import com.lukelorusso.domain.usecase.v3.SetSaveCameraOptionsUseCase as SetSaveCameraOptionsUseCaseV3
 
 val domainModule = module {
     //region UseCase
@@ -30,6 +34,11 @@ val domainModule = module {
     factory { GetAboutMeUrlUseCaseV3(get()) }
     factory { GetHelpUrlUseCaseV3(get()) }
     factory { GetHomeUrlUseCaseV3(get()) }
+
+    factory { GetPixelNeighbourhoodUseCaseV3(get()) }
+    factory { SetPixelNeighbourhoodUseCaseV3(get()) }
+    factory { GetSaveCameraOptionsUseCaseV3(get()) }
+    factory { SetSaveCameraOptionsUseCaseV3(get()) }
 
     factory { GetSavedColorListUseCaseV3(get()) }
     factory { DeleteSavedColorUseCaseV3(get()) }

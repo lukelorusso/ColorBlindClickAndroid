@@ -12,11 +12,9 @@ import com.lukelorusso.data.datasource.HttpManager
 import com.lukelorusso.data.net.OkHttpClientFactory
 import com.lukelorusso.data.net.RetrofitFactory
 import com.lukelorusso.data.repository.ColorRepositoryImpl
-import com.lukelorusso.data.repository.v3.HistoryRepositoryImpl
-import com.lukelorusso.data.repository.v3.InfoRepositoryImpl
+import com.lukelorusso.data.repository.v3.*
 import com.lukelorusso.domain.repository.ColorRepository
-import com.lukelorusso.domain.repository.v3.HistoryRepository
-import com.lukelorusso.domain.repository.v3.InfoRepository
+import com.lukelorusso.domain.repository.v3.*
 import org.koin.dsl.module
 import retrofit2.Retrofit
 
@@ -48,9 +46,9 @@ val dataTestModule = module {
             get()
         )
     }
-
     factory<InfoRepository> { InfoRepositoryImpl() }
     factory<HistoryRepository> { HistoryRepositoryImpl(get()) }
+    factory<SettingsRepository> { SettingsRepositoryImpl(get()) }
     //endregion
 
     //region Settings
