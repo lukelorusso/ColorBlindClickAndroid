@@ -11,7 +11,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class HistoryFragment : Fragment() {
     private val viewModel: HistoryViewModel by viewModel()
 
-    fun backPressHandled(): Boolean {
+    fun onBackPressHandled(): Boolean {
         return when {
             isActive() && viewModel.uiState.value.isSearchingMode -> {
                 viewModel.toggleSearchingMode(false)

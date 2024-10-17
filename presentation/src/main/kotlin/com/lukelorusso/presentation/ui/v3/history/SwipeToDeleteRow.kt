@@ -17,9 +17,13 @@ import com.lukelorusso.presentation.R
 fun SwipeToDeleteRow(
     directions: Set<DismissDirection>,
     state: DismissState,
+    isLoading: Boolean = false,
     dismissContent: @Composable (RowScope.() -> Unit)
 ) {
-    SwipeToDismiss(
+    if (isLoading) Row {
+        dismissContent()
+    }
+    else SwipeToDismiss(
         state = state,
         directions = directions,
         dismissThresholds = { FractionalThreshold(.65F) }, // percentage of swipe before dismissing

@@ -74,7 +74,7 @@ class CameraFragment : ARenderFragment<CameraData>(R.layout.fragment_camera) {
     private var camera: Fotoapparat? = null
     private var pixelNeighbourhood: Int = -1
 
-    fun backPressHandled(): Boolean {
+    fun onBackPressHandled(): Boolean {
         return when {
             isActive() && isToolbarColorVisible() -> {
                 hideToolbarColor()

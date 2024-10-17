@@ -24,36 +24,10 @@ class HistoryViewModel(
         if (uiState.value.contentState.isLoading) {
             return
         } else {
-            dismissError()
+            updateUiState { it.copy(contentState = ContentState.LOADING) }
         }
 
         viewModelScope.launch {
-            loadDataSuspend()
-        }
-    }
-
-    fun deleteColor(param: Color) {
-        if (uiState.value.contentState.isLoading) {
-            return
-        } else {
-            dismissError()
-        }
-
-        viewModelScope.launch {
-            deleteSavedColor.invoke(param)
-            loadDataSuspend()
-        }
-    }
-
-    fun deleteAllColors() {
-        if (uiState.value.contentState.isLoading) {
-            return
-        } else {
-            dismissError()
-        }
-
-        viewModelScope.launch {
-            deleteAllSavedColors.invoke(Unit)
             loadDataSuspend()
         }
     }
@@ -69,6 +43,50 @@ class HistoryViewModel(
             }
         } catch (t: Throwable) {
             updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
+        }
+    }
+
+    fun deleteColor(param: Color) {
+        if (uiState.value.contentState.isLoading) {
+            return
+        } else {
+            updateUiState {
+                it.copy(
+                    contentState = ContentState.LOADING,
+                    colorList = uiState.value.colorList.minus(param) // temporarily preview the result
+                )
+            }
+        }
+
+        viewModelScope.launch {
+            try {
+                deleteSavedColor.invoke(param)
+                loadDataSuspend()
+            } catch (t: Throwable) {
+                updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
+            }
+        }
+    }
+
+    fun deleteAllColors() {
+        if (uiState.value.contentState.isLoading) {
+            return
+        } else {
+            updateUiState {
+                it.copy(
+                    contentState = ContentState.LOADING,
+                    colorList = emptyList() // temporarily preview the result
+                )
+            }
+        }
+
+        viewModelScope.launch {
+            try {
+                deleteAllSavedColors.invoke(Unit)
+                loadDataSuspend()
+            } catch (t: Throwable) {
+                updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
+            }
         }
     }
 

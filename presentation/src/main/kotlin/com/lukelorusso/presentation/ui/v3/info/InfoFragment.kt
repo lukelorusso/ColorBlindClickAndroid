@@ -11,7 +11,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class InfoFragment : Fragment() {
     private val viewModel: InfoViewModel by viewModel()
 
-    fun backPressHandled(): Boolean {
+    fun onBackPressHandled(): Boolean {
         return when {
             isActive() -> {
                 viewModel.gotoCamera()

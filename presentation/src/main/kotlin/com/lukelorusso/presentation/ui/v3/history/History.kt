@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
@@ -29,6 +30,8 @@ import com.lukelorusso.presentation.ui.v3.error.ErrorAlertDialog
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import com.lukelorusso.domain.model.Color as ColorModel
+
+private const val FAB_SIZE = 96
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -80,6 +83,7 @@ fun History(
             ) {
                 stickyHeader {
                     Header(
+                        isLoading = uiState.contentState.isLoading,
                         colorListNotEmpty = uiState.colorList.isNotEmpty(),
                         isSearchingMode = uiState.isSearchingMode,
                         searchText = uiState.searchText,
@@ -107,13 +111,21 @@ fun History(
                     )
                 }
 
-                itemsIndexed(filteredColors) { index, colorModel ->
+                itemsIndexed(
+                    items = filteredColors,
+                    key = { _, colorModel -> colorModel.timestamp } // setting a key will solve graphical glitches on SwipeToDismiss
+                ) { index, colorModel ->
                     ColorLine(
+                        isLoading = uiState.contentState.isLoading,
                         isEven = index % 2 == 0,
                         item = colorModel,
                         onClick = viewModel::gotoPreview,
                         onDeleteColor = viewModel::deleteColor
                     )
+                }
+
+                item {
+                    Spacer(modifier = Modifier.height(FAB_SIZE.dp))
                 }
             }
 
@@ -124,6 +136,7 @@ fun History(
 
 @Composable
 private fun Header(
+    isLoading: Boolean,
     colorListNotEmpty: Boolean,
     isSearchingMode: Boolean,
     searchText: String,
@@ -205,10 +218,17 @@ private fun Header(
             )
         }
 
-        Spacer(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(1.dp)
+        val lineModifier = Modifier
+            .fillMaxWidth()
+            .height(2.dp)
+
+        if (isLoading) LinearProgressIndicator(
+            modifier = lineModifier,
+            backgroundColor = colorResource(id = R.color.white_50),
+            color = colorResource(id = R.color.red_delete)
+        )
+        else Spacer(
+            modifier = lineModifier
                 .background(colorResource(id = R.color.fragment_separation_view))
         )
     }
@@ -220,7 +240,7 @@ private fun SearchTextField(
     updateSearchText: (String) -> Unit,
     focusRequester: FocusRequester
 ) {
-    TextField(
+    OutlinedTextField(
         modifier = Modifier
             .fillMaxWidth()
             .focusRequester(focusRequester),
@@ -237,16 +257,25 @@ private fun SearchTextField(
                 Icon(
                     modifier = Modifier.clickable { updateSearchText("") },
                     imageVector = Icons.Default.Clear,
+                    tint = Color.White,
                     contentDescription = null
                 )
             }
-        }
+        },
+        colors = TextFieldDefaults.textFieldColors(
+            cursorColor = colorResource(id = R.color.white_50),
+            focusedIndicatorColor = colorResource(id = R.color.white_50),
+            textColor = Color.White,
+            placeholderColor = colorResource(id = R.color.white_50)
+        ),
+        shape = RoundedCornerShape(8.dp)
     )
 }
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun ColorLine(
+    isLoading: Boolean,
     isEven: Boolean,
     item: ColorModel,
     onClick: (ColorModel) -> Unit,
@@ -274,7 +303,8 @@ private fun ColorLine(
 
     SwipeToDeleteRow(
         directions = dismissDirections,
-        state = swipeToDismissState
+        state = swipeToDismissState,
+        isLoading = isLoading
     ) {
         Row(
             modifier = Modifier
@@ -341,7 +371,7 @@ private fun BoxScope.FAB(
     FloatingActionButton(
         modifier = Modifier
             .align(Alignment.BottomEnd)
-            .size(96.dp)
+            .size(FAB_SIZE.dp)
             .padding(16.dp),
         onClick = onClick
     ) {

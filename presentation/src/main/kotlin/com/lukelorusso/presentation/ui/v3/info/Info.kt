@@ -20,6 +20,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.lukelorusso.presentation.R
 import com.lukelorusso.presentation.ui.v3.error.ErrorAlertDialog
 
+private const val FAB_SIZE = 96
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Info(
@@ -34,57 +36,63 @@ fun Info(
         )
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(colorResource(id = R.color.fragment_background))
-    ) {
-        LazyColumn(
+    Surface {
+        Box(
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxSize()
+                .background(colorResource(id = R.color.fragment_background))
         ) {
-            stickyHeader {
-                Header(versionName = uiState.versionName)
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                stickyHeader {
+                    Header(versionName = uiState.versionName)
+                }
+
+                item {
+                    InfoLine(
+                        isEven = true,
+                        iconPainter = painterResource(id = R.drawable.info_home),
+                        text = stringResource(id = R.string.info_home),
+                        onClick = viewModel::gotoHome
+                    )
+                }
+
+                item {
+                    InfoLine(
+                        isEven = false,
+                        iconPainter = painterResource(id = R.drawable.info_help),
+                        text = stringResource(id = R.string.info_help),
+                        onClick = viewModel::gotoHelp
+                    )
+                }
+
+                item {
+                    InfoLine(
+                        isEven = true,
+                        iconPainter = painterResource(id = R.drawable.info_about_me),
+                        text = stringResource(id = R.string.info_about_me),
+                        onClick = viewModel::gotoAboutMe
+                    )
+                }
+
+                item {
+                    InfoLine(
+                        isEven = false,
+                        iconPainter = painterResource(id = R.drawable.info_settings),
+                        text = stringResource(id = R.string.info_settings),
+                        onClick = viewModel::gotoSettings
+                    )
+                }
+
+                item {
+                    Spacer(modifier = Modifier.height(FAB_SIZE.dp))
+                }
             }
 
-            item {
-                InfoLine(
-                    isEven = true,
-                    iconPainter = painterResource(id = R.drawable.info_home),
-                    text = stringResource(id = R.string.info_home),
-                    onClick = viewModel::gotoHome
-                )
-            }
-
-            item {
-                InfoLine(
-                    isEven = false,
-                    iconPainter = painterResource(id = R.drawable.info_help),
-                    text = stringResource(id = R.string.info_help),
-                    onClick = viewModel::gotoHelp
-                )
-            }
-
-            item {
-                InfoLine(
-                    isEven = true,
-                    iconPainter = painterResource(id = R.drawable.info_about_me),
-                    text = stringResource(id = R.string.info_about_me),
-                    onClick = viewModel::gotoAboutMe
-                )
-            }
-
-            item {
-                InfoLine(
-                    isEven = false,
-                    iconPainter = painterResource(id = R.drawable.info_settings),
-                    text = stringResource(id = R.string.info_settings),
-                    onClick = viewModel::gotoSettings
-                )
-            }
+            FAB(onClick = viewModel::gotoCamera)
         }
-
-        FAB(onClick = viewModel::gotoCamera)
     }
 }
 
@@ -131,10 +139,12 @@ private fun Header(
             )
         }
 
+        val lineModifier = Modifier
+            .fillMaxWidth()
+            .height(2.dp)
+
         Spacer(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(1.dp)
+            modifier = lineModifier
                 .background(colorResource(id = R.color.fragment_separation_view))
         )
     }
@@ -197,7 +207,7 @@ private fun BoxScope.FAB(
     FloatingActionButton(
         modifier = Modifier
             .align(Alignment.BottomEnd)
-            .size(96.dp)
+            .size(FAB_SIZE.dp)
             .padding(16.dp),
         onClick = onClick
     ) {

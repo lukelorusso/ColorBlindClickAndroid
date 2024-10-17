@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -18,8 +19,8 @@ import com.lukelorusso.presentation.ui.camera.CameraFragment
 import com.lukelorusso.presentation.ui.preview.PreviewDialogFragment
 import com.lukelorusso.presentation.ui.settings.SettingsDialogFragment
 import com.lukelorusso.presentation.view.MaybeScrollableViewPager
-import com.lukelorusso.presentation.ui.v3.info.InfoFragment as InfoFragmentV3
 import com.lukelorusso.presentation.ui.v3.history.HistoryFragment as HistoryFragmentV3
+import com.lukelorusso.presentation.ui.v3.info.InfoFragment as InfoFragmentV3
 
 
 class MainActivity : AppCompatActivity() {
@@ -43,13 +44,15 @@ class MainActivity : AppCompatActivity() {
         private const val OFFSCREEN_PAGE_LIMIT = 3
     }
 
-    override fun onBackPressed() {
-        when (val f =
-            pagerAdapter.getItem(binding.viewPager.currentItem)) { // pick the current fragment
-            is InfoFragmentV3 -> if (!f.backPressHandled()) finish()
-            is CameraFragment -> if (!f.backPressHandled()) finish()
-            is HistoryFragmentV3 -> if (!f.backPressHandled()) finish()
-            else -> finish() // just quit
+    private val handleOnBackPressed = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            when (val f =
+                pagerAdapter.getItem(binding.viewPager.currentItem)) { // pick the current fragment
+                is InfoFragmentV3 -> if (!f.onBackPressHandled()) finish()
+                is CameraFragment -> if (!f.onBackPressHandled()) finish()
+                is HistoryFragmentV3 -> if (!f.onBackPressHandled()) finish()
+                else -> finish()
+            }
         }
     }
 
@@ -70,6 +73,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        onBackPressedDispatcher.addCallback(this, handleOnBackPressed)
         val duration = resources.getInteger(R.integer.splash_screen_duration)
         binding.splash.logo.setAlphaWithAnimation(0F, 1F, duration.toLong()) {
             initializeActivity(savedInstanceState)
