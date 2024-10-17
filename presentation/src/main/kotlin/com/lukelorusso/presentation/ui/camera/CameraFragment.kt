@@ -32,7 +32,7 @@ import io.fotoapparat.log.Logger as FotoApparatLogger
 class CameraFragment : ARenderFragment<CameraData>(R.layout.fragment_camera) {
 
     companion object {
-        val TAG: String = CameraFragment::class.java.simpleName
+        val TAG: String = this::class.java.simpleName
         private const val INIT_ZOOM_VALUE = 10
         private const val MAX_ZOOM_VALUE = 100
 

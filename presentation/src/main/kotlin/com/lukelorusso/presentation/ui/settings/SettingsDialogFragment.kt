@@ -21,7 +21,7 @@ class SettingsDialogFragment : ARenderBottomSheetDialogFragment<SettingsData>(
 ) {
 
     companion object {
-        val TAG: String = SettingsDialogFragment::class.java.simpleName
+        val TAG: String = this::class.java.simpleName
 
         fun newInstance(): SettingsDialogFragment =
             SettingsDialogFragment()

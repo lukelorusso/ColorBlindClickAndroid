@@ -20,7 +20,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class InfoFragment : ARenderFragment<InfoData>(R.layout.fragment_info) {
 
     companion object {
-        val TAG: String = InfoFragment::class.java.simpleName
+        val TAG: String = this::class.java.simpleName
 
         fun newInstance(): InfoFragment = InfoFragment()
     }

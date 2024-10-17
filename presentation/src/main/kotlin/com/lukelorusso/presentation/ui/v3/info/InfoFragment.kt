@@ -45,7 +45,7 @@ class InfoFragment : Fragment() {
     }
 
     companion object {
-        val TAG: String = InfoFragment::class.java.simpleName
+        val TAG: String = this::class.java.simpleName
 
         fun newInstance(): InfoFragment = InfoFragment()
     }

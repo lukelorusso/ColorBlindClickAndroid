@@ -4,6 +4,6 @@ import com.lukelorusso.presentation.ui.v3.base.ContentState
 
 data class SettingsUiState(
     val contentState: ContentState = ContentState.CONTENT,
-    val pixelNeighbourhood: Int? = null,
-    val saveCameraOptions: Boolean? = null
+    val pixelNeighbourhood: Int = 0,
+    val saveCameraOptions: Boolean = false
 )

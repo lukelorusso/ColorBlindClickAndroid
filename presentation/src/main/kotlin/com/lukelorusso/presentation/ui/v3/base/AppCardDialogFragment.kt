@@ -30,8 +30,7 @@ abstract class AppCardDialogFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val shouldTweakBehaviour = isFullScreen || isLocked
-        if (shouldTweakBehaviour) {
+        if (isLocked) {
             view.addOneTimeOnGlobalLayoutListener {
                 if (isFullScreen) dialog?.findViewById<View>(R.id.design_bottom_sheet)?.apply {
                     layoutParams = layoutParams.apply {

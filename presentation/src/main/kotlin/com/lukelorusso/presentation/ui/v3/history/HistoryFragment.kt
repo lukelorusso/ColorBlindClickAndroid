@@ -53,7 +53,7 @@ class HistoryFragment : Fragment() {
         viewModel.loadData()
 
     companion object {
-        val TAG: String = HistoryFragment::class.java.simpleName
+        val TAG: String = this::class.java.simpleName
 
         fun newInstance(): HistoryFragment = HistoryFragment()
     }

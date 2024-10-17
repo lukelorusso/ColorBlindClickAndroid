@@ -25,7 +25,7 @@ class PreviewDialogFragment : ARenderBottomSheetDialogFragment<PreviewData>(
         private const val EXTRA_SERIALIZED_COLOR = "EXTRA_SERIALIZED_COLOR"
         private const val EXTRA_STATUS_BAR_TOP_MARGIN = "EXTRA_STATUS_BAR_TOP_MARGIN"
 
-        val TAG: String = PreviewDialogFragment::class.java.simpleName
+        val TAG: String = this::class.java.simpleName
 
         fun newInstance(
             serializedColor: String,

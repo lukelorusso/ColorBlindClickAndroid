@@ -28,7 +28,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class HistoryFragment : ARenderFragment<HistoryData>(R.layout.fragment_history) {
 
     companion object {
-        val TAG: String = HistoryFragment::class.java.simpleName
+        val TAG: String = this::class.java.simpleName
 
         fun newInstance(): HistoryFragment = HistoryFragment()
     }

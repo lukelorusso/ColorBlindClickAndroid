@@ -19,6 +19,7 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import com.lukelorusso.presentation.ui.v3.history.HistoryViewModel as HistoryViewModelV3
 import com.lukelorusso.presentation.ui.v3.info.InfoViewModel as InfoViewModelV3
+import com.lukelorusso.presentation.ui.v3.settings.SettingsViewModel as SettingsViewModelV3
 
 /**
  * Copyright (C) 2021 Luke Lorusso
@@ -50,6 +51,7 @@ val presentationModule = module {
     viewModel { InfoViewModelV3(get(), get(), get()) }
     viewModel { PreviewViewModel(get(), get()) }
     viewModel { SettingsViewModel(get(), get(), get(), get(), get()) }
+    viewModel { SettingsViewModelV3(get(), get(), get(), get()) }
     //endregion
 
     //region Router

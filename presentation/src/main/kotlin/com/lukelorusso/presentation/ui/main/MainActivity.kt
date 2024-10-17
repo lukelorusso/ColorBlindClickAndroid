@@ -17,10 +17,10 @@ import com.lukelorusso.presentation.databinding.ActivityMainBinding
 import com.lukelorusso.presentation.extensions.*
 import com.lukelorusso.presentation.ui.camera.CameraFragment
 import com.lukelorusso.presentation.ui.preview.PreviewDialogFragment
-import com.lukelorusso.presentation.ui.settings.SettingsDialogFragment
 import com.lukelorusso.presentation.view.MaybeScrollableViewPager
 import com.lukelorusso.presentation.ui.v3.history.HistoryFragment as HistoryFragmentV3
 import com.lukelorusso.presentation.ui.v3.info.InfoFragment as InfoFragmentV3
+import com.lukelorusso.presentation.ui.v3.settings.SettingsDialogFragment as SettingsDialogFragmentV3
 
 
 class MainActivity : AppCompatActivity() {
@@ -215,6 +215,6 @@ class MainActivity : AppCompatActivity() {
             .show(supportFragmentManager, PreviewDialogFragment.TAG)
 
     fun showSettingsDialog() =
-        SettingsDialogFragment.newInstance()
-            .show(supportFragmentManager, SettingsDialogFragment.TAG)
+        SettingsDialogFragmentV3.newInstance()
+            .show(supportFragmentManager, SettingsDialogFragmentV3.TAG)
 }
