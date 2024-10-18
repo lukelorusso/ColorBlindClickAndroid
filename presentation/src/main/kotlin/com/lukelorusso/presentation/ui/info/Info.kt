@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.lukelorusso.presentation.R
+import com.lukelorusso.presentation.error.ErrorMessageFactory
 import com.lukelorusso.presentation.ui.base.FAB
 import com.lukelorusso.presentation.ui.base.FAB_SIZE
 import com.lukelorusso.presentation.ui.error.ErrorAlertDialog
@@ -25,13 +26,15 @@ import com.lukelorusso.presentation.ui.error.ErrorAlertDialog
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Info(
-    viewModel: InfoViewModel
+    viewModel: InfoViewModel,
+    errorMessageFactory: ErrorMessageFactory
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     if (uiState.contentState.isError) {
         ErrorAlertDialog(
-            message = uiState.contentState.errorMessage,
+            message = uiState.contentState.error
+                ?.let { errorMessageFactory.getLocalizedMessage(it) },
             dismissCallback = viewModel::dismissError
         )
     }

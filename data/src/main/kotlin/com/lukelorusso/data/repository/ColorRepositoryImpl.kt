@@ -28,12 +28,11 @@ class ColorRepositoryImpl(
         )
 
         persistenceDataSource.getColorList().toMutableList().apply {
-            val existent = firstOrNull { it.originalColorHex() == newColor.originalColorHex() }
-            if (existent != null) {
+            firstOrNull { it.originalColorHex() == newColor.originalColorHex() }?.let { existent ->
                 remove(existent)
-                add(0, newColor)
-                persistenceDataSource.saveColorList(this)
             }
+            add(0, newColor)
+            persistenceDataSource.saveColorList(this)
         }
 
         return newColor

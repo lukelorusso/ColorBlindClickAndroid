@@ -6,7 +6,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
-import com.lukelorusso.presentation.exception.ErrorMessageFactory
+import com.lukelorusso.presentation.error.ErrorMessageFactory
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 
@@ -14,8 +14,9 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
  * Copyright (C) 2021 Luke Lorusso
  * Licensed under the Apache License Version 2.0
  */
-abstract class OldViewModel<Data : Any>(private val errorMessageFactory: ErrorMessageFactory) :
-    ViewModel() {
+abstract class OldViewModel<Data : Any>(
+    private val errorMessageFactory: ErrorMessageFactory
+) : ViewModel() {
 
     private val liveData: MutableLiveData<Data> by lazy {
         MutableLiveData()
@@ -55,7 +56,8 @@ abstract class OldViewModel<Data : Any>(private val errorMessageFactory: ErrorMe
         composite.add(Observable.mergeArray(*observables).subscribe { postData(it) })
     }
 
-    protected fun getErrorMessage(error: Throwable): String = errorMessageFactory.getError(error)
+    fun getErrorMessage(error: Throwable): String =
+        errorMessageFactory.getLocalizedMessage(error)
 
     override fun onCleared() {
         super.onCleared()

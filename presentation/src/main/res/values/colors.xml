@@ -27,6 +27,5 @@
     <color name="item_background_odds">#F8F8F8</color>
     <color name="dialog_background">@color/white_FFFFFF</color>
     <color name="dialog_line">@color/black_50</color>
-    <color name="dialog_inverse_background">@color/black_000000</color>
 
 </resources>

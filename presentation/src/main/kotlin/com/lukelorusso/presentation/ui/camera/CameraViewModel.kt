@@ -4,7 +4,7 @@ import com.google.gson.Gson
 import com.lukelorusso.data.extensions.startWithSingle
 import com.lukelorusso.domain.model.Color
 import com.lukelorusso.domain.usecase.*
-import com.lukelorusso.presentation.exception.ErrorMessageFactory
+import com.lukelorusso.presentation.error.ErrorMessageFactory
 import com.lukelorusso.presentation.ui.base.OldViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single

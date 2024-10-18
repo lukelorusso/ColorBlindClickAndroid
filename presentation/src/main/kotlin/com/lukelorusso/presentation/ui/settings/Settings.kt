@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.lukelorusso.presentation.R
+import com.lukelorusso.presentation.error.ErrorMessageFactory
 import com.lukelorusso.presentation.ui.base.BottomSheetUpperLine
 import com.lukelorusso.presentation.ui.base.MultiOptionDialog
 import com.lukelorusso.presentation.ui.error.ErrorAlertDialog
@@ -31,14 +32,16 @@ private val viewfinderPixelsValueStringResList = listOf(
 
 @Composable
 fun Settings(
-    viewModel: SettingsViewModel
+    viewModel: SettingsViewModel,
+    errorMessageFactory: ErrorMessageFactory
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var showViewfinderMultiOption by remember { mutableStateOf(false) }
 
     if (uiState.contentState.isError) {
         ErrorAlertDialog(
-            message = uiState.contentState.errorMessage,
+            message = uiState.contentState.error
+                ?.let { errorMessageFactory.getLocalizedMessage(it) },
             dismissCallback = viewModel::dismissError
         )
     }

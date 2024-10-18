@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.lukelorusso.presentation.R
+import com.lukelorusso.presentation.error.ErrorMessageFactory
 import com.lukelorusso.presentation.extensions.*
 import com.lukelorusso.presentation.ui.base.FAB
 import com.lukelorusso.presentation.ui.base.FAB_SIZE
@@ -36,7 +37,8 @@ import com.lukelorusso.domain.model.Color as ColorModel
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun History(
-    viewModel: HistoryViewModel
+    viewModel: HistoryViewModel,
+    errorMessageFactory: ErrorMessageFactory
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val filteredColors = uiState.colorList.filter { item ->
@@ -45,7 +47,9 @@ fun History(
     val focusRequester = remember { FocusRequester() }
     val coroutineScope = rememberCoroutineScope()
     var showDeleteAllAlertDialog by remember { mutableStateOf(false) }
+    var shouldDeleteColor by remember { mutableStateOf<ColorModel?>(null) }
 
+    // request focus on SearchTextField
     if (uiState.run { uiState.isSearchingMode && !contentState.isLoading && searchText.isEmpty() }) {
         DisposableEffect(Unit) {
             coroutineScope.launch {
@@ -59,15 +63,31 @@ fun History(
 
     if (uiState.contentState.isError) {
         ErrorAlertDialog(
-            message = uiState.contentState.errorMessage,
+            message = uiState.contentState.error
+                ?.let { errorMessageFactory.getLocalizedMessage(it) },
             dismissCallback = viewModel::dismissError
         )
     }
 
     if (showDeleteAllAlertDialog) {
-        DeleteAllAlertDialog(
+        DeleteAlertDialog(
+            text = stringResource(R.string.color_delete_all_confirmation_message),
             confirmCallback = viewModel::deleteAllColors,
             dismissCallback = { showDeleteAllAlertDialog = false }
+        )
+    }
+
+    shouldDeleteColor?.let { colorToDelete ->
+        DeleteAlertDialog(
+            text = stringResource(R.string.color_delete_one_confirmation_message),
+            confirmCallback = {
+                viewModel.deleteColor(colorToDelete)
+                shouldDeleteColor = null
+            },
+            dismissCallback = {
+                viewModel.restoreColorToUiState(colorToDelete)
+                shouldDeleteColor = null
+            }
         )
     }
 
@@ -120,7 +140,10 @@ fun History(
                         isEven = index % 2 == 0,
                         item = colorModel,
                         onClick = viewModel::gotoPreview,
-                        onDeleteColor = viewModel::deleteColor
+                        onDeleteColor = {
+                            viewModel.deleteColorFromUiState(colorModel)
+                            shouldDeleteColor = colorModel
+                        }
                     )
                 }
 
@@ -227,7 +250,7 @@ private fun Header(
 
         if (isLoading) LinearProgressIndicator(
             modifier = lineModifier,
-            backgroundColor = colorResource(id = R.color.white_50),
+            backgroundColor = colorResource(id = R.color.progress_background),
             color = colorResource(id = R.color.red_delete)
         )
         else Spacer(

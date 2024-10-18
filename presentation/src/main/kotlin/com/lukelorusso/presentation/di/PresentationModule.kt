@@ -1,7 +1,8 @@
 package com.lukelorusso.presentation.di
 
 import com.lukelorusso.domain.usecase.base.Logger
-import com.lukelorusso.presentation.exception.ErrorMessageFactory
+import com.lukelorusso.presentation.error.ErrorMessageFactory
+import com.lukelorusso.presentation.ui.error.ErrorMessageFactoryImpl
 import com.lukelorusso.presentation.helper.TrackerHelper
 import com.lukelorusso.presentation.logger.TimberLogger
 import com.lukelorusso.presentation.ui.camera.CameraViewModel
@@ -18,7 +19,7 @@ import org.koin.dsl.module
  */
 val presentationModule = module {
     //region AppComponent
-    factory<ErrorMessageFactory> { ErrorMessageFactory.Impl(get(), get()) }
+    factory<ErrorMessageFactory> { ErrorMessageFactoryImpl(get(), get()) }
     factory<Logger> {
         object : Logger {
             override fun log(message: () -> String) {

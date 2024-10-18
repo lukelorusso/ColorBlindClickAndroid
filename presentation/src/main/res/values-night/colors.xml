@@ -11,6 +11,5 @@
     <color name="item_background_odds">#222222</color>
     <color name="dialog_background">@color/gray_1A1A1A</color>
     <color name="dialog_line">@color/white_50</color>
-    <color name="dialog_inverse_background">@color/white_FFFFFF</color>
 
 </resources>

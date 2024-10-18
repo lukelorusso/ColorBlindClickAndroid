@@ -4,12 +4,15 @@ import android.os.Bundle
 import android.view.*
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
+import com.lukelorusso.presentation.error.ErrorMessageFactory
 import com.lukelorusso.presentation.extensions.isActive
 import com.lukelorusso.presentation.ui.theme.AppTheme
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HistoryFragment : Fragment() {
     private val viewModel: HistoryViewModel by viewModel()
+    private val errorMessageFactory by inject<ErrorMessageFactory>()
 
     fun onBackPressHandled(): Boolean {
         return when {
@@ -43,7 +46,8 @@ class HistoryFragment : Fragment() {
         setContent {
             AppTheme {
                 History(
-                    viewModel = viewModel
+                    viewModel = viewModel,
+                    errorMessageFactory = errorMessageFactory
                 )
             }
         }

@@ -51,6 +51,35 @@ class HistoryViewModel(
         }
     }
 
+    fun deleteColorFromUiState(param: Color) {
+        if (uiState.value.contentState.isLoading) {
+            return
+        } else {
+            updateUiState {
+                it.copy(
+                    contentState = ContentState.CONTENT,
+                    colorList = uiState.value.colorList
+                        .minus(param) // temporarily preview the result
+                )
+            }
+        }
+    }
+
+    fun restoreColorToUiState(param: Color) {
+        if (uiState.value.contentState.isLoading) {
+            return
+        } else {
+            updateUiState {
+                it.copy(
+                    contentState = ContentState.CONTENT,
+                    colorList = uiState.value.colorList
+                        .plus(param)
+                        .sortedByDescending { color -> color.timestamp }
+                )
+            }
+        }
+    }
+
     fun deleteColor(param: Color) {
         if (uiState.value.contentState.isLoading) {
             return

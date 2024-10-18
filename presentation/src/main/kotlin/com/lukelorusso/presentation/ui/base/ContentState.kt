@@ -13,6 +13,6 @@ sealed class ContentState {
     val isError: Boolean
         get() = this is ERROR
 
-    val errorMessage: String?
-        get() = (this as? ERROR)?.t?.message
+    val error: Throwable?
+        get() = (this as? ERROR)?.t
 }

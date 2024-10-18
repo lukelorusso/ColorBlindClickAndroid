@@ -7,7 +7,7 @@
     <string name="choose_an_app">"Choisir une appli"</string>
     <string name="color_history">Historique des couleurs</string>
     <string name="history_no_item">"Aucune couleur (pour l'instant!)"</string>
-    <string name="color_delete_confirmation_message">"Voulez-vous vraiment supprimer le couleur sélectionné?"</string>
+    <string name="color_delete_one_confirmation_message">"Voulez-vous vraiment supprimer le couleur sélectionné?"</string>
     <string name="color_delete_all_confirmation_message">"Voulez-vous vraiment supprimer TOUTES vos couleurs?"</string>
     <string name="yes">Oui</string>
     <string name="no">Non</string>

@@ -18,7 +18,7 @@ import com.lukelorusso.presentation.ui.history.HistoryFragment
 import com.lukelorusso.presentation.ui.info.InfoFragment
 import com.lukelorusso.presentation.ui.preview.PreviewDialogFragment
 import com.lukelorusso.presentation.ui.settings.SettingsDialogFragment
-import com.lukelorusso.presentation.view.MaybeScrollableViewPager
+import com.lukelorusso.presentation.ui.base.MaybeScrollableViewPager
 
 
 class MainActivity : AppCompatActivity() {

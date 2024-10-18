@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.lukelorusso.presentation.R
+import com.lukelorusso.presentation.error.ErrorMessageFactory
 import com.lukelorusso.presentation.extensions.*
 import com.lukelorusso.presentation.ui.base.BottomSheetUpperLine
 import com.lukelorusso.presentation.ui.base.FAB
@@ -26,13 +27,15 @@ import com.lukelorusso.domain.model.Color as ColorModel
 
 @Composable
 fun Preview(
-    viewModel: PreviewViewModel
+    viewModel: PreviewViewModel,
+    errorMessageFactory: ErrorMessageFactory
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     if (uiState.contentState.isError) {
         ErrorAlertDialog(
-            message = uiState.contentState.errorMessage,
+            message = uiState.contentState.error
+                ?.let { errorMessageFactory.getLocalizedMessage(it) },
             dismissCallback = viewModel::dismissError
         )
     }
@@ -74,7 +77,8 @@ fun Preview(
                     val description = (stringResource(id = R.string.credits) + " " + uiState.homeUrl).let { credits ->
                         colorModel.sharableDescription(credits)
                     }
-                    val popupLabel = stringResource(id = R.string.choose_an_app)
+                    val textPopupLabel = stringResource(id = R.string.choose_an_app)
+                    val bitmapPopupLabel = stringResource(id = R.string.share_color)
                     val size = with(LocalDensity.current) {
                         dimensionResource(id = R.dimen.color_picker_dimens_big).roundToPx()
                     }
@@ -84,7 +88,7 @@ fun Preview(
                         shareText = {
                             viewModel.shareText(
                                 text = description,
-                                popupLabel = popupLabel
+                                popupLabel = textPopupLabel
                             )
                         },
                         shareBitmap = {
@@ -95,7 +99,7 @@ fun Preview(
                                     color.toArgb()
                                 ),
                                 description = description,
-                                popupLabel = popupLabel
+                                popupLabel = bitmapPopupLabel
                             )
                         }
                     )

@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.*
  * Copyright (C) 2024 Luke Lorusso
  * Licensed under the Apache License Version 2.0
  */
-abstract class AppViewModel<UiState : Any> : ViewModel() {
+abstract class AppViewModel<UiState> : ViewModel() {
     abstract val router: AppRouter?
 
     @Suppress("PropertyName")

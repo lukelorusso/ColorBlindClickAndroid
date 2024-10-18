@@ -10,7 +10,8 @@ import com.lukelorusso.presentation.R
 
 
 @Composable
-fun DeleteAllAlertDialog(
+fun DeleteAlertDialog(
+    text: String,
     dismissCallback: () -> Unit = {},
     confirmCallback: () -> Unit = {}
 ) {
@@ -30,7 +31,7 @@ fun DeleteAllAlertDialog(
                 Text(
                     modifier = Modifier.padding(top = 4.dp),
                     color = colorResource(id = R.color.text_color),
-                    text = stringResource(R.string.color_delete_all_confirmation_message)
+                    text = text
                 )
             }
         },
