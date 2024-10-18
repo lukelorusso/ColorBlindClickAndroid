@@ -26,12 +26,12 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.lukelorusso.presentation.R
 import com.lukelorusso.presentation.extensions.*
+import com.lukelorusso.presentation.ui.v3.base.FAB
+import com.lukelorusso.presentation.ui.v3.base.FAB_SIZE
 import com.lukelorusso.presentation.ui.v3.error.ErrorAlertDialog
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import com.lukelorusso.domain.model.Color as ColorModel
-
-private const val FAB_SIZE = 96
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -129,7 +129,10 @@ fun History(
                 }
             }
 
-            FAB(onClick = viewModel::gotoCamera)
+            FAB(
+                painter = painterResource(id = R.drawable.camera_white),
+                onClick = viewModel::gotoCamera
+            )
         }
     }
 }
@@ -361,26 +364,5 @@ private fun ColorLine(
                 text = item.originalColorHex()
             )
         }
-    }
-}
-
-@Composable
-private fun BoxScope.FAB(
-    onClick: () -> Unit
-) {
-    FloatingActionButton(
-        modifier = Modifier
-            .align(Alignment.BottomEnd)
-            .size(FAB_SIZE.dp)
-            .padding(16.dp),
-        onClick = onClick
-    ) {
-        Icon(
-            modifier = Modifier
-                .size(40.dp),
-            painter = painterResource(id = R.drawable.camera_white),
-            tint = Color.White,
-            contentDescription = null
-        )
     }
 }

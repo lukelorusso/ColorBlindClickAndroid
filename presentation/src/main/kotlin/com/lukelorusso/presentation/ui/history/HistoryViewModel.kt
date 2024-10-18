@@ -1,5 +1,6 @@
 package com.lukelorusso.presentation.ui.history
 
+import com.google.gson.Gson
 import com.lukelorusso.data.extensions.startWithSingle
 import com.lukelorusso.domain.exception.PersistenceException
 import com.lukelorusso.domain.functions.DelayFunction
@@ -14,6 +15,7 @@ import io.reactivex.rxjava3.core.Observable
 import java.util.concurrent.TimeUnit
 
 class HistoryViewModel(
+    private val gson: Gson,
     private val getColorList: GetColorListUseCase,
     private val deleteColor: DeleteColorUseCase,
     private val deleteAllColors: DeleteAllColorsUseCase,
@@ -59,7 +61,7 @@ class HistoryViewModel(
 
     internal fun gotoCamera() = router.routeToCamera()
 
-    internal fun gotoPreview(color: Color) = router.routeToPreview(color)
+    internal fun gotoPreview(color: Color) = router.routeToPreview(gson.toJson(color))
 
     private fun onError(e: Throwable): HistoryData =
         HistoryData.createIsPersistenceException(e is PersistenceException)

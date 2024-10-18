@@ -1,6 +1,7 @@
 package com.lukelorusso.presentation.ui.v3.history
 
 import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
 import com.lukelorusso.domain.model.Color
 import com.lukelorusso.domain.usecase.v3.*
 import com.lukelorusso.presentation.ui.v3.base.AppViewModel
@@ -9,6 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class HistoryViewModel(
+    private val gson: Gson,
     private val getSavedColorList: GetSavedColorListUseCase,
     private val deleteSavedColor: DeleteSavedColorUseCase,
     private val deleteAllSavedColors: DeleteAllSavedColorsUseCase
@@ -105,7 +107,7 @@ class HistoryViewModel(
     }
 
     fun gotoPreview(color: Color) =
-        router.routeToPreview(color)
+        router.routeToPreview(gson.toJson(color))
 
     fun gotoCamera() =
         router.routeToCamera()

@@ -9,6 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.res.colorResource
@@ -52,7 +53,8 @@ fun Settings(
     }
 
     Surface(
-        modifier = Modifier.nestedScroll(rememberNestedScrollInteropConnection()) // fixes issue scrolling down while inside a BottomSheetDialogFragment
+        modifier = Modifier.nestedScroll(rememberNestedScrollInteropConnection()), // fixes issue scrolling down while inside a BottomSheetDialogFragment
+        color = Color.Transparent // AppCardDialogFragment already implements a custom theme
     ) {
         Box(
             modifier = Modifier

@@ -139,7 +139,7 @@ fun Context.shareBitmap(
     }
 }
 
-fun Context.shareUri(content: Uri, description: String, popupLabel: String? = null) {
+private fun Context.shareUri(content: Uri, description: String, popupLabel: String? = null) {
     var intent = Intent()
     intent.action = Intent.ACTION_SEND
     intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
@@ -152,7 +152,7 @@ fun Context.shareUri(content: Uri, description: String, popupLabel: String? = nu
     startActivityWithFlagNewTask(intent)
 }
 
-fun Context.shareText(text: String, popupLabel: String?) {
+fun Context.shareText(text: String, popupLabel: String? = null) {
     var intent = Intent()
     intent.action = Intent.ACTION_SEND
     intent.putExtra(Intent.EXTRA_TEXT, text)

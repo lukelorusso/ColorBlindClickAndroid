@@ -10,16 +10,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.viewpager.widget.ViewPager
-import com.google.gson.Gson
-import com.lukelorusso.domain.model.Color
 import com.lukelorusso.presentation.R
 import com.lukelorusso.presentation.databinding.ActivityMainBinding
 import com.lukelorusso.presentation.extensions.*
 import com.lukelorusso.presentation.ui.camera.CameraFragment
-import com.lukelorusso.presentation.ui.preview.PreviewDialogFragment
 import com.lukelorusso.presentation.view.MaybeScrollableViewPager
 import com.lukelorusso.presentation.ui.v3.history.HistoryFragment as HistoryFragmentV3
 import com.lukelorusso.presentation.ui.v3.info.InfoFragment as InfoFragmentV3
+import com.lukelorusso.presentation.ui.v3.preview.PreviewDialogFragment as PreviewDialogFragmentV3
 import com.lukelorusso.presentation.ui.v3.settings.SettingsDialogFragment as SettingsDialogFragmentV3
 
 
@@ -30,7 +28,6 @@ class MainActivity : AppCompatActivity() {
     private val pagerAdapter by lazy { MainPagerAdapter(supportFragmentManager) }
 
     // Properties
-    private val gson = Gson()
     private var immersiveMode: Boolean = false
         set(value) {
             field = value
@@ -40,7 +37,7 @@ class MainActivity : AppCompatActivity() {
     private var lastPage = -1
 
     companion object {
-        private const val PERMISSIONS_REQUEST_CAMERA = 10107
+        private const val PERMISSION_CAMERA_REQUEST_CODE = 10107
         private const val OFFSCREEN_PAGE_LIMIT = 3
     }
 
@@ -101,7 +98,7 @@ class MainActivity : AppCompatActivity() {
                 ActivityCompat.requestPermissions(
                     this,
                     arrayOf(Manifest.permission.CAMERA),
-                    PERMISSIONS_REQUEST_CAMERA
+                    PERMISSION_CAMERA_REQUEST_CODE
                 )
             }
 
@@ -117,7 +114,7 @@ class MainActivity : AppCompatActivity() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, resultArray)
         when (requestCode) {
-            PERMISSIONS_REQUEST_CAMERA -> {
+            PERMISSION_CAMERA_REQUEST_CODE -> {
                 if (resultArray.isNotEmpty() // if the request is cancelled, resultArray is empty
                     && resultArray[0] == PackageManager.PERMISSION_GRANTED
                 ) {
@@ -210,9 +207,9 @@ class MainActivity : AppCompatActivity() {
         binding.viewPager.currentItem = 2
     }
 
-    fun showColorPreviewDialog(color: Color) =
-        PreviewDialogFragment.newInstance(gson.toJson(color), !isPageVisible(1))
-            .show(supportFragmentManager, PreviewDialogFragment.TAG)
+    fun showColorPreviewDialog(serializedColor: String) =
+        PreviewDialogFragmentV3.newInstance(serializedColor)
+            .show(supportFragmentManager, PreviewDialogFragmentV3.TAG)
 
     fun showSettingsDialog() =
         SettingsDialogFragmentV3.newInstance()

@@ -1,5 +1,6 @@
 package com.lukelorusso.presentation.ui.camera
 
+import com.google.gson.Gson
 import com.lukelorusso.data.extensions.startWithSingle
 import com.lukelorusso.domain.exception.PersistenceException
 import com.lukelorusso.domain.model.Color
@@ -12,6 +13,7 @@ import javax.inject.Inject
 
 class CameraViewModel
 @Inject constructor(
+    private val gson: Gson,
     private val getLastLensPosition: GetLastLensPositionUseCase,
     private val setLastLensPosition: SetLastLensPositionUseCase,
     private val getLastZoomValue: GetLastZoomValueUseCase,
@@ -87,7 +89,7 @@ class CameraViewModel
 
     internal fun gotoHistory() = router.routeToHistory()
 
-    internal fun gotoPreview(color: Color) = router.routeToPreview(color)
+    internal fun gotoPreview(color: Color) = router.routeToPreview(gson.toJson(color))
 
     private fun onError(e: Throwable): CameraData =
         CameraData.createIsPersistenceException(e is PersistenceException)

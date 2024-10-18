@@ -1,8 +1,6 @@
 package com.lukelorusso.presentation.extensions
 
-import android.graphics.Bitmap
-import android.graphics.Color
-import android.graphics.Matrix
+import android.graphics.*
 import java.io.FileOutputStream
 
 private var scaleMatrix: Matrix? = null
@@ -83,6 +81,22 @@ fun Bitmap.getAveragePixel(averageNeighbourhood: Int = 0): Int {
         (greenBucket / pixelCount).toInt(),
         (blueBucket / pixelCount).toInt()
     )
+}
+
+/**
+ * A one color image.
+ * @param width
+ * @param height
+ * @param color
+ * @return A one color image with the given width and height.
+ */
+fun createBitmap(width: Int, height: Int, color: Int): Bitmap {
+    val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+    val canvas = Canvas(bitmap)
+    val paint = Paint()
+    paint.setColor(color)
+    canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
+    return bitmap
 }
 
 fun Bitmap.compressToPNG(stream: FileOutputStream) {
