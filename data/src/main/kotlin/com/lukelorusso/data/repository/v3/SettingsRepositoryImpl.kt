@@ -27,4 +27,36 @@ class SettingsRepositoryImpl(
             settingsManager.deleteLastZoomValue()
         }
     }
+
+    /**
+     * Back camera = 0; Front camera = 1
+     */
+    override fun getLastLensPosition(): Int {
+        return settingsManager.getLastLensPosition()
+    }
+
+    /**
+     * First, check if the user wants to save the camera options
+     */
+    override fun setLastLensPosition(position: Int) {
+        if (settingsManager.getSaveCameraOptions()) {
+            settingsManager.setLastLensPosition(position)
+        }
+    }
+
+    /**
+     * Min zoom value = 0; Max zoom value = 100
+     */
+    override fun getLastZoomValue(): Int {
+        return settingsManager.getLastZoomValue()
+    }
+
+    /**
+     * First, check if the user wants to save the camera options
+     */
+    override fun setLastZoomValue(position: Int) {
+        if (settingsManager.getSaveCameraOptions()) {
+            settingsManager.setLastZoomValue(position)
+        }
+    }
 }

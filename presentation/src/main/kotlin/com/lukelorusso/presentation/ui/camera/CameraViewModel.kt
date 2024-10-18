@@ -4,11 +4,13 @@ import com.google.gson.Gson
 import com.lukelorusso.data.extensions.startWithSingle
 import com.lukelorusso.domain.exception.PersistenceException
 import com.lukelorusso.domain.model.Color
-import com.lukelorusso.domain.usecase.*
+import com.lukelorusso.domain.usecase.GetColorUseCase
+import com.lukelorusso.domain.usecase.v3.*
 import com.lukelorusso.presentation.exception.ErrorMessageFactory
 import com.lukelorusso.presentation.ui.base.AViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
+import kotlinx.coroutines.rx3.rxSingle
 import javax.inject.Inject
 
 class CameraViewModel
@@ -25,18 +27,18 @@ class CameraViewModel
 ) : AViewModel<CameraData>(errorMessageFactory) {
 
     internal fun intentLoadData(param: Unit): Observable<CameraData> =
+
         Single.zip(
-            getLastLensPosition.execute(param),
-            getLastZoomValue.execute(param),
-            getPixelNeighbourhood.execute(param),
-            { lensPosition, zoomValue, pixelNeighbourhood ->
-                CameraData.createContent(
-                    lensPosition = lensPosition,
-                    zoomValue = zoomValue,
-                    pixelNeighbourhood = pixelNeighbourhood
-                )
-            }
-        ).toObservable().onErrorReturn { onError(it) }
+            rxSingle { getLastLensPosition.invoke(param) },
+            rxSingle { getLastZoomValue.invoke(param) },
+            rxSingle { getPixelNeighbourhood.invoke(param) }
+        ) { lensPosition, zoomValue, pixelNeighbourhood ->
+            CameraData.createContent(
+                lensPosition = lensPosition,
+                zoomValue = zoomValue,
+                pixelNeighbourhood = pixelNeighbourhood
+            )
+        }.toObservable().onErrorReturn { onError(it) }
 
     /**
      * param.first = LastLensPosition;
@@ -44,13 +46,12 @@ class CameraViewModel
      */
     internal fun intentReloadData(param: Pair<Int, Int>): Observable<CameraData> =
         Single.zip(
-            setLastLensPosition.execute(param.first).toSingle {},
-            setLastZoomValue.execute(param.second).toSingle {},
-            getPixelNeighbourhood.execute(Unit),
-            { _, _, pixelNeighbourhood ->
-                CameraData.createContent(pixelNeighbourhood = pixelNeighbourhood)
-            }
-        ).toObservable().onErrorReturn { onError(it) }
+            rxSingle { setLastLensPosition.invoke(param.first) },
+            rxSingle { setLastZoomValue.invoke(param.second) },
+            rxSingle { getPixelNeighbourhood.invoke(Unit) }
+        ) { _, _, pixelNeighbourhood ->
+            CameraData.createContent(pixelNeighbourhood = pixelNeighbourhood)
+        }.toObservable().onErrorReturn { onError(it) }
 
     internal fun intentGetColor(param: GetColorUseCase.Param): Observable<CameraData> =
         getColor.execute(param)
@@ -60,27 +61,25 @@ class CameraViewModel
             .onErrorReturn { onError(it) }
 
     internal fun intentSetLastLensPosition(param: Int): Observable<CameraData> =
-        setLastLensPosition.execute(param)
-            .toSingleDefault(Unit)
+        rxSingle { setLastLensPosition.invoke(param) }
             .toObservable()
             .map { CameraData.createContent(zoomValue = -1) }
             .onErrorReturn { onError(it) }
 
     internal fun intentGetLastZoomValue(param: Unit): Observable<CameraData> =
-        getLastZoomValue.execute(param)
+        rxSingle { getLastZoomValue.invoke(param) }
             .toObservable()
             .map { CameraData.createContent(zoomValue = it) }
             .onErrorReturn { onError(it) }
 
     internal fun intentSetLastZoomValue(param: Int): Observable<CameraData> =
-        setLastZoomValue.execute(param)
-            .toSingleDefault(Unit)
+        rxSingle { setLastZoomValue.invoke(param) }
             .toObservable()
             .map { CameraData.createEmptyContent() }
             .onErrorReturn { onError(it) }
 
     internal fun intentGetPixelNeighbourhood(param: Unit): Observable<CameraData> =
-        getPixelNeighbourhood.execute(param)
+        rxSingle { getPixelNeighbourhood.invoke(param) }
             .toObservable()
             .map { CameraData.createContent(pixelNeighbourhood = it) }
             .onErrorReturn { onError(it) }

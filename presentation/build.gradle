@@ -109,6 +109,7 @@ dependencies {
     implementation androidXLifecycleRuntimeCompose
 
     // RX
+    implementation kotlinxCoroutinesRx2
     implementation rxAndroid
     implementation rxKotlin
     implementation rxBinding

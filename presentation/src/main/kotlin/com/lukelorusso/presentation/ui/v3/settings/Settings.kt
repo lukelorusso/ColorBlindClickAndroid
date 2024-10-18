@@ -113,7 +113,7 @@ fun Settings(
                         Switch(
                             modifier = Modifier
                                 .scale(1.5F)
-                                .padding(16.dp),
+                                .padding(24.dp),
                             checked = uiState.saveCameraOptions,
                             onCheckedChange = {
                                 viewModel.setSaveCameraOptions(!uiState.saveCameraOptions)

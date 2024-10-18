@@ -2,9 +2,7 @@ package com.lukelorusso.presentation.ui.camera
 
 import android.content.pm.PackageManager
 import android.graphics.drawable.GradientDrawable
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+import android.os.*
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.lukelorusso.domain.model.Color
@@ -80,6 +78,7 @@ class CameraFragment : ARenderFragment<CameraData>(R.layout.fragment_camera) {
                 hideToolbarColor()
                 true
             }
+
             else -> false
         }
     }
@@ -108,8 +107,8 @@ class CameraFragment : ARenderFragment<CameraData>(R.layout.fragment_camera) {
 
         viewModel.observe(
             viewLifecycleOwner,
-            dataObserver = { data -> data?.let(::render) },
-            eventObserver = { event -> event?.let(::renderEvent) }
+            dataObserver = { data -> render(data) },
+            eventObserver = { event -> renderEvent(event) }
         )
 
         if (savedInstanceState != null) {

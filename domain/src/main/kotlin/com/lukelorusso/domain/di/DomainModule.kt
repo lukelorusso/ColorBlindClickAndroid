@@ -12,6 +12,10 @@ import com.lukelorusso.domain.usecase.v3.GetSaveCameraOptionsUseCase as GetSaveC
 import com.lukelorusso.domain.usecase.v3.GetSavedColorListUseCase as GetSavedColorListUseCaseV3
 import com.lukelorusso.domain.usecase.v3.SetPixelNeighbourhoodUseCase as SetPixelNeighbourhoodUseCaseV3
 import com.lukelorusso.domain.usecase.v3.SetSaveCameraOptionsUseCase as SetSaveCameraOptionsUseCaseV3
+import com.lukelorusso.domain.usecase.v3.GetLastLensPositionUseCase as GetLastLensPositionUseCaseV3
+import com.lukelorusso.domain.usecase.v3.SetLastLensPositionUseCase as SetLastLensPositionUseCaseV3
+import com.lukelorusso.domain.usecase.v3.GetLastZoomValueUseCase as GetLastZoomValueUseCaseV3
+import com.lukelorusso.domain.usecase.v3.SetLastZoomValueUseCase as SetLastZoomValueUseCaseV3
 
 val domainModule = module {
     //region UseCase
@@ -39,6 +43,10 @@ val domainModule = module {
     factory { SetPixelNeighbourhoodUseCaseV3(get()) }
     factory { GetSaveCameraOptionsUseCaseV3(get()) }
     factory { SetSaveCameraOptionsUseCaseV3(get()) }
+    factory { GetLastLensPositionUseCaseV3(get()) }
+    factory { SetLastLensPositionUseCaseV3(get()) }
+    factory { GetLastZoomValueUseCaseV3(get()) }
+    factory { SetLastZoomValueUseCaseV3(get()) }
 
     factory { GetSavedColorListUseCaseV3(get()) }
     factory { DeleteSavedColorUseCaseV3(get()) }
