@@ -27,7 +27,6 @@ class CameraViewModel
 ) : AViewModel<CameraData>(errorMessageFactory) {
 
     internal fun intentLoadData(param: Unit): Observable<CameraData> =
-
         Single.zip(
             rxSingle { getLastLensPosition.invoke(param) },
             rxSingle { getLastZoomValue.invoke(param) },

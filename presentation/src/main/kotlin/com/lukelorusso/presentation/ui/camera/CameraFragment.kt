@@ -5,6 +5,7 @@ import android.graphics.drawable.GradientDrawable
 import android.os.*
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.lukelorusso.domain.model.Color
 import com.lukelorusso.domain.usecase.GetColorUseCase
 import com.lukelorusso.domain.usecase.base.Logger
@@ -12,8 +13,8 @@ import com.lukelorusso.presentation.R
 import com.lukelorusso.presentation.databinding.FragmentCameraBinding
 import com.lukelorusso.presentation.extensions.*
 import com.lukelorusso.presentation.helper.TrackerHelper
-import com.lukelorusso.presentation.ui.base.ARenderFragment
 import com.lukelorusso.presentation.ui.base.ContentState
+import com.lukelorusso.presentation.ui.base.Event
 import com.lukelorusso.presentation.ui.main.MainActivity
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import io.fotoapparat.Fotoapparat
@@ -27,7 +28,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 import io.fotoapparat.log.Logger as FotoApparatLogger
 
-class CameraFragment : ARenderFragment<CameraData>(R.layout.fragment_camera) {
+class CameraFragment : Fragment(R.layout.fragment_camera) {
 
     companion object {
         val TAG: String = this::class.java.simpleName
@@ -119,7 +120,7 @@ class CameraFragment : ARenderFragment<CameraData>(R.layout.fragment_camera) {
     }
 
     // region RENDER
-    override fun render(data: CameraData) {
+    private fun render(data: CameraData) {
         showLoading(
             show = data.contentState == ContentState.LOADING ||
                     data.contentState == ContentState.RETRY
@@ -131,7 +132,10 @@ class CameraFragment : ARenderFragment<CameraData>(R.layout.fragment_camera) {
         renderPersistenceException(data.isPersistenceException)
     }
 
-    override fun renderSnack(messageError: String?) {
+    private fun renderEvent(event: Event<String>) =
+        renderSnack(event.contentIfNotHandled())
+
+    private fun renderSnack(messageError: String?) {
         showToolbarColor(messageError)
     }
 
@@ -375,7 +379,7 @@ class CameraFragment : ARenderFragment<CameraData>(R.layout.fragment_camera) {
     private fun showLoading(show: Boolean) =
         showLoading(binding.inclToolbarCameraBottom.toolbarProgressBar.root, show)
 
-    override fun showLoading(loading: View, visible: Boolean) {
+    private fun showLoading(loading: View, visible: Boolean) {
         if (visible) {
             hideToolbarColor()
             binding.inclToolbarCameraBottom.toolbarCameraButton.visibility = View.GONE
