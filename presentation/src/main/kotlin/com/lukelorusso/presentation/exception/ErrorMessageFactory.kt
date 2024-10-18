@@ -23,14 +23,8 @@ interface ErrorMessageFactory {
         override fun getError(exception: Throwable): String = when (exception) {
             is NotConnectedException -> context.getString(R.string.error_no_connection)
             is WebServiceException -> context.getString(R.string.error_web_service)
-            //is PersistenceException -> context.getString(R.string.error_persistence)
             else -> exception.message ?: context.getString(R.string.error_generic)
         }.apply { logger.logError { exception } }
-    }
-
-    class TestImpl : ErrorMessageFactory {
-        override fun getError(exception: Throwable): String =
-            "${exception.javaClass}: ${exception.message}"
     }
 
 }

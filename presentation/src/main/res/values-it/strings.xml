@@ -7,7 +7,7 @@
     <string name="choose_an_app">"Scegli l'app"</string>
     <string name="color_history">Cronologia colori</string>
     <string name="history_no_item">"Nessun colore presente (al momento!)"</string>
-    <string name="color_delete_confirmation_message">Sei sicuro di voler eliminare questo colore?</string>
+    <string name="color_delete_one_confirmation_message">Sei sicuro di voler eliminare questo colore?</string>
     <string name="color_delete_all_confirmation_message">Sei sicuro di voler eliminare TUTTI i colori salvati?</string>
     <string name="yes">Si</string>
     <string name="no">No</string>

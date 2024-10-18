@@ -1,4 +1,4 @@
-package com.lukelorusso.presentation.view
+package com.lukelorusso.presentation.ui.base
 
 import android.annotation.SuppressLint
 import android.content.Context

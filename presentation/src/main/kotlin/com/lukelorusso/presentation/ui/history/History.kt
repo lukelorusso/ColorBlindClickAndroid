@@ -65,7 +65,8 @@ fun History(
     }
 
     if (showDeleteAllAlertDialog) {
-        DeleteAllAlertDialog(
+        DeleteAlertDialog(
+            text = stringResource(R.string.color_delete_all_confirmation_message),
             confirmCallback = viewModel::deleteAllColors,
             dismissCallback = { showDeleteAllAlertDialog = false }
         )
@@ -120,7 +121,7 @@ fun History(
                         isEven = index % 2 == 0,
                         item = colorModel,
                         onClick = viewModel::gotoPreview,
-                        onDeleteColor = viewModel::deleteColor
+                        onDeleteColor = viewModel::deleteColor // TODO: ask confirmation
                     )
                 }
 
@@ -227,7 +228,7 @@ private fun Header(
 
         if (isLoading) LinearProgressIndicator(
             modifier = lineModifier,
-            backgroundColor = colorResource(id = R.color.white_50),
+            backgroundColor = colorResource(id = R.color.progress_background),
             color = colorResource(id = R.color.red_delete)
         )
         else Spacer(

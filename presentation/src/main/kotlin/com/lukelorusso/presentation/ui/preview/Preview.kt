@@ -74,7 +74,8 @@ fun Preview(
                     val description = (stringResource(id = R.string.credits) + " " + uiState.homeUrl).let { credits ->
                         colorModel.sharableDescription(credits)
                     }
-                    val popupLabel = stringResource(id = R.string.choose_an_app)
+                    val textPopupLabel = stringResource(id = R.string.choose_an_app)
+                    val bitmapPopupLabel = stringResource(id = R.string.share_color)
                     val size = with(LocalDensity.current) {
                         dimensionResource(id = R.dimen.color_picker_dimens_big).roundToPx()
                     }
@@ -84,7 +85,7 @@ fun Preview(
                         shareText = {
                             viewModel.shareText(
                                 text = description,
-                                popupLabel = popupLabel
+                                popupLabel = textPopupLabel
                             )
                         },
                         shareBitmap = {
@@ -95,7 +96,7 @@ fun Preview(
                                     color.toArgb()
                                 ),
                                 description = description,
-                                popupLabel = popupLabel
+                                popupLabel = bitmapPopupLabel
                             )
                         }
                     )
