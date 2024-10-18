@@ -3,12 +3,14 @@ package com.lukelorusso.presentation.ui.v3.info
 import androidx.lifecycle.viewModelScope
 import com.lukelorusso.domain.usecase.v3.*
 import com.lukelorusso.presentation.BuildConfig
+import com.lukelorusso.presentation.helper.TrackerHelper
 import com.lukelorusso.presentation.ui.v3.base.AppViewModel
 import com.lukelorusso.presentation.ui.v3.base.ContentState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class InfoViewModel(
+    private val trackerHelper: TrackerHelper,
     private val getHelpUrl: GetHelpUrlUseCase,
     private val getHomeUrl: GetHomeUrlUseCase,
     private val getAboutMeUrl: GetAboutMeUrlUseCase
@@ -36,6 +38,7 @@ class InfoViewModel(
         viewModelScope.launch {
             try {
                 val url = getHomeUrl.invoke(Unit)
+                trackerHelper.track(router.activity, TrackerHelper.Actions.GOTO_HOME_PAGE)
                 router.routeToBrowser(url)
             } catch (t: Throwable) {
                 updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
@@ -48,6 +51,7 @@ class InfoViewModel(
         viewModelScope.launch {
             try {
                 val url = getHelpUrl.invoke(Unit)
+                trackerHelper.track(router.activity, TrackerHelper.Actions.GOTO_HELP_PAGE)
                 router.routeToBrowser(url)
             } catch (t: Throwable) {
                 updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
@@ -60,6 +64,7 @@ class InfoViewModel(
         viewModelScope.launch {
             try {
                 val url = getAboutMeUrl.invoke(Unit)
+                trackerHelper.track(router.activity, TrackerHelper.Actions.GOTO_ABOUT_ME_PAGE)
                 router.routeToBrowser(url)
             } catch (t: Throwable) {
                 updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
@@ -67,8 +72,10 @@ class InfoViewModel(
         }
     }
 
-    fun gotoSettings() =
+    fun gotoSettings() {
+        trackerHelper.track(router.activity, TrackerHelper.Actions.GOTO_SETTINGS)
         router.routeToSettings()
+    }
 
     fun dismissError(onDismiss: (() -> Unit)? = null) {
         updateUiState { it.copy(contentState = ContentState.CONTENT) }

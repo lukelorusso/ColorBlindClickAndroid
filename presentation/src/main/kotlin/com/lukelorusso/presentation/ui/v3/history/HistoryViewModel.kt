@@ -4,6 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.lukelorusso.domain.model.Color
 import com.lukelorusso.domain.usecase.v3.*
+import com.lukelorusso.presentation.helper.TrackerHelper
 import com.lukelorusso.presentation.ui.v3.base.AppViewModel
 import com.lukelorusso.presentation.ui.v3.base.ContentState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,6 +12,7 @@ import kotlinx.coroutines.launch
 
 class HistoryViewModel(
     private val gson: Gson,
+    private val trackerHelper: TrackerHelper,
     private val getSavedColorList: GetSavedColorListUseCase,
     private val deleteSavedColor: DeleteSavedColorUseCase,
     private val deleteAllSavedColors: DeleteAllSavedColorsUseCase
@@ -44,6 +46,7 @@ class HistoryViewModel(
                 )
             }
         } catch (t: Throwable) {
+            trackerHelper.track(router.activity, TrackerHelper.Actions.PERSISTENCE_EXCEPTION)
             updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
         }
     }
@@ -63,8 +66,10 @@ class HistoryViewModel(
         viewModelScope.launch {
             try {
                 deleteSavedColor.invoke(param)
+                trackerHelper.track(router.activity, TrackerHelper.Actions.DELETED_ITEM)
                 loadDataSuspend()
             } catch (t: Throwable) {
+                trackerHelper.track(router.activity, TrackerHelper.Actions.PERSISTENCE_EXCEPTION)
                 updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
             }
         }
@@ -85,8 +90,10 @@ class HistoryViewModel(
         viewModelScope.launch {
             try {
                 deleteAllSavedColors.invoke(Unit)
+                trackerHelper.track(router.activity, TrackerHelper.Actions.DELETED_ALL_ITEMS)
                 loadDataSuspend()
             } catch (t: Throwable) {
+                trackerHelper.track(router.activity, TrackerHelper.Actions.PERSISTENCE_EXCEPTION)
                 updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
             }
         }

@@ -10,7 +10,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.*
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.*
 import androidx.compose.ui.text.font.FontWeight
@@ -51,8 +50,6 @@ fun Preview(
             )
 
             uiState.color?.let { colorModel ->
-                val context = LocalContext.current
-
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -85,13 +82,13 @@ fun Preview(
                     BottomToolBar(
                         colorModel = colorModel,
                         shareText = {
-                            context.shareText(
+                            viewModel.shareText(
                                 text = description,
                                 popupLabel = popupLabel
                             )
                         },
                         shareBitmap = {
-                            context.shareBitmap(
+                            viewModel.shareBitmap(
                                 bitmap = createBitmap(
                                     size,
                                     size,

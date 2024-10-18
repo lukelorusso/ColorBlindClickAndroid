@@ -16,6 +16,14 @@ class SettingsDialogFragment : AppCardDialogFragment(
     //region PROPERTIES
     private val viewModel: SettingsViewModel by viewModel()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel.initRouter(
+            activity = requireActivity(),
+            fragment = this
+        ) // If there's a router, initialize it here
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

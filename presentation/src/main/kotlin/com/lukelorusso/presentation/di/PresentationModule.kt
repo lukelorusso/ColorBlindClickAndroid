@@ -47,11 +47,11 @@ val presentationModule = module {
     //region ViewModel
     viewModel { CameraViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { HistoryViewModel(get(), get(), get(), get(), get(), get(), get()) }
-    viewModel { HistoryViewModelV3(get(), get(), get(), get()) }
+    viewModel { HistoryViewModelV3(get(), get(), get(), get(), get()) }
     viewModel { InfoViewModel(get(), get(), get(), get(), get()) }
-    viewModel { InfoViewModelV3(get(), get(), get()) }
+    viewModel { InfoViewModelV3(get(), get(), get(), get()) }
     viewModel { PreviewViewModel(get(), get()) }
-    viewModel { PreviewViewModelV3(get(), get()) }
+    viewModel { PreviewViewModelV3(get(), get(), get()) }
     viewModel { SettingsViewModel(get(), get(), get(), get(), get()) }
     viewModel { SettingsViewModelV3(get(), get(), get(), get()) }
     //endregion
