@@ -2,14 +2,13 @@ package com.lukelorusso.domain.usecase
 
 import com.lukelorusso.domain.model.Color
 import com.lukelorusso.domain.repository.ColorRepository
-import com.lukelorusso.domain.usecase.base.SingleUseCase
-import io.reactivex.rxjava3.core.Single
+import com.lukelorusso.domain.usecase.base.UseCase
 
 class GetColorUseCase(private val repository: ColorRepository) :
-    SingleUseCase<Color, GetColorUseCase.Param>() {
+    UseCase<GetColorUseCase.Param, Color>() {
 
-    override fun build(param: Param): Single<Color> =
-        repository.getColor(param.hex, param.deviceUdid)
+    override suspend fun run(param: Param): Color =
+        repository.decodeColorHex(param.hex, param.deviceUdid)
 
     data class Param(
         val hex: String,

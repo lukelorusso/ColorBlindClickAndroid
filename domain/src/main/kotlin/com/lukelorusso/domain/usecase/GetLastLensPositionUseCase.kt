@@ -1,12 +1,14 @@
 package com.lukelorusso.domain.usecase
 
-import com.lukelorusso.domain.repository.ColorRepository
-import com.lukelorusso.domain.usecase.base.SingleUseCase
-import io.reactivex.rxjava3.core.Single
+import com.lukelorusso.domain.repository.SettingsRepository
+import com.lukelorusso.domain.usecase.base.UseCase
 
-class GetLastLensPositionUseCase(private val repository: ColorRepository) :
-    SingleUseCase<Int, Unit>() {
+class GetLastLensPositionUseCase(
+    private val repository: SettingsRepository
+) : UseCase<Unit, Int>() {
 
-    override fun build(param: Unit): Single<Int> = repository.getLastLensPosition()
+    override suspend fun run(param: Unit): Int {
+        return repository.getLastLensPosition()
+    }
 
 }

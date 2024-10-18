@@ -6,13 +6,10 @@ import com.lukelorusso.data.datasource.impl.PersistenceDataSourceImpl
 import com.lukelorusso.data.datasource.impl.SharedPrefDataSourceImpl
 import com.lukelorusso.data.extensions.api
 import com.lukelorusso.data.mapper.ColorMapper
-import com.lukelorusso.data.datasource.HttpManager
 import com.lukelorusso.data.net.OkHttpClientFactory
 import com.lukelorusso.data.net.RetrofitFactory
-import com.lukelorusso.data.repository.ColorRepositoryImpl
-import com.lukelorusso.data.repository.v3.*
-import com.lukelorusso.domain.repository.ColorRepository
-import com.lukelorusso.domain.repository.v3.*
+import com.lukelorusso.data.repository.*
+import com.lukelorusso.domain.repository.*
 import org.koin.dsl.module
 import retrofit2.Retrofit
 
@@ -37,7 +34,6 @@ val dataModule = module {
     factory<ColorRepository> {
         ColorRepositoryImpl(
             (get() as Retrofit).api(),
-            get(),
             get(),
             get(),
             get()

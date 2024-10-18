@@ -1,70 +1,126 @@
 package com.lukelorusso.presentation.ui.history
 
+import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
-import com.lukelorusso.data.extensions.startWithSingle
-import com.lukelorusso.domain.exception.PersistenceException
-import com.lukelorusso.domain.functions.DelayFunction
 import com.lukelorusso.domain.model.Color
-import com.lukelorusso.domain.usecase.DeleteAllColorsUseCase
-import com.lukelorusso.domain.usecase.DeleteColorUseCase
-import com.lukelorusso.domain.usecase.GetColorListUseCase
-import com.lukelorusso.domain.usecase.base.UseCaseScheduler
-import com.lukelorusso.presentation.exception.ErrorMessageFactory
-import com.lukelorusso.presentation.ui.base.AViewModel
-import io.reactivex.rxjava3.core.Observable
-import java.util.concurrent.TimeUnit
+import com.lukelorusso.domain.usecase.*
+import com.lukelorusso.presentation.helper.TrackerHelper
+import com.lukelorusso.presentation.ui.base.AppViewModel
+import com.lukelorusso.presentation.ui.base.ContentState
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 
 class HistoryViewModel(
     private val gson: Gson,
-    private val getColorList: GetColorListUseCase,
-    private val deleteColor: DeleteColorUseCase,
-    private val deleteAllColors: DeleteAllColorsUseCase,
-    private val scheduler: UseCaseScheduler,
-    override val router: HistoryRouter,
-    errorMessageFactory: ErrorMessageFactory
-) : AViewModel<HistoryData>(errorMessageFactory) {
+    private val trackerHelper: TrackerHelper,
+    private val getSavedColorList: GetSavedColorListUseCase,
+    private val deleteSavedColor: DeleteSavedColorUseCase,
+    private val deleteAllSavedColors: DeleteAllSavedColorsUseCase
+) : AppViewModel<HistoryUiState>() {
+    override val _uiState = MutableStateFlow(HistoryUiState())
+    override val router = HistoryRouter()
 
-    private fun intentGetItems(param: Unit): Observable<HistoryData> = getColorList.execute(param)
-        .toObservable()
-        .map { HistoryData.createData(it) }
+    init {
+        loadData()
+    }
 
-    internal fun intentLoadData(param: Unit): Observable<HistoryData> = intentGetItems(param)
-        //.startWithSingle(HistoryData.createLoading())
-        .onErrorReturn { onError(it) }
+    fun loadData() {
+        if (uiState.value.contentState.isLoading) {
+            return
+        } else {
+            updateUiState { it.copy(contentState = ContentState.LOADING) }
+        }
 
-    internal fun intentRefreshData(param: Unit): Observable<HistoryData> = intentGetItems(param)
-        .delay(200, TimeUnit.MILLISECONDS)
-        .onErrorReturn { onError(it) }
+        viewModelScope.launch {
+            loadDataSuspend()
+        }
+    }
 
-    internal fun intentRetryData(param: Unit): Observable<HistoryData> = intentGetItems(param)
-        .startWithSingle(HistoryData.createRetryLoading())
-        .onErrorResumeNext(DelayFunction<HistoryData>(scheduler))
-        .onErrorReturn { onError(it) }
+    private suspend fun loadDataSuspend() {
+        try {
+            val colorList = getSavedColorList.invoke(Unit)
+            updateUiState {
+                it.copy(
+                    contentState = ContentState.CONTENT,
+                    colorList = colorList
+                )
+            }
+        } catch (t: Throwable) {
+            trackerHelper.track(router.activity, TrackerHelper.Actions.PERSISTENCE_EXCEPTION)
+            updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
+        }
+    }
 
-    internal fun intentDeleteItem(param: Color): Observable<HistoryData> =
-        deleteColor.execute(param)
-            .toSingleDefault(Unit)
-            .toObservable()
-            .map { HistoryData.createDeletedItem(param) }
-            .delay(450, TimeUnit.MILLISECONDS)
-            .startWithSingle(HistoryData.createLoading())
-            .onErrorReturn { onError(it) }
+    fun deleteColor(param: Color) {
+        if (uiState.value.contentState.isLoading) {
+            return
+        } else {
+            updateUiState {
+                it.copy(
+                    contentState = ContentState.LOADING,
+                    colorList = uiState.value.colorList.minus(param) // temporarily preview the result
+                )
+            }
+        }
 
-    internal fun intentDeleteAllItems(param: Unit): Observable<HistoryData> =
-        deleteAllColors.execute(param)
-            .toSingleDefault(Unit)
-            .toObservable()
-            .map { HistoryData.createDeletedAllItem() }
-            .delay(450, TimeUnit.MILLISECONDS)
-            .startWithSingle(HistoryData.createLoading())
-            .onErrorReturn { onError(it) }
+        viewModelScope.launch {
+            try {
+                deleteSavedColor.invoke(param)
+                trackerHelper.track(router.activity, TrackerHelper.Actions.DELETED_ITEM)
+                loadDataSuspend()
+            } catch (t: Throwable) {
+                trackerHelper.track(router.activity, TrackerHelper.Actions.PERSISTENCE_EXCEPTION)
+                updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
+            }
+        }
+    }
 
-    internal fun gotoCamera() = router.routeToCamera()
+    fun deleteAllColors() {
+        if (uiState.value.contentState.isLoading) {
+            return
+        } else {
+            updateUiState {
+                it.copy(
+                    contentState = ContentState.LOADING,
+                    colorList = emptyList() // temporarily preview the result
+                )
+            }
+        }
 
-    internal fun gotoPreview(color: Color) = router.routeToPreview(gson.toJson(color))
+        viewModelScope.launch {
+            try {
+                deleteAllSavedColors.invoke(Unit)
+                trackerHelper.track(router.activity, TrackerHelper.Actions.DELETED_ALL_ITEMS)
+                loadDataSuspend()
+            } catch (t: Throwable) {
+                trackerHelper.track(router.activity, TrackerHelper.Actions.PERSISTENCE_EXCEPTION)
+                updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
+            }
+        }
+    }
 
-    private fun onError(e: Throwable): HistoryData =
-        HistoryData.createIsPersistenceException(e is PersistenceException)
-            .also { postEvent(getErrorMessage(e)) }
+    fun toggleSearchingMode(value: Boolean) {
+        updateUiState {
+            it.copy(isSearchingMode = value).run {
+                if (!value) copy(searchText = "")
+                else this
+            }
+        }
 
+    }
+
+    fun updateSearchText(newText: String) {
+        updateUiState { it.copy(searchText = newText) }
+    }
+
+    fun gotoPreview(color: Color) =
+        router.routeToPreview(gson.toJson(color))
+
+    fun gotoCamera() =
+        router.routeToCamera()
+
+    fun dismissError(onDismiss: (() -> Unit)? = null) {
+        updateUiState { it.copy(contentState = ContentState.CONTENT) }
+        onDismiss?.invoke()
+    }
 }

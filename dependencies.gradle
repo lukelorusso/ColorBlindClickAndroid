@@ -63,7 +63,7 @@ ext {
     rxJavaVersion = '3.1.5'
     rxKotlinVersion = '3.0.1'
     rxBindingVersion = '4.0.0'
-    kotlinxCoroutinesRx2 = "org.jetbrains.kotlinx:kotlinx-coroutines-rx3"
+    kotlinxCoroutinesRx3 = "org.jetbrains.kotlinx:kotlinx-coroutines-rx3"
     rxAndroid = "io.reactivex.rxjava3:rxandroid:$rxAndroidVersion"
     rxJava = "io.reactivex.rxjava3:rxjava:$rxJavaVersion"
     rxKotlin = "io.reactivex.rxjava3:rxkotlin:$rxKotlinVersion"

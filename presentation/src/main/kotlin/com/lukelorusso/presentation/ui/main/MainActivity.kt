@@ -14,11 +14,11 @@ import com.lukelorusso.presentation.R
 import com.lukelorusso.presentation.databinding.ActivityMainBinding
 import com.lukelorusso.presentation.extensions.*
 import com.lukelorusso.presentation.ui.camera.CameraFragment
+import com.lukelorusso.presentation.ui.history.HistoryFragment
+import com.lukelorusso.presentation.ui.info.InfoFragment
+import com.lukelorusso.presentation.ui.preview.PreviewDialogFragment
+import com.lukelorusso.presentation.ui.settings.SettingsDialogFragment
 import com.lukelorusso.presentation.view.MaybeScrollableViewPager
-import com.lukelorusso.presentation.ui.v3.history.HistoryFragment as HistoryFragmentV3
-import com.lukelorusso.presentation.ui.v3.info.InfoFragment as InfoFragmentV3
-import com.lukelorusso.presentation.ui.v3.preview.PreviewDialogFragment as PreviewDialogFragmentV3
-import com.lukelorusso.presentation.ui.v3.settings.SettingsDialogFragment as SettingsDialogFragmentV3
 
 
 class MainActivity : AppCompatActivity() {
@@ -45,9 +45,9 @@ class MainActivity : AppCompatActivity() {
         override fun handleOnBackPressed() {
             when (val f =
                 pagerAdapter.getItem(binding.viewPager.currentItem)) { // pick the current fragment
-                is InfoFragmentV3 -> if (!f.onBackPressHandled()) finish()
+                is InfoFragment -> if (!f.onBackPressHandled()) finish()
                 is CameraFragment -> if (!f.onBackPressHandled()) finish()
-                is HistoryFragmentV3 -> if (!f.onBackPressHandled()) finish()
+                is HistoryFragment -> if (!f.onBackPressHandled()) finish()
                 else -> finish()
             }
         }
@@ -171,7 +171,7 @@ class MainActivity : AppCompatActivity() {
                         immersiveMode = newPage == 1 // only camera page is immersive
                         if (newPage != lastPage) {
                             val f = pagerAdapter.getItem(newPage)
-                            (f as? HistoryFragmentV3)?.reloadData()
+                            (f as? HistoryFragment)?.reloadData()
                             (f as? CameraFragment)?.reloadData()
                         }
                         direction = when (newPage) {
@@ -208,10 +208,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun showColorPreviewDialog(serializedColor: String) =
-        PreviewDialogFragmentV3.newInstance(serializedColor)
-            .show(supportFragmentManager, PreviewDialogFragmentV3.TAG)
+        PreviewDialogFragment.newInstance(serializedColor)
+            .show(supportFragmentManager, PreviewDialogFragment.TAG)
 
     fun showSettingsDialog() =
-        SettingsDialogFragmentV3.newInstance()
-            .show(supportFragmentManager, SettingsDialogFragmentV3.TAG)
+        SettingsDialogFragment.newInstance()
+            .show(supportFragmentManager, SettingsDialogFragment.TAG)
 }

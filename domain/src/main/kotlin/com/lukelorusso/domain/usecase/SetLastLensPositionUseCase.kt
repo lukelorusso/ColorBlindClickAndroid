@@ -1,12 +1,13 @@
 package com.lukelorusso.domain.usecase
 
-import com.lukelorusso.domain.repository.ColorRepository
-import com.lukelorusso.domain.usecase.base.CompletableUseCase
-import io.reactivex.rxjava3.core.Completable
+import com.lukelorusso.domain.repository.SettingsRepository
+import com.lukelorusso.domain.usecase.base.UseCase
 
-class SetLastLensPositionUseCase(private val repository: ColorRepository) :
-    CompletableUseCase<Int>() {
+class SetLastLensPositionUseCase(
+    private val repository: SettingsRepository
+) : UseCase<Int, Unit>() {
 
-    override fun build(param: Int): Completable = repository.setLastLensPosition(param)
-
+    override suspend fun run(param: Int) {
+        repository.setLastLensPosition(param)
+    }
 }

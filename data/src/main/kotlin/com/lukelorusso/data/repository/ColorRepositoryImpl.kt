@@ -1,162 +1,50 @@
 package com.lukelorusso.data.repository
 
-import com.lukelorusso.data.datasource.*
-import com.lukelorusso.data.extensions.catchPersistenceException
+import com.lukelorusso.data.datasource.HttpManager
+import com.lukelorusso.data.datasource.PersistenceDataSource
 import com.lukelorusso.data.mapper.ColorMapper
-import com.lukelorusso.data.net.RetrofitFactory.COLOR_BLIND_SITE_ABOUT_ME
-import com.lukelorusso.data.net.RetrofitFactory.COLOR_BLIND_SITE_HELP
-import com.lukelorusso.data.net.RetrofitFactory.COLOR_BLIND_SITE_HOME
 import com.lukelorusso.data.net.api.ColorApi
 import com.lukelorusso.domain.model.Color
 import com.lukelorusso.domain.repository.ColorRepository
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Maybe
-import io.reactivex.rxjava3.core.Single
 import java.util.*
 
 class ColorRepositoryImpl(
     private val api: ColorApi,
-    private val colorMapper: ColorMapper,
     private val httpManager: HttpManager,
-    private val settingsManager: SettingsManager,
-    private val persistenceManager: PersistenceDataSource
+    private val colorMapper: ColorMapper,
+    private val persistenceDataSource: PersistenceDataSource
 ) : ColorRepository {
-    companion object {
-        private val COLOR_API_SUPPORTED_LANGUAGES = arrayListOf(
-            "en",
-            "it",
-            "fr",
-            "de",
-            "es"
-        )
-    }
 
-    /**
-     * Back camera = 0; Front camera = 1
-     */
-    override fun getLastLensPosition(): Single<Int> =
-        Single.just(settingsManager.getLastLensPosition())
-
-    /**
-     * First, check if the user wants to save the camera options
-     */
-    override fun setLastLensPosition(position: Int): Completable =
-        Single.just(settingsManager.getSaveCameraOptions())
-            .filter { it }
-            .flatMap { Maybe.just(settingsManager.setLastLensPosition(position)) }
-            .doAfterSuccess { settingsManager.deleteLastZoomValue() }
-            .ignoreElement()
-
-    /**
-     * Min zoom value = 0; Max zoom value = 100
-     */
-    override fun getLastZoomValue(): Single<Int> =
-        Single.just(settingsManager.getLastZoomValue())
-
-    /**
-     * First, check if the user wants to save the camera options
-     */
-    override fun setLastZoomValue(position: Int): Completable =
-        Single.just(settingsManager.getSaveCameraOptions())
-            .filter { it }
-            .flatMap { Maybe.just(settingsManager.setLastZoomValue(position)) }
-            .ignoreElement()
-
-    override fun getPixelNeighbourhood(): Single<Int> =
-        Single.just(settingsManager.getPixelNeighbourhood())
-
-    override fun setPixelNeighbourhood(count: Int): Completable =
-        Single.just(settingsManager.setPixelNeighbourhood(count))
-            .ignoreElement()
-
-    override fun getSaveCameraOptions(): Single<Boolean> =
-        Single.just(settingsManager.getSaveCameraOptions())
-
-    /**
-     * If the user does NOT save the camera options, you should delete them
-     */
-    override fun setSaveCameraOptions(shouldSave: Boolean): Completable =
-        Single.just(settingsManager.setSaveCameraOptions(shouldSave))
-            .doAfterSuccess {
-                if (!shouldSave) {
-                    settingsManager.deleteLastLensPosition()
-                    settingsManager.deleteLastZoomValue()
-                }
-            }
-            .ignoreElement()
-
-    override fun getHelpUrl(): Single<String> = Single.just(
-        String.format(
-            COLOR_BLIND_SITE_HELP,
-            getDeviceLanguage()
-        )
-    )
-
-    override fun getHomeUrl(): Single<String> = Single.just(
-        String.format(
-            COLOR_BLIND_SITE_HOME,
-            getDeviceLanguage()
-        )
-    )
-
-    override fun getAboutMeUrl(): Single<String> = Single.just(
-        String.format(
-            COLOR_BLIND_SITE_ABOUT_ME,
-            getDeviceLanguage()
-        )
-    )
-
-    override fun getColor(colorHex: String, deviceUdid: String): Single<Color> =
-        httpManager.execute(
-            call = api.getColor(
-                colorHex.let {
-                    if (it.contains("#"))
-                        it.replace("#", "")
-                    else
-                        it
-                },
-                getDeviceLanguage(),
-                deviceUdid
-            ),
+    override suspend fun decodeColorHex(colorHex: String, deviceUdid: String): Color {
+        val newColor: Color = httpManager.restCall(
+            call = {
+                api.getColor(
+                    colorHex.removePrefix("#"),
+                    getDeviceLanguage(),
+                    deviceUdid
+                )
+            },
             mapper = { colorMapper.transform(it) }
-        ).flatMap { model ->
-            Single.fromCallable {
-                persistenceManager.getColorList().toMutableList().apply {
-                    val existent = find { oldModel ->
-                        oldModel.originalColorHex() == model.originalColorHex()
-                    }
-                    existent?.also { remove(it) }
-                    add(0, model)
-                    persistenceManager.saveColorList(this)
-                }
-            }.map { model }
-        }.onErrorResumeNext { e -> e.catchPersistenceException() }
+        )
 
-    override fun getColorList(): Single<List<Color>> = Single
-        .fromCallable { persistenceManager.getColorList() }
-        .onErrorResumeNext { e -> e.catchPersistenceException() }
-
-    override fun deleteColor(color: Color): Completable = Single
-        .fromCallable {
-            persistenceManager.getColorList().toMutableList().apply {
-                val existent = find { c -> c.originalColorHex() == color.originalColorHex() }
-                existent?.also { remove(it) }
-                persistenceManager.saveColorList(this)
+        persistenceDataSource.getColorList().toMutableList().apply {
+            val existent = firstOrNull { it.originalColorHex() == newColor.originalColorHex() }
+            if (existent != null) {
+                remove(existent)
+                add(0, newColor)
+                persistenceDataSource.saveColorList(this)
             }
         }
-        .onErrorResumeNext { e -> e.catchPersistenceException() }
-        .ignoreElement()
 
-    override fun deleteAllColors(): Completable = Single
-        .fromCallable { persistenceManager.clearColorList() }
-        .onErrorResumeNext { e -> e.catchPersistenceException() }
-        .ignoreElement()
+        return newColor
+    }
 
     private fun getDeviceLanguage(): String {
         val language = Locale.getDefault().language
-        if (!COLOR_API_SUPPORTED_LANGUAGES.contains(language)) {
-            return COLOR_API_SUPPORTED_LANGUAGES[0]
+        if (!APP_SUPPORTED_LANGUAGES.contains(language)) {
+            return APP_SUPPORTED_LANGUAGES[0]
         }
         return language
     }
+
 }

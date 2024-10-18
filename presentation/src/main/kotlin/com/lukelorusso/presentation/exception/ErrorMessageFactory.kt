@@ -2,7 +2,6 @@ package com.lukelorusso.presentation.exception
 
 import android.content.Context
 import com.lukelorusso.domain.exception.NotConnectedException
-import com.lukelorusso.domain.exception.PersistenceException
 import com.lukelorusso.domain.exception.WebServiceException
 import com.lukelorusso.domain.usecase.base.Logger
 import com.lukelorusso.presentation.R
@@ -24,7 +23,7 @@ interface ErrorMessageFactory {
         override fun getError(exception: Throwable): String = when (exception) {
             is NotConnectedException -> context.getString(R.string.error_no_connection)
             is WebServiceException -> context.getString(R.string.error_web_service)
-            is PersistenceException -> context.getString(R.string.error_persistence)
+            //is PersistenceException -> context.getString(R.string.error_persistence)
             else -> exception.message ?: context.getString(R.string.error_generic)
         }.apply { logger.logError { exception } }
     }

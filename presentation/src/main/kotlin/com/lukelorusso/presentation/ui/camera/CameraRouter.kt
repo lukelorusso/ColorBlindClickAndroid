@@ -1,9 +1,9 @@
 package com.lukelorusso.presentation.ui.camera
 
-import com.lukelorusso.presentation.ui.base.ARouter
+import com.lukelorusso.presentation.ui.base.AppRouter
 import com.lukelorusso.presentation.ui.main.MainActivity
 
-class CameraRouter : ARouter() {
+class CameraRouter : AppRouter() {
 
     fun routeToInfo() = (activity as? MainActivity)?.gotoInfo()
 

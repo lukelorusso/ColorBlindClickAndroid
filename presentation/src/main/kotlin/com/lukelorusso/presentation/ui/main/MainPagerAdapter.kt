@@ -2,9 +2,9 @@ package com.lukelorusso.presentation.ui.main
 
 import androidx.fragment.app.*
 import com.lukelorusso.presentation.ui.camera.CameraFragment
+import com.lukelorusso.presentation.ui.history.HistoryFragment
+import com.lukelorusso.presentation.ui.info.InfoFragment
 import java.lang.ref.WeakReference
-import com.lukelorusso.presentation.ui.v3.history.HistoryFragment as HistoryFragmentV3
-import com.lukelorusso.presentation.ui.v3.info.InfoFragment as InfoFragmentV3
 
 /**
  * @author LukeLorusso on 07-01-2019.
@@ -13,9 +13,9 @@ class MainPagerAdapter(private var fragmentManager: FragmentManager) :
     FragmentStatePagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
     private val tabTitleList = listOf(
-        InfoFragmentV3.TAG,
+        InfoFragment.TAG,
         CameraFragment.TAG,
-        HistoryFragmentV3.TAG
+        HistoryFragment.TAG
     )
 
     // It's important to keep WeakReference to Fragments,
@@ -36,9 +36,9 @@ class MainPagerAdapter(private var fragmentManager: FragmentManager) :
             .also { weakFragmentList[position] = WeakReference(it) }
 
     private fun newInstanceAt(position: Int): Fragment = when (position) {
-        0 -> InfoFragmentV3.newInstance()
+        0 -> InfoFragment.newInstance()
         1 -> CameraFragment.newInstance()
-        2 -> HistoryFragmentV3.newInstance()
+        2 -> HistoryFragment.newInstance()
         else -> Fragment()
     }
 

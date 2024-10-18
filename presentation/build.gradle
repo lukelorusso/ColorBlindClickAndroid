@@ -109,8 +109,9 @@ dependencies {
     implementation androidXLifecycleRuntimeCompose
 
     // RX
-    implementation kotlinxCoroutinesRx2
+    implementation kotlinxCoroutinesRx3
     implementation rxAndroid
+    implementation rxJava
     implementation rxKotlin
     implementation rxBinding
     implementation rxBindingSwipeRefreshLayout

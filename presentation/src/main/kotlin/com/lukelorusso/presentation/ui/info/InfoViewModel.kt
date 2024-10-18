@@ -1,44 +1,84 @@
 package com.lukelorusso.presentation.ui.info
 
-import com.lukelorusso.domain.usecase.GetAboutMeUrlUseCase
-import com.lukelorusso.domain.usecase.GetHelpUrlUseCase
-import com.lukelorusso.domain.usecase.GetHomeUrlUseCase
-import com.lukelorusso.presentation.exception.ErrorMessageFactory
-import com.lukelorusso.presentation.ui.base.AViewModel
-import io.reactivex.rxjava3.core.Observable
+import androidx.lifecycle.viewModelScope
+import com.lukelorusso.domain.usecase.*
+import com.lukelorusso.presentation.BuildConfig
+import com.lukelorusso.presentation.helper.TrackerHelper
+import com.lukelorusso.presentation.ui.base.AppViewModel
+import com.lukelorusso.presentation.ui.base.ContentState
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 
 class InfoViewModel(
+    private val trackerHelper: TrackerHelper,
     private val getHelpUrl: GetHelpUrlUseCase,
     private val getHomeUrl: GetHomeUrlUseCase,
-    private val getAboutMeUrl: GetAboutMeUrlUseCase,
-    override val router: InfoRouter,
-    errorMessageFactory: ErrorMessageFactory
-) : AViewModel<InfoData>(errorMessageFactory) {
+    private val getAboutMeUrl: GetAboutMeUrlUseCase
+) : AppViewModel<InfoUiState>() {
+    override val _uiState = MutableStateFlow(InfoUiState())
+    override val router = InfoRouter()
 
-    internal fun intentGetHelpUrl(): Observable<InfoData> = getHelpUrl.execute(Unit)
-        .toObservable()
-        .map { InfoData.createUrlToGoTo(it) }
-        .onErrorReturn { onError(it) }
+    init {
+        loadData()
+    }
 
-    internal fun intentGetHomeUrl(): Observable<InfoData> = getHomeUrl.execute(Unit)
-        .toObservable()
-        .map { InfoData.createUrlToGoTo(it) }
-        .onErrorReturn { onError(it) }
+    private fun loadData() {
+        initUiState(
+            InfoUiState(
+                versionName = "v.${BuildConfig.VERSION_NAME}"
+            )
+        )
+    }
 
-    internal fun intentGetAboutMeUrl(): Observable<InfoData> = getAboutMeUrl.execute(Unit)
-        .toObservable()
-        .map { InfoData.createUrlToGoTo(it) }
-        .onErrorReturn { onError(it) }
+    fun gotoCamera() =
+        router.routeToCamera()
 
-    internal fun gotoBrowser(url: String) = router.routeToBrowser(url)
+    fun gotoHome() {
+        dismissError()
+        viewModelScope.launch {
+            try {
+                val url = getHomeUrl.invoke(Unit)
+                trackerHelper.track(router.activity, TrackerHelper.Actions.GOTO_HOME_PAGE)
+                router.routeToBrowser(url)
+            } catch (t: Throwable) {
+                updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
+            }
+        }
+    }
 
-    internal fun gotoCamera() = router.routeToCamera()
+    fun gotoHelp() {
+        dismissError()
+        viewModelScope.launch {
+            try {
+                val url = getHelpUrl.invoke(Unit)
+                trackerHelper.track(router.activity, TrackerHelper.Actions.GOTO_HELP_PAGE)
+                router.routeToBrowser(url)
+            } catch (t: Throwable) {
+                updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
+            }
+        }
+    }
 
-    internal fun gotoSettings(): Observable<InfoData> = Observable.just(Unit)
-        .map { InfoData.createEmptyContent() }
-        .doAfterNext { router.routeToSettings() }
+    fun gotoAboutMe() {
+        dismissError()
+        viewModelScope.launch {
+            try {
+                val url = getAboutMeUrl.invoke(Unit)
+                trackerHelper.track(router.activity, TrackerHelper.Actions.GOTO_ABOUT_ME_PAGE)
+                router.routeToBrowser(url)
+            } catch (t: Throwable) {
+                updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
+            }
+        }
+    }
 
-    private fun onError(e: Throwable): InfoData =
-        InfoData.createEmptyContent().also { postEvent(getErrorMessage(e)) }
+    fun gotoSettings() {
+        trackerHelper.track(router.activity, TrackerHelper.Actions.GOTO_SETTINGS)
+        router.routeToSettings()
+    }
 
+    fun dismissError(onDismiss: (() -> Unit)? = null) {
+        updateUiState { it.copy(contentState = ContentState.CONTENT) }
+        onDismiss?.invoke()
+    }
 }

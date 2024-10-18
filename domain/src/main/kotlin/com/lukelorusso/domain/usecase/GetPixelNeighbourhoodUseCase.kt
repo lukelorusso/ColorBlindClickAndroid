@@ -1,12 +1,14 @@
 package com.lukelorusso.domain.usecase
 
-import com.lukelorusso.domain.repository.ColorRepository
-import com.lukelorusso.domain.usecase.base.SingleUseCase
-import io.reactivex.rxjava3.core.Single
+import com.lukelorusso.domain.repository.SettingsRepository
+import com.lukelorusso.domain.usecase.base.UseCase
 
-class GetPixelNeighbourhoodUseCase(private val repository: ColorRepository) :
-    SingleUseCase<Int, Unit>() {
+class GetPixelNeighbourhoodUseCase(
+    private val repository: SettingsRepository
+) : UseCase<Unit, Int>() {
 
-    override fun build(param: Unit): Single<Int> = repository.getPixelNeighbourhood()
+    override suspend fun run(param: Unit): Int {
+        return repository.getPixelNeighbourhood()
+    }
 
 }

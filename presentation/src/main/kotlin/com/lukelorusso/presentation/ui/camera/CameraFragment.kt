@@ -122,8 +122,7 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
     // region RENDER
     private fun render(data: CameraData) {
         showLoading(
-            show = data.contentState == ContentState.LOADING ||
-                    data.contentState == ContentState.RETRY
+            show = data.contentState == ContentState.LOADING
         )
 
         renderInitCamera(data.lastLensPosition, data.lastZoomValue, data.pixelNeighbourhood)

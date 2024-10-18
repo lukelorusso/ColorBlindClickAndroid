@@ -2,12 +2,10 @@ package com.lukelorusso.presentation.ui.camera
 
 import com.google.gson.Gson
 import com.lukelorusso.data.extensions.startWithSingle
-import com.lukelorusso.domain.exception.PersistenceException
 import com.lukelorusso.domain.model.Color
-import com.lukelorusso.domain.usecase.GetColorUseCase
-import com.lukelorusso.domain.usecase.v3.*
+import com.lukelorusso.domain.usecase.*
 import com.lukelorusso.presentation.exception.ErrorMessageFactory
-import com.lukelorusso.presentation.ui.base.AViewModel
+import com.lukelorusso.presentation.ui.base.OldViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.rx3.rxSingle
@@ -22,9 +20,9 @@ class CameraViewModel
     private val setLastZoomValue: SetLastZoomValueUseCase,
     private val getPixelNeighbourhood: GetPixelNeighbourhoodUseCase,
     private val getColor: GetColorUseCase,
-    override val router: CameraRouter,
     errorMessageFactory: ErrorMessageFactory
-) : AViewModel<CameraData>(errorMessageFactory) {
+) : OldViewModel<CameraData>(errorMessageFactory) {
+    override val router = CameraRouter()
 
     internal fun intentLoadData(param: Unit): Observable<CameraData> =
         Single.zip(
@@ -53,11 +51,11 @@ class CameraViewModel
         }.toObservable().onErrorReturn { onError(it) }
 
     internal fun intentGetColor(param: GetColorUseCase.Param): Observable<CameraData> =
-        getColor.execute(param)
+        rxSingle { getColor.invoke(param) }
             .toObservable()
             .map { CameraData.createColor(it) }
             .startWithSingle(CameraData.createLoading())
-            .onErrorReturn { onError(it) }
+            .onErrorReturn { onError(it, true) }
 
     internal fun intentSetLastLensPosition(param: Int): Observable<CameraData> =
         rxSingle { setLastLensPosition.invoke(param) }
@@ -89,8 +87,8 @@ class CameraViewModel
 
     internal fun gotoPreview(color: Color) = router.routeToPreview(gson.toJson(color))
 
-    private fun onError(e: Throwable): CameraData =
-        CameraData.createIsPersistenceException(e is PersistenceException)
+    private fun onError(e: Throwable, isPersistenceException: Boolean = false): CameraData =
+        CameraData.createIsPersistenceException(isPersistenceException)
             .also { postEvent(getErrorMessage(e)) }
 
 }

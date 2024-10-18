@@ -1,12 +1,13 @@
 package com.lukelorusso.domain.usecase
 
-import com.lukelorusso.domain.repository.ColorRepository
-import com.lukelorusso.domain.usecase.base.SingleUseCase
-import io.reactivex.rxjava3.core.Single
+import com.lukelorusso.domain.repository.SettingsRepository
+import com.lukelorusso.domain.usecase.base.UseCase
 
-class GetSaveCameraOptionsUseCase(private val repository: ColorRepository) :
-    SingleUseCase<Boolean, Unit>() {
+class GetSaveCameraOptionsUseCase(
+    private val repository: SettingsRepository
+) : UseCase<Unit, Boolean>() {
 
-    override fun build(param: Unit): Single<Boolean> = repository.getSaveCameraOptions()
-
+    override suspend fun run(param: Unit): Boolean {
+        return repository.getSaveCameraOptions()
+    }
 }

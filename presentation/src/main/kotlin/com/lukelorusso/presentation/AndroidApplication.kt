@@ -6,7 +6,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.lukelorusso.data.di.dataModule
 import com.lukelorusso.domain.di.domainModule
 import com.lukelorusso.presentation.di.presentationModule
-import com.lukelorusso.presentation.helper.CrashlyticsTree
+import com.lukelorusso.presentation.logger.CrashlyticsTree
 import io.paperdb.Paper
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
