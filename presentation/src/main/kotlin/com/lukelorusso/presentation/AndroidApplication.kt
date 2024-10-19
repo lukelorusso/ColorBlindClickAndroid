@@ -1,7 +1,6 @@
 package com.lukelorusso.presentation
 
 import android.app.Application
-import com.facebook.stetho.Stetho
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.lukelorusso.data.di.dataModule
 import com.lukelorusso.domain.di.domainModule
@@ -27,11 +26,6 @@ class AndroidApplication : Application() {
 
         // Init Crashlytics
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true)
-
-        // Init Stetho
-        if (BuildConfig.DEBUG) {
-            Stetho.initializeWithDefaults(this)
-        }
 
         // Init Debug log
         if (BuildConfig.DEBUG) {

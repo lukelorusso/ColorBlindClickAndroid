@@ -1,10 +1,13 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'com.github.ben-manes.versions'
 
 android {
-    compileSdkVersion androidCompileSdkVersion
+    compileSdkVersion = androidCompileSdkVersion
+
+    buildFeatures {
+        buildConfig = true
+    }
 
     defaultConfig {
         minSdkVersion androidMinSdkVersion
@@ -20,11 +23,11 @@ android {
     buildTypes {
         debug {
             minifyEnabled true
-            consumerProguardFiles modelRules, supportRules, apacheRules, gsonRules, okhttp3Rules, retrofit2Rules, stethoRules
+            consumerProguardFiles dtoRules, gsonRules, modelRules, okhttp3Rules, retrofit2Rules
         }
         release {
             minifyEnabled true
-            consumerProguardFiles modelRules, supportRules, apacheRules, gsonRules, okhttp3Rules, retrofit2Rules, stethoRules
+            consumerProguardFiles dtoRules, gsonRules, modelRules, okhttp3Rules, retrofit2Rules
         }
         // For Android Test
         debugTest {
@@ -42,6 +45,7 @@ android {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_18
     }
+
     namespace 'com.lukelorusso.data'
 }
 
@@ -59,26 +63,16 @@ dependencies {
     // DEPENDENCY INJECTION
     implementation koinCore
 
-    // RX
-    implementation rxAndroid
-    implementation rxJava
-    implementation rxKotlin
-
     // WEBSERVICES
     implementation retrofitConverterGson
     implementation retrofitConverterScalars
-    implementation retrofitAdapterRxJava
 
     // DATABASE
     implementation paperDB
 
     // DEBUG TOOLS
     implementation timber
-    implementation stethoOkHttp
     debugImplementation chuckerDebug
     debugTestImplementation chuckerDebug
     releaseImplementation chuckerRelease
-
-    // DEPENDENCY CHECK STRATEGY
-    dependencyUpdates.resolutionStrategy dependencyUpdatesStrategy
 }

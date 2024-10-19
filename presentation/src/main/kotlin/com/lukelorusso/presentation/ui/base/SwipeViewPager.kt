@@ -7,7 +7,7 @@ import android.view.MotionEvent
 
 import androidx.viewpager.widget.ViewPager
 
-class MaybeScrollableViewPager(context: Context, attrs: AttributeSet) : ViewPager(context, attrs) {
+class SwipeViewPager(context: Context, attrs: AttributeSet) : ViewPager(context, attrs) {
 
     private var initialXValue: Float = 0.toFloat()
     var direction: SwipeDirection

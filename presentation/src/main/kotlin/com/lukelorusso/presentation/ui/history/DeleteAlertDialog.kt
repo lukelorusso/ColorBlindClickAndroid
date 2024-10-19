@@ -4,7 +4,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.*
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.lukelorusso.presentation.R
 
@@ -12,6 +14,7 @@ import com.lukelorusso.presentation.R
 @Composable
 fun DeleteAlertDialog(
     text: String,
+    painter: Painter,
     dismissCallback: () -> Unit = {},
     confirmCallback: () -> Unit = {}
 ) {
@@ -21,7 +24,7 @@ fun DeleteAlertDialog(
                 Icon(
                     modifier = Modifier
                         .size(34.dp),
-                    painter = painterResource(id = R.drawable.delete_sweep_white),
+                    painter = painter,
                     tint = colorResource(id = R.color.red_delete),
                     contentDescription = null
                 )
@@ -37,12 +40,7 @@ fun DeleteAlertDialog(
         },
         onDismissRequest = dismissCallback,
         confirmButton = {
-            TextButton(
-                onClick = {
-                    confirmCallback()
-                    dismissCallback()
-                }
-            ) {
+            TextButton(onClick = confirmCallback) {
                 Text(
                     text = stringResource(R.string.yes),
                     color = colorResource(id = R.color.red_delete)
@@ -50,11 +48,7 @@ fun DeleteAlertDialog(
             }
         },
         dismissButton = {
-            TextButton(
-                onClick = {
-                    dismissCallback()
-                }
-            ) {
+            TextButton(onClick = dismissCallback) {
                 Text(
                     text = stringResource(R.string.no),
                     color = colorResource(id = R.color.text_color),

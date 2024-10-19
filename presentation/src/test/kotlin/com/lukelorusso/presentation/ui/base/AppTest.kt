@@ -8,10 +8,10 @@ import org.koin.test.KoinTest
 import org.koin.test.KoinTestRule
 
 /**
- * Copyright (C) 2021 Luke Lorusso
+ * Copyright (C) 2024 Luke Lorusso
  * Licensed under the Apache License Version 2.0
  */
-abstract class ABaseTest : KoinTest {
+abstract class AppTest : KoinTest {
 
     companion object {
         private val modules = dataTestModule +

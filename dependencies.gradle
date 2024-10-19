@@ -1,19 +1,10 @@
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
-        gradlePluginPortal()
-        maven { url 'https://jitpack.io' }
-    }
-}
-
 ext {
     // APP ID
     androidApplicationId = 'com.lukelorusso.colorblindclick'
 
     // APP VERSION
-    androidVersionCode = 58
-    androidVersionName = '2.5.6'
+    androidVersionCode = 60
+    androidVersionName = '3.0.0'
 
     // ANDROID VERSION
     androidCompileSdkVersion = 34
@@ -58,18 +49,6 @@ ext {
     koinAndroidxViewmodel = "io.insert-koin:koin-androidx-viewmodel:$koinVersion"
     koinTest = "io.insert-koin:koin-test:$koinVersion"
 
-    // RX
-    rxAndroidVersion = '3.0.0'
-    rxJavaVersion = '3.1.5'
-    rxKotlinVersion = '3.0.1'
-    rxBindingVersion = '4.0.0'
-    kotlinxCoroutinesRx3 = "org.jetbrains.kotlinx:kotlinx-coroutines-rx3"
-    rxAndroid = "io.reactivex.rxjava3:rxandroid:$rxAndroidVersion"
-    rxJava = "io.reactivex.rxjava3:rxjava:$rxJavaVersion"
-    rxKotlin = "io.reactivex.rxjava3:rxkotlin:$rxKotlinVersion"
-    rxBinding = "com.jakewharton.rxbinding4:rxbinding:$rxBindingVersion"
-    rxBindingSwipeRefreshLayout = "com.jakewharton.rxbinding4:rxbinding-swiperefreshlayout:$rxBindingVersion"
-
     // WEBSERVICES
     gsonVersion = '2.9.1'
     retrofitVersion = '2.9.0'
@@ -77,15 +56,11 @@ ext {
     gson = "com.google.code.gson:gson:$gsonVersion"
     retrofitConverterGson = "com.squareup.retrofit2:converter-gson:$retrofitVersion"
     retrofitConverterScalars = "com.squareup.retrofit2:converter-scalars:$retrofitVersion"
-    retrofitAdapterRxJava = "com.squareup.retrofit2:adapter-rxjava3:$retrofitVersion"
 
     // DEBUG
     timberVersion = '5.0.1'
-    stethoVersion = '1.6.0'
     chuckerVersion = '3.5.2'
     timber = "com.jakewharton.timber:timber:$timberVersion"
-    stetho = "com.facebook.stetho:stetho:$stethoVersion"
-    stethoOkHttp = "com.facebook.stetho:stetho-okhttp3:$stethoVersion"
     chuckerDebug = "com.github.chuckerteam.chucker:library:$chuckerVersion"
     chuckerRelease = "com.github.chuckerteam.chucker:library-no-op:$chuckerVersion"
 
@@ -98,13 +73,11 @@ ext {
 
     // PROGUARD
     proguardFolder = '../proguard/'
-    apacheRules = proguardFolder + 'apache-rules.pro'
     gsonRules = proguardFolder + 'gson-rules.pro'
+    dtoRules = proguardFolder + 'dto-rules.pro'
     modelRules = proguardFolder + 'model-rules.pro'
     okhttp3Rules = proguardFolder + 'okhttp3-rules.pro'
     retrofit2Rules = proguardFolder + 'retrofit2-rules.pro'
-    stethoRules = proguardFolder + 'stetho-rules.pro'
-    supportRules = proguardFolder + 'support-rules.pro'
 
     // UI
     picasso = 'com.squareup.picasso:picasso:2.71828'
@@ -117,19 +90,4 @@ ext {
     firebaseBom = 'com.google.firebase:firebase-bom:32.2.3'
     firebaseCore = 'com.google.firebase:firebase-core:21.1.1'
     firebaseCrashlytics = 'com.google.firebase:firebase-crashlytics:18.4.1'
-
-
-    // DEPENDENCY CHECK STRATEGY
-    dependencyUpdatesStrategy = {
-        componentSelection { rules ->
-            rules.all { selection ->
-                boolean rejected = ['alpha', 'beta', 'rc', 'cr', 'm'].any { qualifier ->
-                    selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-]*/
-                }
-                if (rejected) {
-                    selection.reject('Release candidate')
-                }
-            }
-        }
-    }
 }

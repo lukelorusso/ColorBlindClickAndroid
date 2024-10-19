@@ -52,31 +52,21 @@ class HistoryViewModel(
     }
 
     fun deleteColorFromUiState(param: Color) {
-        if (uiState.value.contentState.isLoading) {
-            return
-        } else {
-            updateUiState {
-                it.copy(
-                    contentState = ContentState.CONTENT,
-                    colorList = uiState.value.colorList
-                        .minus(param) // temporarily preview the result
-                )
-            }
+        updateUiState {
+            it.copy(
+                colorList = uiState.value.colorList
+                    .minus(param) // temporarily preview the result
+            )
         }
     }
 
     fun restoreColorToUiState(param: Color) {
-        if (uiState.value.contentState.isLoading) {
-            return
-        } else {
-            updateUiState {
-                it.copy(
-                    contentState = ContentState.CONTENT,
-                    colorList = uiState.value.colorList
-                        .plus(param)
-                        .sortedByDescending { color -> color.timestamp }
-                )
-            }
+        updateUiState {
+            it.copy(
+                colorList = uiState.value.colorList
+                    .plus(param)
+                    .sortedByDescending { color -> color.timestamp }
+            )
         }
     }
 
@@ -84,12 +74,7 @@ class HistoryViewModel(
         if (uiState.value.contentState.isLoading) {
             return
         } else {
-            updateUiState {
-                it.copy(
-                    contentState = ContentState.LOADING,
-                    colorList = uiState.value.colorList.minus(param) // temporarily preview the result
-                )
-            }
+            updateUiState { it.copy(contentState = ContentState.LOADING) }
         }
 
         viewModelScope.launch {

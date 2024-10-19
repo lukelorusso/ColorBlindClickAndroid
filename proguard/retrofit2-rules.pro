@@ -1,2 +1,4 @@
+-keepattributes Signature
+-keepattributes *Annotation*
 -keep class retrofit.** { *; }
 -dontwarn org.codehaus.**

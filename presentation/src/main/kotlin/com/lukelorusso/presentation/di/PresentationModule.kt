@@ -2,10 +2,10 @@ package com.lukelorusso.presentation.di
 
 import com.lukelorusso.domain.usecase.base.Logger
 import com.lukelorusso.presentation.error.ErrorMessageFactory
-import com.lukelorusso.presentation.ui.error.ErrorMessageFactoryImpl
 import com.lukelorusso.presentation.helper.TrackerHelper
 import com.lukelorusso.presentation.logger.TimberLogger
 import com.lukelorusso.presentation.ui.camera.CameraViewModel
+import com.lukelorusso.presentation.ui.error.ErrorMessageFactoryImpl
 import com.lukelorusso.presentation.ui.history.HistoryViewModel
 import com.lukelorusso.presentation.ui.info.InfoViewModel
 import com.lukelorusso.presentation.ui.preview.PreviewViewModel

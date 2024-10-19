@@ -23,8 +23,6 @@ In this project you can find
 
 * [Koin for dependency injection](https://insert-koin.io/)
 
-* [RxJava and RxAndroid for reactive programming](https://github.com/ReactiveX/RxJava)
-
 * [Retrofit + GSON to consume web services](https://square.github.io/retrofit/)
 
 * [Fotoapparat API that provide a safe CameraView](https://github.com/RedApparat/Fotoapparat)

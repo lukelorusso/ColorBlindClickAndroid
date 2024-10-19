@@ -17,6 +17,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.*
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -72,7 +73,11 @@ fun History(
     if (showDeleteAllAlertDialog) {
         DeleteAlertDialog(
             text = stringResource(R.string.color_delete_all_confirmation_message),
-            confirmCallback = viewModel::deleteAllColors,
+            painter = painterResource(id = R.drawable.delete_sweep_white),
+            confirmCallback = {
+                viewModel.deleteAllColors()
+                showDeleteAllAlertDialog = false
+            },
             dismissCallback = { showDeleteAllAlertDialog = false }
         )
     }
@@ -80,6 +85,7 @@ fun History(
     shouldDeleteColor?.let { colorToDelete ->
         DeleteAlertDialog(
             text = stringResource(R.string.color_delete_one_confirmation_message),
+            painter = painterResource(id = R.drawable.delete_item_white),
             confirmCallback = {
                 viewModel.deleteColor(colorToDelete)
                 shouldDeleteColor = null
@@ -171,6 +177,10 @@ private fun Header(
     toggleSearchingMode: () -> Unit,
     onDeleteAllClick: () -> Unit
 ) {
+    val topPadding = with(LocalDensity.current) {
+        WindowInsets.statusBars.getTop(this).toDp()
+    }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -181,8 +191,8 @@ private fun Header(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .requiredHeight(100.dp)
-                .padding(top = 24.dp),
+                .padding(top = topPadding)
+                .requiredHeight(80.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             if (colorListNotEmpty) Icon(

@@ -13,12 +13,12 @@ import androidx.viewpager.widget.ViewPager
 import com.lukelorusso.presentation.R
 import com.lukelorusso.presentation.databinding.ActivityMainBinding
 import com.lukelorusso.presentation.extensions.*
+import com.lukelorusso.presentation.ui.base.SwipeViewPager
 import com.lukelorusso.presentation.ui.camera.CameraFragment
 import com.lukelorusso.presentation.ui.history.HistoryFragment
 import com.lukelorusso.presentation.ui.info.InfoFragment
 import com.lukelorusso.presentation.ui.preview.PreviewDialogFragment
 import com.lukelorusso.presentation.ui.settings.SettingsDialogFragment
-import com.lukelorusso.presentation.ui.base.MaybeScrollableViewPager
 
 
 class MainActivity : AppCompatActivity() {
@@ -28,12 +28,6 @@ class MainActivity : AppCompatActivity() {
     private val pagerAdapter by lazy { MainPagerAdapter(supportFragmentManager) }
 
     // Properties
-    private var immersiveMode: Boolean = false
-        set(value) {
-            field = value
-            if (value) enableImmersiveMode(hideNavBar = false, hideStatusBar = true, resize = false)
-            else disableImmersiveMode()
-        }
     private var lastPage = -1
 
     companion object {
@@ -56,11 +50,6 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         if (isBrokenViewVisible()) checkPermission()
-        applyImmersiveMode()
-    }
-
-    fun applyImmersiveMode() {
-        immersiveMode = isPageVisible(1)
     }
 
     @SuppressLint("MissingSuperCall") // No call for super(): bug on API Level > 11
@@ -135,7 +124,6 @@ class MainActivity : AppCompatActivity() {
                 && binding.viewPager.visibility == View.GONE
 
     private fun showBrokenView() {
-        immersiveMode = false
         binding.splash.root.visibility = View.GONE
         binding.viewPager.visibility = View.GONE
         binding.brokenScreen.apply {
@@ -154,7 +142,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun hideBrokenView() {
-        immersiveMode = true
         binding.brokenScreen.root.visibility = View.GONE
         binding.viewPager.visibility = View.VISIBLE
         initializeViewPager()
@@ -168,16 +155,18 @@ class MainActivity : AppCompatActivity() {
                 override fun onPageScrollStateChanged(state: Int) {
                     if (state == ViewPager.SCROLL_STATE_IDLE) { // if scroll is finished
                         val newPage = currentItem
-                        immersiveMode = newPage == 1 // only camera page is immersive
                         if (newPage != lastPage) {
                             val f = pagerAdapter.getItem(newPage)
                             (f as? HistoryFragment)?.reloadData()
                             (f as? CameraFragment)?.reloadData()
                         }
                         direction = when (newPage) {
-                            0 -> MaybeScrollableViewPager.SwipeDirection.RIGHT // info page cannot scroll left... this will hide the swiping feedback when you can't scroll anymore
-                            pagerAdapter.count - 1 -> MaybeScrollableViewPager.SwipeDirection.LEFT // history page cannot scroll right, because swipe right gesture is set to delete an item from history
-                            else -> MaybeScrollableViewPager.SwipeDirection.ALL
+                            0 ->
+                                SwipeViewPager.SwipeDirection.RIGHT // info page cannot scroll left... this will hide the swiping feedback when you can't scroll anymore
+                            pagerAdapter.count - 1 ->
+                                SwipeViewPager.SwipeDirection.LEFT // history page cannot scroll right, because swipe right gesture is set to delete an item from history
+                            else ->
+                                SwipeViewPager.SwipeDirection.ALL
                         }
                         lastPage = newPage
                     }

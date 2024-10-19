@@ -1,8 +1,6 @@
 package com.lukelorusso.presentation.di
 
 import com.lukelorusso.domain.usecase.base.Logger
-import com.lukelorusso.domain.usecase.base.UseCaseScheduler
-import io.reactivex.rxjava3.schedulers.Schedulers
 import org.koin.dsl.module
 
 /**
@@ -22,6 +20,5 @@ val presentationTestModule = module {
             }
         }
     }
-    factory { UseCaseScheduler(Schedulers.io(), Schedulers.trampoline()) }
     //endregion
 }

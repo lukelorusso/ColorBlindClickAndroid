@@ -1,14 +1,12 @@
 package com.lukelorusso.presentation.ui.preview
 
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.*
 import androidx.compose.ui.platform.ComposeView
 import com.lukelorusso.presentation.error.ErrorMessageFactory
 import com.lukelorusso.presentation.extensions.build
-import com.lukelorusso.presentation.ui.main.MainActivity
-import com.lukelorusso.presentation.ui.theme.AppTheme
 import com.lukelorusso.presentation.ui.base.AppCardDialogFragment
+import com.lukelorusso.presentation.ui.theme.AppTheme
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -49,11 +47,6 @@ class PreviewDialogFragment : AppCardDialogFragment(
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.loadData(extraSerializedColor)
-    }
-
-    override fun onCancel(dialog: DialogInterface) {
-        super.onCancel(dialog)
-        (activity as? MainActivity)?.applyImmersiveMode()
     }
 
     companion object {

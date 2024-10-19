@@ -7,7 +7,8 @@ import com.lukelorusso.presentation.ui.info.InfoFragment
 import java.lang.ref.WeakReference
 
 /**
- * @author LukeLorusso on 07-01-2019.
+ * Copyright (C) 2021 Luke Lorusso
+ * Licensed under the Apache License Version 2.0
  */
 class MainPagerAdapter(private var fragmentManager: FragmentManager) :
     FragmentStatePagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {

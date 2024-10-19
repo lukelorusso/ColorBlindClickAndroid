@@ -46,14 +46,14 @@ class PreviewViewModel(
     fun shareText(text: String, popupLabel: String?) {
         router.activity?.let { activity ->
             trackerHelper.track(activity, TrackerHelper.Actions.SHARED_TEXT)
-            activity.applicationContext.shareText(text, popupLabel)
+            activity.shareText(text, popupLabel)
         }
     }
 
     fun shareBitmap(bitmap: Bitmap, description: String, popupLabel: String?) {
         router.activity?.let { activity ->
             trackerHelper.track(activity, TrackerHelper.Actions.SHARED_PREVIEW)
-            activity.applicationContext.shareBitmap(bitmap, description, popupLabel)
+            activity.shareBitmap(bitmap, description, popupLabel)
         }
     }
 

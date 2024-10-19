@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.*
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextOverflow
@@ -106,6 +107,10 @@ fun Info(
 private fun Header(
     versionName: String
 ) {
+    val topPadding = with(LocalDensity.current) {
+        WindowInsets.statusBars.getTop(this).toDp()
+    }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -116,7 +121,7 @@ private fun Header(
         Image(
             modifier = Modifier
                 .padding(
-                    top = 48.dp,
+                    top = topPadding + 24.dp,
                     bottom = 24.dp
                 )
                 .size(64.dp),

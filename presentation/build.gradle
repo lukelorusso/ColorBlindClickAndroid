@@ -1,15 +1,15 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 
 android {
-    compileSdkVersion androidCompileSdkVersion
+    compileSdkVersion = androidCompileSdkVersion
 
     buildFeatures {
-        viewBinding true
+        buildConfig = true
+        viewBinding = true
         compose = true
     }
 
@@ -47,21 +47,20 @@ android {
         def ENABLE_ANALYTICS = "ENABLE_ANALYTICS"
         debug {
             applicationIdSuffix = ".debug"
-            //versionNameSuffix "-DEBUG"
             minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt')
+            consumerProguardFiles gsonRules, modelRules
             buildConfigField "boolean", ENABLE_ANALYTICS, 'Boolean.parseBoolean("false")'
         }
         release {
             shrinkResources true
             minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt')
+            consumerProguardFiles gsonRules, modelRules
             buildConfigField "boolean", ENABLE_ANALYTICS, 'Boolean.parseBoolean("true")'
         }
         // For Android Test
         debugTest {
-            initWith(debug)
             minifyEnabled false
+            buildConfigField "boolean", ENABLE_ANALYTICS, 'Boolean.parseBoolean("false")'
         }
         testBuildType 'debugTest'
     }
@@ -74,16 +73,17 @@ android {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_18
     }
+
     lint {
         disable 'ContentDescription'
     }
+
     namespace 'com.lukelorusso.presentation'
 
 }
 
 dependencies {
     // MODULE
-    implementation files('libs/hfrecyclerview-kotlin-1.1.1.aar')
     implementation project(':data')
     implementation project(':domain')
 
@@ -108,14 +108,6 @@ dependencies {
     implementation androidXComposeUiTooling
     implementation androidXLifecycleRuntimeCompose
 
-    // RX
-    implementation kotlinxCoroutinesRx3
-    implementation rxAndroid
-    implementation rxJava
-    implementation rxKotlin
-    implementation rxBinding
-    implementation rxBindingSwipeRefreshLayout
-
     // ANDROID TEST
     androidTestImplementation androidXTestRunner
     androidTestImplementation androidXTestJunit
@@ -132,7 +124,6 @@ dependencies {
 
     // DEBUG TOOLS
     implementation timber
-    implementation stetho
 
     // GSON
     implementation gson
@@ -147,7 +138,4 @@ dependencies {
     implementation firebaseCore
     implementation(firebaseCrashlytics) { transitive = true }
     implementation firebaseAnalytics
-
-    // DEPENDENCY CHECK STRATEGY
-    dependencyUpdates.resolutionStrategy dependencyUpdatesStrategy
 }

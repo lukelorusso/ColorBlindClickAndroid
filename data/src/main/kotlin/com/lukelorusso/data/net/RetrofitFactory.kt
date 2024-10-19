@@ -5,7 +5,6 @@ import android.content.Context
 import androidx.annotation.RequiresPermission
 import com.google.gson.Gson
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 
@@ -43,7 +42,6 @@ object RetrofitFactory {
             .baseUrl(COLOR_API_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .addConverterFactory(ScalarsConverterFactory.create())
-            .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
             .client(okHttpClientFactory.createOkHttpClient(context))
             .build()
 
@@ -61,7 +59,6 @@ object RetrofitFactory {
             .baseUrl(COLOR_API_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .addConverterFactory(ScalarsConverterFactory.create())
-            .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
             .client(okHttpClientFactory.createOkHttpClient())
             .build()
 

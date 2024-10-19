@@ -1,10 +1,7 @@
 package com.lukelorusso.data.net
 
 import android.content.Context
-import com.chuckerteam.chucker.api.ChuckerCollector
-import com.chuckerteam.chucker.api.ChuckerInterceptor
-import com.chuckerteam.chucker.api.RetentionManager
-import com.facebook.stetho.okhttp3.StethoInterceptor
+import com.chuckerteam.chucker.api.*
 import com.lukelorusso.data.BuildConfig
 import okhttp3.OkHttpClient
 import java.util.concurrent.TimeUnit
@@ -27,7 +24,6 @@ open class OkHttpClientFactory {
 
 
     private fun OkHttpClient.Builder.enableDebugTools(context: Context?) {
-        addInterceptor(StethoInterceptor())
         context?.also {
             addInterceptor(
                 ChuckerInterceptor.Builder(it)
