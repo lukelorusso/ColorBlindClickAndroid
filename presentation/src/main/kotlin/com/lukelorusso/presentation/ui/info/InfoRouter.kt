@@ -1,8 +1,8 @@
 package com.lukelorusso.presentation.ui.info
 
 import com.lukelorusso.presentation.extensions.redirectToBrowser
-import com.lukelorusso.presentation.ui.main.MainActivity
 import com.lukelorusso.presentation.ui.base.AppRouter
+import com.lukelorusso.presentation.ui.main.MainActivity
 
 class InfoRouter : AppRouter() {
 

@@ -1,14 +1,11 @@
 package com.lukelorusso.data.di
 
 import com.google.gson.Gson
-import com.lukelorusso.data.datasource.PersistenceDataSource
-import com.lukelorusso.data.datasource.SettingsManager
-import com.lukelorusso.data.datasource.SharedPrefDataSource
+import com.lukelorusso.data.datasource.*
 import com.lukelorusso.data.datasource.impl.PersistenceDataSourceTestImpl
 import com.lukelorusso.data.datasource.impl.SharedPrefDataSourceTestImpl
 import com.lukelorusso.data.extensions.api
 import com.lukelorusso.data.mapper.ColorMapper
-import com.lukelorusso.data.datasource.HttpManager
 import com.lukelorusso.data.net.OkHttpClientFactory
 import com.lukelorusso.data.net.RetrofitFactory
 import com.lukelorusso.data.repository.*

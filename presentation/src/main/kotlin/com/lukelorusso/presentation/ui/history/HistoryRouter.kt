@@ -1,7 +1,7 @@
 package com.lukelorusso.presentation.ui.history
 
-import com.lukelorusso.presentation.ui.main.MainActivity
 import com.lukelorusso.presentation.ui.base.AppRouter
+import com.lukelorusso.presentation.ui.main.MainActivity
 
 class HistoryRouter : AppRouter() {
 

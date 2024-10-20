@@ -4,8 +4,6 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-import com.lukelorusso.presentation.ui.theme.darkColors
-import com.lukelorusso.presentation.ui.theme.lightColors
 
 /**
  * Copyright (C) 2024 Luke Lorusso

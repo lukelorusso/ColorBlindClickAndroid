@@ -1,8 +1,6 @@
 package com.lukelorusso.data.net
 
 import android.content.Context
-import com.chuckerteam.chucker.api.*
-import com.lukelorusso.data.BuildConfig
 import okhttp3.OkHttpClient
 import java.util.concurrent.TimeUnit
 
@@ -14,29 +12,8 @@ open class OkHttpClientFactory {
 
     open fun createOkHttpClient(context: Context? = null): OkHttpClient =
         OkHttpClient.Builder()
-            .apply {
-                if (BuildConfig.DEBUG) {
-                    enableDebugTools(context)
-                }
-                updateTimeout()
-            }
+            .apply { updateTimeout() }
             .build()
-
-
-    private fun OkHttpClient.Builder.enableDebugTools(context: Context?) {
-        context?.also {
-            addInterceptor(
-                ChuckerInterceptor.Builder(it)
-                    .collector(
-                        ChuckerCollector(
-                            context = it,
-                            retentionPeriod = RetentionManager.Period.ONE_DAY
-                        )
-                    )
-                    .build()
-            )
-        }
-    }
 
     private fun OkHttpClient.Builder.updateTimeout(read: Long = 60, write: Long = 60) {
         readTimeout(read, TimeUnit.SECONDS)

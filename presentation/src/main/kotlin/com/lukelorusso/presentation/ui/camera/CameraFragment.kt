@@ -3,7 +3,7 @@ package com.lukelorusso.presentation.ui.camera
 import android.content.pm.PackageManager
 import android.graphics.drawable.GradientDrawable
 import android.os.*
-import android.view.View
+import android.view.*
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -16,7 +16,6 @@ import com.lukelorusso.presentation.error.ErrorMessageFactory
 import com.lukelorusso.presentation.extensions.*
 import com.lukelorusso.presentation.ui.base.ContentState
 import com.lukelorusso.presentation.ui.main.MainActivity
-import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import io.fotoapparat.Fotoapparat
 import io.fotoapparat.configuration.CameraConfiguration
 import io.fotoapparat.parameter.Flash
@@ -38,7 +37,7 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
     }
 
     // View
-    private val binding by viewBinding(FragmentCameraBinding::bind)
+    private lateinit var binding : FragmentCameraBinding
     private val viewModel by viewModel<CameraViewModel>()
     private val errorMessageFactory by inject<ErrorMessageFactory>()
     private val logger by inject<Logger>()
@@ -90,6 +89,11 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
             requireActivity() as AppCompatActivity,
             fragment = this
         ) // If there's a router, initialize it here
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        binding = FragmentCameraBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
