@@ -46,4 +46,5 @@ android {
 dependencies {
     implementation(project(":domain"))
     implementation(libs.bundles.data)
+    testImplementation(libs.bundles.data.test)
 }

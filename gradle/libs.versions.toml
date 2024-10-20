@@ -50,7 +50,7 @@ paper-db = { group = "io.github.pilgr", name = "paperdb", version.ref = "paper-d
 retrofit-converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
 retrofit-converter-scalars = { group = "com.squareup.retrofit2", name = "converter-scalars", version.ref = "retrofit" }
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
-verticalseekbar = {group = "com.github.lukelorusso", name = "VerticalSeekBar", version.ref = "verticalseekbar" }
+verticalseekbar = { group = "com.github.lukelorusso", name = "VerticalSeekBar", version.ref = "verticalseekbar" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-gradle-plugin" }
@@ -71,6 +71,9 @@ data = [
     "retrofit-converter-gson",
     "retrofit-converter-scalars",
     "timber"
+]
+data-test = [
+    "junit"
 ]
 domain = [
     "koin-core"
