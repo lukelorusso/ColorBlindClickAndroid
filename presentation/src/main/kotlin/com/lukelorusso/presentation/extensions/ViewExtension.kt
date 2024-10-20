@@ -15,6 +15,7 @@ fun View.setAlphaWithAnimation(
 }
 
 fun View.fadeInView(duration: Int? = null) {
+    if (this.visibility == View.VISIBLE) return
     this.animation?.setAnimationListener(null)
     this.animation?.cancel()
     this.clearAnimation()
@@ -26,6 +27,7 @@ fun View.fadeInView(duration: Int? = null) {
 }
 
 fun View.fadeOutView(duration: Int? = null) {
+    if (this.visibility == View.INVISIBLE) return
     this.animation?.setAnimationListener(null)
     this.animation?.cancel()
     this.clearAnimation()

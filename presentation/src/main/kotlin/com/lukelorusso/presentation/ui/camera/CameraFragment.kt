@@ -17,6 +17,7 @@ import com.lukelorusso.presentation.extensions.*
 import com.lukelorusso.presentation.ui.base.ContentState
 import com.lukelorusso.presentation.ui.main.MainActivity
 import io.fotoapparat.Fotoapparat
+import io.fotoapparat.capability.Capabilities
 import io.fotoapparat.configuration.CameraConfiguration
 import io.fotoapparat.parameter.Flash
 import io.fotoapparat.selector.*
@@ -37,13 +38,14 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
     }
 
     // View
-    private lateinit var binding : FragmentCameraBinding
+    private lateinit var binding: FragmentCameraBinding
     private val viewModel by viewModel<CameraViewModel>()
     private val errorMessageFactory by inject<ErrorMessageFactory>()
     private val logger by inject<Logger>()
 
     // Properties
-    private var isFrontCamera = false
+    private val isFrontCamera
+        get() = viewModel.uiState.value.lastLensPosition == 1
     private val cameraConfiguration by lazy {
         CameraConfiguration(
             previewResolution = firstAvailable(
@@ -110,58 +112,31 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
     // region RENDER
     private fun render(data: CameraUiState) {
         showLoading(data.contentState == ContentState.LOADING)
-        renderInitCamera(data)
+        renderCamera(data.lastLensPosition, data.lastZoomValue, data.cameraCapabilities)
         renderColorResult(data.color)
-        renderSnack(data.contentState.error?.let(errorMessageFactory::getLocalizedMessage))
+        renderError(data.contentState.error?.let(errorMessageFactory::getLocalizedMessage))
     }
 
-    private fun renderSnack(messageError: String?) {
-        showToolbarColor(messageError)
+    private fun renderError(message: String?) {
+        showToolbarColor(message)
     }
 
-    private fun renderInitCamera(data: CameraUiState) {
-        data.lastLensPosition?.also { position ->
+    private fun renderCamera(
+        lastLensPosition: Int?,
+        lastZoomValue: Int?,
+        cameraCapabilities: Capabilities?
+    ) {
+        lastLensPosition?.also { lensPosition ->
             if (camera == null) {
-                camera = Fotoapparat(
-                    context = requireContext(),
-                    view = binding.cameraView,
-                    focusView = binding.focusView,
-                    logger = object : FotoApparatLogger {
-                        override fun log(message: String) {
-                            logger.log { "Camera message: $message" }
-                        }
-                    },
-                    lensPosition = if (position == 0) back() else front(),
-                    cameraConfiguration = cameraConfiguration,
-                    cameraErrorCallback = { Timber.e("Camera error: $it") }
-                ).apply { start() }
-                isFrontCamera = position == 1
-                checkFrontCamera()
-                checkCameraCapabilities()
-
-                val duration = resources.getInteger(R.integer.fading_effect_duration_default)
-                Handler(Looper.getMainLooper()).postDelayed({
-                    (activity as? MainActivity)?.hideSplashScreen()
-                }, duration.toLong())
-            }
-
-            binding.cameraZoomSeekBar.apply {
-                maxValue = MAX_ZOOM_VALUE
-                setOnProgressChangeListener { progressValue ->
-                    camera?.setZoom(progressValue.toFloat().div(MAX_ZOOM_VALUE))
-                }
-                setOnReleaseListener { progressValue ->
-                    viewModel.setLastZoomValue(progressValue)
-                }
-                visibility = View.VISIBLE
+                initCamera(lensPosition)
             }
         }
 
-        data.lastZoomValue?.also {
-            binding.cameraZoomSeekBar.progress = if (it == -1) INIT_ZOOM_VALUE else it
+        lastZoomValue?.also { zoomValue ->
+            binding.cameraZoomSeekBar.progress = if (zoomValue < 0) INIT_ZOOM_VALUE else zoomValue
         }
 
-        data.cameraCapabilities?.also { capabilities ->
+        cameraCapabilities?.also { capabilities ->
             if (capabilities.flashModes.contains(Flash.On)) {
                 binding.inclToolbarCameraTop.root.visibility = View.VISIBLE
                 binding.inclToolbarCameraTop.toolbarFlashButton.visibility = View.VISIBLE
@@ -175,6 +150,29 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
                 else
                     View.VISIBLE
         }
+    }
+
+    private fun initCamera(lensPosition: Int) {
+        camera = Fotoapparat(
+            context = requireContext(),
+            view = binding.cameraView,
+            focusView = binding.focusView,
+            logger = object : FotoApparatLogger {
+                override fun log(message: String) {
+                    logger.log { "Camera message: $message" }
+                }
+            },
+            lensPosition = if (lensPosition == 0) back() else front(),
+            cameraConfiguration = cameraConfiguration,
+            cameraErrorCallback = { Timber.e("Camera error: $it") }
+        ).apply { start() }
+        checkFrontCamera()
+        checkCameraCapabilities()
+
+        val duration = resources.getInteger(R.integer.fading_effect_duration_default)
+        Handler(Looper.getMainLooper()).postDelayed({
+            (activity as? MainActivity)?.hideSplashScreen()
+        }, duration.toLong())
     }
 
     private fun renderColorResult(color: Color?) {
@@ -194,6 +192,16 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
                 viewModel.uiState.collect { uiState ->
                     render(uiState)
                 }
+            }
+        }
+
+        binding.cameraZoomSeekBar.apply {
+            maxValue = MAX_ZOOM_VALUE
+            setOnProgressChangeListener { progressValue ->
+                camera?.setZoom(progressValue.toFloat().div(MAX_ZOOM_VALUE))
+            }
+            setOnReleaseListener { progressValue ->
+                viewModel.setLastZoomValue(progressValue)
             }
         }
 
@@ -227,8 +235,7 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
                     lensPosition = if (isFrontCamera) back() else front(),
                     cameraConfiguration = CameraConfiguration()
                 )
-                isFrontCamera = !isFrontCamera
-                viewModel.setLastLensPosition(isFrontCamera.toInt())
+                viewModel.setLastLensPosition(isFrontCamera.not().toInt())
                 initToolbarTop()
                 checkCameraCapabilities()
                 camera.setZoom(binding.cameraZoomSeekBar.progress.toFloat().div(MAX_ZOOM_VALUE))
@@ -280,7 +287,7 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
         Handler(Looper.getMainLooper()).post {
             camera?.also { camera ->
                 camera.getCapabilities().whenAvailable { capabilities ->
-                    viewModel.updateUiState { it.copy(cameraCapabilities = capabilities) }
+                    viewModel.setCameraCapabilities(capabilities)
                 }
             }
         }

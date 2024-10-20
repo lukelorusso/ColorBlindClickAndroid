@@ -8,6 +8,7 @@ import com.lukelorusso.presentation.extensions.getDeviceUdid
 import com.lukelorusso.presentation.helper.TrackerHelper
 import com.lukelorusso.presentation.ui.base.AppViewModel
 import com.lukelorusso.presentation.ui.base.ContentState
+import io.fotoapparat.capability.Capabilities
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
@@ -80,7 +81,12 @@ class CameraViewModel(
         if (uiState.value.contentState.isLoading) {
             return
         } else {
-            updateUiState { it.copy(contentState = ContentState.LOADING) }
+            updateUiState {
+                it.copy(
+                    contentState = ContentState.LOADING,
+                    color = null
+                )
+            }
         }
 
         viewModelScope.launch {
@@ -107,7 +113,12 @@ class CameraViewModel(
         viewModelScope.launch {
             try {
                 setLastLensPosition.invoke(param)
-                updateUiState { it.copy(lastZoomValue = -1) }
+                updateUiState {
+                    it.copy(
+                        lastLensPosition = param,
+                        lastZoomValue = -1
+                    )
+                }
             } catch (t: Throwable) {
                 updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
             }
@@ -129,21 +140,15 @@ class CameraViewModel(
         viewModelScope.launch {
             try {
                 setLastZoomValue.invoke(param)
+                updateUiState { it.copy(lastZoomValue = param) }
             } catch (t: Throwable) {
                 updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
             }
         }
     }
 
-    fun getPixelNeighbourhood() {
-        viewModelScope.launch {
-            try {
-                val pixelNeighbourhood = getPixelNeighbourhood.invoke(Unit)
-                updateUiState { it.copy(pixelNeighbourhood = pixelNeighbourhood) }
-            } catch (t: Throwable) {
-                updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
-            }
-        }
+    fun setCameraCapabilities(capabilities: Capabilities?) {
+        updateUiState { it.copy(cameraCapabilities = capabilities) }
     }
 
     fun gotoInfo() =
