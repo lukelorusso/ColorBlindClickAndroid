@@ -7,6 +7,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.selection.LocalTextSelectionColors
+import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
@@ -276,36 +278,44 @@ private fun SearchTextField(
     updateSearchText: (String) -> Unit,
     focusRequester: FocusRequester
 ) {
-    OutlinedTextField(
-        modifier = Modifier
-            .fillMaxWidth()
-            .focusRequester(focusRequester),
-        value = searchText,
-        onValueChange = updateSearchText,
-        singleLine = true,
-        placeholder = {
-            Text(
-                text = stringResource(R.string.history_search_hint)
-            )
-        },
-        trailingIcon = {
-            if (searchText.isNotEmpty()) {
-                Icon(
-                    modifier = Modifier.clickable { updateSearchText("") },
-                    imageVector = Icons.Default.Clear,
-                    tint = Color.White,
-                    contentDescription = null
-                )
-            }
-        },
-        colors = TextFieldDefaults.textFieldColors(
-            cursorColor = colorResource(id = R.color.white_50),
-            focusedIndicatorColor = colorResource(id = R.color.white_50),
-            textColor = Color.White,
-            placeholderColor = colorResource(id = R.color.white_50)
-        ),
-        shape = RoundedCornerShape(8.dp)
+    val textSelectionColors = TextSelectionColors(
+        handleColor = Color.White,
+        backgroundColor = colorResource(id = R.color.white_50)
     )
+
+    CompositionLocalProvider(LocalTextSelectionColors provides textSelectionColors) {
+        OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .focusRequester(focusRequester),
+            value = searchText,
+            onValueChange = updateSearchText,
+            singleLine = true,
+            placeholder = {
+                Text(
+                    text = stringResource(R.string.history_search_hint)
+                )
+            },
+            trailingIcon = {
+                if (searchText.isNotEmpty()) {
+                    Icon(
+                        modifier = Modifier.clickable { updateSearchText("") },
+                        imageVector = Icons.Default.Clear,
+                        tint = Color.White,
+                        contentDescription = null
+                    )
+                }
+            },
+            colors = TextFieldDefaults.textFieldColors(
+                cursorColor = colorResource(id = R.color.white_50),
+                focusedIndicatorColor = colorResource(id = R.color.white_50),
+                textColor = Color.White,
+                placeholderColor = colorResource(id = R.color.white_50),
+                leadingIconColor = Color.Red
+            ),
+            shape = RoundedCornerShape(8.dp)
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterialApi::class)
