@@ -53,6 +53,22 @@ fun History(
     var showDeleteAllAlertDialog by remember { mutableStateOf(false) }
     var shouldDeleteColor by remember { mutableStateOf<ColorModel?>(null) }
 
+    // use this function instead of playing directly with the viewModel
+    fun updateSearch(
+        isSearchingMode: Boolean = viewModel.uiState.value.isSearchingMode,
+        newText: String = viewModel.uiState.value.searchText
+    ) {
+        viewModel.toggleSearchingMode(isSearchingMode)
+
+        if (isSearchingMode) {
+            localSearchText = newText
+            viewModel.updateSearchText(newText)
+        } else {
+            localSearchText = ""
+            viewModel.updateSearchText("")
+        }
+    }
+
     // request focus on SearchTextField
     if (uiState.run { uiState.isSearchingMode && !contentState.isLoading && searchText.isEmpty() }) {
         DisposableEffect(Unit) {
@@ -86,6 +102,10 @@ fun History(
     }
 
     shouldDeleteColor?.let { colorToDelete ->
+        if (uiState.colorList.isEmpty() && uiState.isSearchingMode) {
+            updateSearch(isSearchingMode = false)
+        }
+
         DeleteAlertDialog(
             text = stringResource(R.string.color_delete_one_confirmation_message),
             painter = painterResource(id = R.drawable.delete_item_white),
@@ -117,15 +137,12 @@ fun History(
                         isSearchingMode = uiState.isSearchingMode,
                         searchText = localSearchText,
                         focusRequester = focusRequester,
-                        updateSearchText = { newText ->
-                            localSearchText = newText
-                            viewModel.updateSearchText(newText)
-                        },
+                        updateSearchText = { updateSearch(newText = it) },
                         toggleSearchingMode = {
-                            viewModel.toggleSearchingMode(!uiState.isSearchingMode)
+                            updateSearch(isSearchingMode = !uiState.isSearchingMode)
                         },
                         onDeleteAllClick = {
-                            viewModel.toggleSearchingMode(false)
+                            updateSearch(isSearchingMode = false)
                             showDeleteAllAlertDialog = true
                         }
                     )

@@ -113,14 +113,11 @@ class HistoryViewModel(
         }
     }
 
-    fun toggleSearchingMode(value: Boolean) {
-        updateUiState {
-            it.copy(isSearchingMode = value).run {
-                if (!value) copy(searchText = "")
-                else this
-            }
-        }
+    fun toggleSearchingMode() =
+        toggleSearchingMode(!uiState.value.isSearchingMode)
 
+    fun toggleSearchingMode(value: Boolean) {
+        updateUiState { it.copy(isSearchingMode = value) }
     }
 
     fun updateSearchText(newText: String) {
