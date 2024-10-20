@@ -131,7 +131,7 @@ private fun BottomToolBar(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                color = colorResource(id = R.color.text_color),
+                color = Color.White,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.W500,
                 maxLines = 1,
@@ -142,7 +142,7 @@ private fun BottomToolBar(
             Spacer(modifier = Modifier.height(2.dp))
 
             Text(
-                color = colorResource(id = R.color.text_color),
+                color = Color.White,
                 fontSize = 16.sp,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
@@ -152,7 +152,7 @@ private fun BottomToolBar(
             Spacer(modifier = Modifier.height(2.dp))
 
             Text(
-                color = colorResource(id = R.color.text_color),
+                color = Color.White,
                 fontSize = 16.sp,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
