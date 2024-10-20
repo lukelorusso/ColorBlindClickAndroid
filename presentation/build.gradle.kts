@@ -33,7 +33,7 @@ android {
         val proguardFolder = "../proguard/"
 
         debug {
-            applicationIdSuffix = ".debug"
+            versionNameSuffix = ".debug"
             isShrinkResources = false
             isMinifyEnabled = false
             buildConfigField("Boolean", enableAnalyticsTag, "false")
