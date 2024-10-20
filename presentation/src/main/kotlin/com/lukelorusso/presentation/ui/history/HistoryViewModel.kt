@@ -5,8 +5,7 @@ import com.google.gson.Gson
 import com.lukelorusso.domain.model.Color
 import com.lukelorusso.domain.usecase.*
 import com.lukelorusso.presentation.helper.TrackerHelper
-import com.lukelorusso.presentation.ui.base.AppViewModel
-import com.lukelorusso.presentation.ui.base.ContentState
+import com.lukelorusso.presentation.ui.base.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
@@ -19,6 +18,7 @@ class HistoryViewModel(
 ) : AppViewModel<HistoryUiState>() {
     override val _uiState = MutableStateFlow(HistoryUiState())
     override val router = HistoryRouter()
+    private val loadBouncer = Bouncer(BOUNCE_DELAY_IN_MILLIS)
 
     init {
         loadData()
@@ -124,7 +124,15 @@ class HistoryViewModel(
     }
 
     fun updateSearchText(newText: String) {
-        updateUiState { it.copy(searchText = newText) }
+        if (newText.isBlank()) {
+            loadBouncer.tick()
+            updateUiState { it.copy(searchText = newText) }
+        } else {
+            // load the job after the defined delay
+            loadBouncer.bounce {
+                updateUiState { it.copy(searchText = newText) }
+            }
+        }
     }
 
     fun gotoPreview(color: Color) =
@@ -136,5 +144,9 @@ class HistoryViewModel(
     fun dismissError(onDismiss: (() -> Unit)? = null) {
         updateUiState { it.copy(contentState = ContentState.CONTENT) }
         onDismiss?.invoke()
+    }
+
+    companion object {
+        private const val BOUNCE_DELAY_IN_MILLIS = 250L
     }
 }

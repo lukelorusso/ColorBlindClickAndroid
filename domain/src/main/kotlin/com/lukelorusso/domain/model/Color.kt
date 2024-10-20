@@ -13,7 +13,7 @@ data class Color(
      * For searching purposes
      */
     override fun toString(): String {
-        return "$colorName #$colorHex"
+        return "$colorName #${originalColorHex()}"
     }
 
     override fun equals(other: Any?) = other is Color

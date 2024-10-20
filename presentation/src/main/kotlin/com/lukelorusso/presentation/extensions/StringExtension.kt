@@ -6,7 +6,7 @@ import android.os.Build
 import android.text.Html
 import android.text.Spanned
 import androidx.compose.ui.graphics.Color
-import java.util.*
+import java.text.Normalizer
 
 fun String.toHtml(): Spanned =
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -15,24 +15,19 @@ fun String.toHtml(): Spanned =
         Html.fromHtml(this)
     }
 
-fun String.containsWords(words: String?): Boolean {
-    if (words == null) {
-        return false
+fun String.matchSearch(searchText: String): Boolean {
+    val searchWords = searchText.split(" ")
+
+    return searchWords.all { word ->
+        this.unaccented()
+            .lowercase()
+            .contains(word.unaccented().lowercase())
     }
-
-    val wordList = listOf(
-        *words.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-    )
-
-    var matchCounter = 0
-    for (word in wordList) {
-        if (this.toLowerCase(Locale.getDefault()).contains(word.toLowerCase(Locale.getDefault()))) {
-            matchCounter++
-        }
-    }
-
-    return wordList.size == matchCounter
 }
+
+fun String.unaccented() = Normalizer.normalize(this, Normalizer.Form.NFD)
+    .replace("\u00df", "ss") // ß
+    .replace("\\p{Mn}+".toRegex(), "") // https://stackoverflow.com/a/63523402
 
 fun String.parseToColor(): Color {
     val parsableColor = when (this.length) {

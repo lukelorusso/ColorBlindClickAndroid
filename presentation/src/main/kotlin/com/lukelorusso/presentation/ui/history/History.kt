@@ -45,10 +45,11 @@ fun History(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val filteredColors = uiState.colorList.filter { item ->
-        item.toString().containsWords(uiState.searchText)
+        item.toString().matchSearch(uiState.searchText)
     }
     val focusRequester = remember { FocusRequester() }
     val coroutineScope = rememberCoroutineScope()
+    var localSearchText by remember { mutableStateOf("") }
     var showDeleteAllAlertDialog by remember { mutableStateOf(false) }
     var shouldDeleteColor by remember { mutableStateOf<ColorModel?>(null) }
 
@@ -114,9 +115,12 @@ fun History(
                         isLoading = uiState.contentState.isLoading,
                         colorListNotEmpty = uiState.colorList.isNotEmpty(),
                         isSearchingMode = uiState.isSearchingMode,
-                        searchText = uiState.searchText,
+                        searchText = localSearchText,
                         focusRequester = focusRequester,
-                        updateSearchText = viewModel::updateSearchText,
+                        updateSearchText = { newText ->
+                            localSearchText = newText
+                            viewModel.updateSearchText(newText)
+                        },
                         toggleSearchingMode = {
                             viewModel.toggleSearchingMode(!uiState.isSearchingMode)
                         },
