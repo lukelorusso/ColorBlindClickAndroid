@@ -1,18 +1,15 @@
 package com.lukelorusso.data.di
 
 import com.google.gson.Gson
-import com.lukelorusso.data.datasource.PersistenceDataSource
-import com.lukelorusso.data.datasource.SettingsManager
-import com.lukelorusso.data.datasource.SharedPrefDataSource
+import com.lukelorusso.data.datasource.*
 import com.lukelorusso.data.datasource.impl.PersistenceDataSourceTestImpl
 import com.lukelorusso.data.datasource.impl.SharedPrefDataSourceTestImpl
 import com.lukelorusso.data.extensions.api
 import com.lukelorusso.data.mapper.ColorMapper
-import com.lukelorusso.data.datasource.HttpManager
 import com.lukelorusso.data.net.OkHttpClientFactory
 import com.lukelorusso.data.net.RetrofitFactory
-import com.lukelorusso.data.repository.ColorRepositoryImpl
-import com.lukelorusso.domain.repository.ColorRepository
+import com.lukelorusso.data.repository.*
+import com.lukelorusso.domain.repository.*
 import org.koin.dsl.module
 import retrofit2.Retrofit
 
@@ -40,13 +37,15 @@ val dataTestModule = module {
             (get() as Retrofit).api(),
             get(),
             get(),
-            get(),
             get()
         )
     }
+    factory<InfoRepository> { InfoRepositoryImpl() }
+    factory<HistoryRepository> { HistoryRepositoryImpl(get()) }
+    factory<SettingsRepository> { SettingsRepositoryImpl(get()) }
     //endregion
 
-    //region Session
+    //region Settings
     factory<SharedPrefDataSource> { SharedPrefDataSourceTestImpl(get()) }
     factory { SettingsManager(get()) }
     //endregion

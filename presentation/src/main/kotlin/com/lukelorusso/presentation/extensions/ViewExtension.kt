@@ -1,19 +1,9 @@
 package com.lukelorusso.presentation.extensions
 
-import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.text.Editable
-import android.text.TextWatcher
-import android.view.KeyEvent
-import android.view.View
-import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
-import android.widget.ImageView
+import android.os.Build
+import android.view.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.lukelorusso.presentation.R
-import com.squareup.picasso.Callback
-import com.squareup.picasso.Picasso
 
 fun View.setAlphaWithAnimation(
     start: Float,
@@ -24,79 +14,8 @@ fun View.setAlphaWithAnimation(
     alpha = it
 }
 
-fun ImageView?.load(url: String?, onError: (() -> Unit)? = null, onSuccess: (() -> Unit)? = null) {
-    url?.also { imageUrl ->
-        this?.also { imageView ->
-            Picasso.get().load(imageUrl).into(imageView, object : Callback {
-                override fun onSuccess() {
-                    onSuccess?.invoke()
-                }
-
-                override fun onError(e: Exception?) {
-                    onError?.invoke()
-                }
-            })
-        }
-    }
-}
-
-fun View.showKeyboard() {
-    requestFocus()
-    (context.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager)?.also {
-        it.showSoftInput(this, InputMethodManager.HIDE_IMPLICIT_ONLY)
-    }
-}
-
-fun View.hideKeyboard() {
-    (context.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager)?.also {
-        it.hideSoftInputFromWindow(windowToken, 0)
-    }
-}
-
-fun EditText.actionDone(callback: () -> Unit) {
-    setOnKeyListener { _, keyCode, event ->
-        // If the event is a key-down event on the "enter" button
-        return@setOnKeyListener if (event.action == KeyEvent.ACTION_DOWN &&
-            keyCode == KeyEvent.KEYCODE_ENTER
-        ) {
-            // Perform action on key press
-            callback()
-            true
-        } else false
-    }
-}
-
-fun EditText.onTextChanged(listener: (String) -> Unit) {
-    addTextChangedListener(object : TextWatcher {
-        override fun afterTextChanged(editable: Editable?) {
-            // Nothing
-        }
-
-        override fun beforeTextChanged(
-            charSequence: CharSequence?,
-            start: Int,
-            count: Int,
-            after: Int
-        ) {
-            // Nothing
-        }
-
-        override fun onTextChanged(
-            charSequence: CharSequence?,
-            start: Int,
-            before: Int,
-            count: Int
-        ) {
-            charSequence?.also { listener(it.toString()) }
-        }
-    })
-}
-
-fun EditText.focusOnLastLetter() {
-    setSelection(text.length)
-}
-
 fun View.fadeInView(duration: Int? = null) {
+    if (this.visibility == View.VISIBLE) return
     this.animation?.setAnimationListener(null)
     this.animation?.cancel()
     this.clearAnimation()
@@ -108,6 +27,7 @@ fun View.fadeInView(duration: Int? = null) {
 }
 
 fun View.fadeOutView(duration: Int? = null) {
+    if (this.visibility == View.INVISIBLE) return
     this.animation?.setAnimationListener(null)
     this.animation?.cancel()
     this.clearAnimation()
@@ -122,14 +42,25 @@ fun View.fadeOutView(duration: Int? = null) {
     else this.visibility = View.INVISIBLE // making this invisible
 }
 
-fun View.getBitmap(): Bitmap {
-    val b = Bitmap.createBitmap(
-        this.layoutParams.width,
-        this.layoutParams.height,
-        Bitmap.Config.ARGB_8888
+fun View.addOneTimeOnGlobalLayoutListener(listener: () -> Unit) {
+    var onGlobalLayoutListener: ViewTreeObserver.OnGlobalLayoutListener? = null
+    onGlobalLayoutListener = ViewTreeObserver.OnGlobalLayoutListener {
+        listener()
+        this.viewTreeObserver.removeOnGlobalLayoutListener(onGlobalLayoutListener)
+    }
+    this.viewTreeObserver.addOnGlobalLayoutListener(
+        onGlobalLayoutListener
     )
-    val c = Canvas(b)
-    this.layout(this.left, this.top, this.right, this.bottom)
-    this.draw(c)
-    return b
+}
+
+@Suppress("DEPRECATION")
+fun View.statusBarHeight() = when {
+    Build.VERSION.SDK_INT >= Build.VERSION_CODES.R ->
+        rootWindowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.systemBars()).top
+
+    Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ->
+        rootWindowInsets?.systemWindowInsetTop ?: 0
+
+    else ->
+        0
 }

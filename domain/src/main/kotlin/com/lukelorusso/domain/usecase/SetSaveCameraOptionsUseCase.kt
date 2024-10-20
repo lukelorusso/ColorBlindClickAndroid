@@ -1,12 +1,13 @@
 package com.lukelorusso.domain.usecase
 
-import com.lukelorusso.domain.repository.ColorRepository
-import com.lukelorusso.domain.usecase.base.CompletableUseCase
-import io.reactivex.rxjava3.core.Completable
+import com.lukelorusso.domain.repository.SettingsRepository
+import com.lukelorusso.domain.usecase.base.UseCase
 
-class SetSaveCameraOptionsUseCase(private val repository: ColorRepository) :
-    CompletableUseCase<Boolean>() {
+class SetSaveCameraOptionsUseCase(
+    private val repository: SettingsRepository
+) : UseCase<Boolean, Unit>() {
 
-    override fun build(param: Boolean): Completable = repository.setSaveCameraOptions(param)
-
+    override suspend fun run(param: Boolean) {
+        repository.setSaveCameraOptions(param)
+    }
 }

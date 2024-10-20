@@ -1,9 +1,8 @@
 package com.lukelorusso.data.datasource
 
-import com.lukelorusso.data.extensions.catchPersistenceException
-import com.lukelorusso.data.extensions.catchWebServiceException
 import com.lukelorusso.domain.exception.NotConnectedException
-import io.reactivex.rxjava3.core.Single
+import com.lukelorusso.domain.exception.WebServiceException
+import retrofit2.Response
 
 /**
  * Copyright (C) 2021 Luke Lorusso
@@ -12,15 +11,18 @@ import io.reactivex.rxjava3.core.Single
 class HttpManager(
     private val networkChecker: NetworkChecker? = null
 ) {
-    @Suppress("ThrowsCount")
-    fun <DTO : Any, Entity : Any> execute(
-        call: Single<DTO>,
+    suspend fun <DTO, Entity> restCall(
+        call: suspend () -> Response<DTO>,
         mapper: (DTO) -> Entity
-    ): Single<Entity> =
+    ): Entity {
         if (networkChecker?.isConnected == false)
-            Single.error(NotConnectedException)
-        else
-            call.map(mapper)
-                .onErrorResumeNext { e -> e.catchWebServiceException() }
-                .onErrorResumeNext { e -> e.catchPersistenceException() }
+            throw NotConnectedException()
+        else {
+            val response = call()
+            if (response.isSuccessful)
+                return mapper(response.body() ?: throw WebServiceException())
+            else
+                throw WebServiceException()
+        }
+    }
 }

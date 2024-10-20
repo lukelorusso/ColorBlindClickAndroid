@@ -1,12 +1,14 @@
 package com.lukelorusso.domain.usecase
 
-import com.lukelorusso.domain.repository.ColorRepository
-import com.lukelorusso.domain.usecase.base.SingleUseCase
-import io.reactivex.rxjava3.core.Single
+import com.lukelorusso.domain.repository.InfoRepository
+import com.lukelorusso.domain.usecase.base.UseCase
 
-class GetHomeUrlUseCase(private val repository: ColorRepository) : SingleUseCase<String, Unit>() {
+class GetHomeUrlUseCase(
+    private val repository: InfoRepository
+) : UseCase<Unit, String>() {
 
-    override fun build(param: Unit): Single<String> =
-        repository.getHomeUrl()
+    override suspend fun run(param: Unit): String {
+        return repository.getHomeUrl()
+    }
 
 }

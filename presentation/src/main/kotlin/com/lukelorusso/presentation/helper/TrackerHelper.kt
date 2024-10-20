@@ -25,8 +25,6 @@ class TrackerHelper
         const val SHARED_TEXT = "SHARED_TEXT"
         const val SHARED_PREVIEW = "SHARED_PREVIEW"
         const val PERSISTENCE_EXCEPTION = "PERSISTENCE_EXCEPTION"
-        const val RATING_YES_CLICKED = "RATING_YES_CLICKED"
-        const val RATING_NO_CLICKED = "RATING_NO_CLICKED"
     }
 
     private val firebaseAnalytics = FirebaseAnalytics.getInstance(context)

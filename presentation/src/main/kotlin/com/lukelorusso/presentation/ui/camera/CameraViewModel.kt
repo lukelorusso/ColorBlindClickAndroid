@@ -1,96 +1,162 @@
 package com.lukelorusso.presentation.ui.camera
 
-import com.lukelorusso.data.extensions.startWithSingle
-import com.lukelorusso.domain.exception.PersistenceException
+import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
 import com.lukelorusso.domain.model.Color
 import com.lukelorusso.domain.usecase.*
-import com.lukelorusso.presentation.exception.ErrorMessageFactory
-import com.lukelorusso.presentation.ui.base.AViewModel
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Single
-import javax.inject.Inject
+import com.lukelorusso.presentation.extensions.getDeviceUdid
+import com.lukelorusso.presentation.helper.TrackerHelper
+import com.lukelorusso.presentation.ui.base.AppViewModel
+import com.lukelorusso.presentation.ui.base.ContentState
+import io.fotoapparat.capability.Capabilities
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 
-class CameraViewModel
-@Inject constructor(
+class CameraViewModel(
+    private val gson: Gson,
+    private val trackerHelper: TrackerHelper,
     private val getLastLensPosition: GetLastLensPositionUseCase,
     private val setLastLensPosition: SetLastLensPositionUseCase,
     private val getLastZoomValue: GetLastZoomValueUseCase,
     private val setLastZoomValue: SetLastZoomValueUseCase,
     private val getPixelNeighbourhood: GetPixelNeighbourhoodUseCase,
-    private val getColor: GetColorUseCase,
-    override val router: CameraRouter,
-    errorMessageFactory: ErrorMessageFactory
-) : AViewModel<CameraData>(errorMessageFactory) {
+    private val decodeColorHex: DecodeColorHexUseCase
+) : AppViewModel<CameraUiState>() {
+    override val _uiState = MutableStateFlow(CameraUiState())
+    override val router = CameraRouter()
 
-    internal fun intentLoadData(param: Unit): Observable<CameraData> =
-        Single.zip(
-            getLastLensPosition.execute(param),
-            getLastZoomValue.execute(param),
-            getPixelNeighbourhood.execute(param),
-            { lensPosition, zoomValue, pixelNeighbourhood ->
-                CameraData.createContent(
-                    lensPosition = lensPosition,
-                    zoomValue = zoomValue,
-                    pixelNeighbourhood = pixelNeighbourhood
+    init {
+        loadData()
+    }
+
+    private fun loadData() {
+        if (uiState.value.contentState.isLoading) {
+            return
+        } else {
+            updateUiState { it.copy(contentState = ContentState.LOADING) }
+        }
+
+        viewModelScope.launch {
+            try {
+                val lastLensPosition = getLastLensPosition.invoke(Unit)
+                val lastZoomValue = getLastZoomValue.invoke(Unit)
+                val pixelNeighbourhood = getPixelNeighbourhood.invoke(Unit)
+                updateUiState {
+                    it.copy(
+                        contentState = ContentState.CONTENT,
+                        lastLensPosition = lastLensPosition,
+                        lastZoomValue = lastZoomValue,
+                        pixelNeighbourhood = pixelNeighbourhood
+                    )
+                }
+            } catch (t: Throwable) {
+                updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
+            }
+        }
+    }
+
+    fun reloadData(lastLensPosition: Int, lastZoomValue: Int) {
+        if (uiState.value.contentState.isLoading) {
+            return
+        }
+
+        viewModelScope.launch {
+            try {
+                setLastLensPosition.invoke(lastLensPosition)
+                setLastZoomValue.invoke(lastZoomValue)
+                val pixelNeighbourhood = getPixelNeighbourhood.invoke(Unit)
+                updateUiState {
+                    it.copy(
+                        contentState = ContentState.CONTENT,
+                        pixelNeighbourhood = pixelNeighbourhood
+                    )
+                }
+            } catch (t: Throwable) {
+                updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
+            }
+        }
+    }
+
+    fun decodeColor(pixelColorToHash: String) {
+        if (uiState.value.contentState.isLoading) {
+            return
+        } else {
+            updateUiState {
+                it.copy(
+                    contentState = ContentState.LOADING,
+                    color = null
                 )
             }
-        ).toObservable().onErrorReturn { onError(it) }
+        }
 
-    /**
-     * param.first = LastLensPosition;
-     * param.second = LastZoomValue
-     */
-    internal fun intentReloadData(param: Pair<Int, Int>): Observable<CameraData> =
-        Single.zip(
-            setLastLensPosition.execute(param.first).toSingle {},
-            setLastZoomValue.execute(param.second).toSingle {},
-            getPixelNeighbourhood.execute(Unit),
-            { _, _, pixelNeighbourhood ->
-                CameraData.createContent(pixelNeighbourhood = pixelNeighbourhood)
+        viewModelScope.launch {
+            try {
+                val param = DecodeColorHexUseCase.Param(
+                    hex = pixelColorToHash,
+                    deviceUdid = router.activity.getDeviceUdid()
+                )
+                val colorModel = decodeColorHex.invoke(param)
+                updateUiState {
+                    it.copy(
+                        contentState = ContentState.CONTENT,
+                        color = colorModel
+                    )
+                }
+            } catch (t: Throwable) {
+                trackerHelper.track(router.activity, TrackerHelper.Actions.PERSISTENCE_EXCEPTION)
+                updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
             }
-        ).toObservable().onErrorReturn { onError(it) }
+        }
+    }
 
-    internal fun intentGetColor(param: GetColorUseCase.Param): Observable<CameraData> =
-        getColor.execute(param)
-            .toObservable()
-            .map { CameraData.createColor(it) }
-            .startWithSingle(CameraData.createLoading())
-            .onErrorReturn { onError(it) }
+    fun setLastLensPosition(param: Int) {
+        viewModelScope.launch {
+            try {
+                setLastLensPosition.invoke(param)
+                updateUiState {
+                    it.copy(
+                        lastLensPosition = param,
+                        lastZoomValue = -1
+                    )
+                }
+            } catch (t: Throwable) {
+                updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
+            }
+        }
+    }
 
-    internal fun intentSetLastLensPosition(param: Int): Observable<CameraData> =
-        setLastLensPosition.execute(param)
-            .toSingleDefault(Unit)
-            .toObservable()
-            .map { CameraData.createContent(zoomValue = -1) }
-            .onErrorReturn { onError(it) }
+    fun getLastZoomValue() {
+        viewModelScope.launch {
+            try {
+                val lastZoomValue = getLastZoomValue.invoke(Unit)
+                updateUiState { it.copy(lastZoomValue = lastZoomValue) }
+            } catch (t: Throwable) {
+                updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
+            }
+        }
+    }
 
-    internal fun intentGetLastZoomValue(param: Unit): Observable<CameraData> =
-        getLastZoomValue.execute(param)
-            .toObservable()
-            .map { CameraData.createContent(zoomValue = it) }
-            .onErrorReturn { onError(it) }
+    fun setLastZoomValue(param: Int) {
+        viewModelScope.launch {
+            try {
+                setLastZoomValue.invoke(param)
+                updateUiState { it.copy(lastZoomValue = param) }
+            } catch (t: Throwable) {
+                updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
+            }
+        }
+    }
 
-    internal fun intentSetLastZoomValue(param: Int): Observable<CameraData> =
-        setLastZoomValue.execute(param)
-            .toSingleDefault(Unit)
-            .toObservable()
-            .map { CameraData.createEmptyContent() }
-            .onErrorReturn { onError(it) }
+    fun setCameraCapabilities(capabilities: Capabilities?) {
+        updateUiState { it.copy(cameraCapabilities = capabilities) }
+    }
 
-    internal fun intentGetPixelNeighbourhood(param: Unit): Observable<CameraData> =
-        getPixelNeighbourhood.execute(param)
-            .toObservable()
-            .map { CameraData.createContent(pixelNeighbourhood = it) }
-            .onErrorReturn { onError(it) }
+    fun gotoInfo() =
+        router.routeToInfo()
 
-    internal fun gotoInfo() = router.routeToInfo()
+    fun gotoHistory() =
+        router.routeToHistory()
 
-    internal fun gotoHistory() = router.routeToHistory()
-
-    internal fun gotoPreview(color: Color) = router.routeToPreview(color)
-
-    private fun onError(e: Throwable): CameraData =
-        CameraData.createIsPersistenceException(e is PersistenceException)
-            .also { postEvent(getErrorMessage(e)) }
-
+    fun gotoPreview(color: Color) =
+        router.routeToPreview(gson.toJson(color))
 }

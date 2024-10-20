@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.preference.PreferenceManager
 import com.lukelorusso.data.datasource.SharedPrefDataSource
 import com.lukelorusso.data.datasource.SharedPrefDataSource.Companion.DEFAULT_STRING
-import com.lukelorusso.domain.usecase.base.Logger
 
 class SharedPrefDataSourceImpl(private val context: Context) : SharedPrefDataSource {
     private val sharedPreferences

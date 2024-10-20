@@ -4,21 +4,24 @@ import com.lukelorusso.domain.usecase.*
 import org.koin.dsl.module
 
 val domainModule = module {
-    //region Repository
-    factory { DeleteAllColorsUseCase(get()) }
-    factory { DeleteColorUseCase(get()) }
+    //region UseCase
+    factory { DecodeColorHexUseCase(get()) }
+
     factory { GetAboutMeUrlUseCase(get()) }
-    factory { GetColorUseCase(get()) }
-    factory { GetColorListUseCase(get()) }
     factory { GetHelpUrlUseCase(get()) }
     factory { GetHomeUrlUseCase(get()) }
-    factory { GetLastLensPositionUseCase(get()) }
-    factory { SetLastLensPositionUseCase(get()) }
-    factory { GetLastZoomValueUseCase(get()) }
-    factory { SetLastZoomValueUseCase(get()) }
+
     factory { GetPixelNeighbourhoodUseCase(get()) }
     factory { SetPixelNeighbourhoodUseCase(get()) }
     factory { GetSaveCameraOptionsUseCase(get()) }
     factory { SetSaveCameraOptionsUseCase(get()) }
+    factory { GetLastLensPositionUseCase(get()) }
+    factory { SetLastLensPositionUseCase(get()) }
+    factory { GetLastZoomValueUseCase(get()) }
+    factory { SetLastZoomValueUseCase(get()) }
+
+    factory { GetSavedColorListUseCase(get()) }
+    factory { DeleteSavedColorUseCase(get()) }
+    factory { DeleteAllSavedColorsUseCase(get()) }
     //endregion
 }

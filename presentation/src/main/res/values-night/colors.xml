@@ -2,14 +2,14 @@
 <resources>
 
     <!--Night-->
+    <color name="red_delete">#F46464</color>
     <color name="text_color">@color/gray_C8C8C8</color>
     <color name="progress_background">@color/black_50</color>
     <color name="fragment_background">@color/black_000000</color>
     <color name="fragment_separation_view">@color/gray_E5E5E5</color>
-    <color name="item_background_evens">#1FFF</color>
-    <color name="item_background_odds">#2FFF</color>
+    <color name="item_background_evens">#111111</color>
+    <color name="item_background_odds">#222222</color>
     <color name="dialog_background">@color/gray_1A1A1A</color>
     <color name="dialog_line">@color/white_50</color>
-    <color name="dialog_inverse_background">@color/white_FFFFFF</color>
 
 </resources>
