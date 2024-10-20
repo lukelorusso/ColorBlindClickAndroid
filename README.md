@@ -17,9 +17,9 @@ In this project you can find
 
 * [Pure Kotlin code](https://kotlinlang.org/)
 
-* [lopspower's Clean RX Architecture](https://github.com/lopspower/CleanRxArchitecture) modified for MVVM (Model-View-ViewModel) architectural pattern
+* [Kotlin Coroutines](https://kotlinlang.org/docs/coroutines-overview.html)
 
-* [AndroidX packages](https://developer.android.com/jetpack/androidx)
+* [Jetpack Compose UI](https://developer.android.com/compose)
 
 * [Koin for dependency injection](https://insert-koin.io/)
 
@@ -38,5 +38,4 @@ The app consumes APIs from a web service to retrieve colors' info.
 ## Copyright ##
 
 The App: Copyright 2022 LUCA LORUSSO - https://lukelorusso.com/  
-The Architecture: Copyright 2020 MIKHAEL LOPEZ - https://mikhaellopez.com/  
 The Backend: Copyright 2016 SAVERIO CIOTOLI  
