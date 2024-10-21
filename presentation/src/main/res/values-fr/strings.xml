@@ -6,9 +6,9 @@
     <string name="share_color">Partager la couleur</string>
     <string name="choose_an_app">"Choisir une appli"</string>
     <string name="color_history">Historique des couleurs</string>
-    <string name="history_no_item">"Aucune couleur (pour l'instant!)"</string>
-    <string name="color_delete_one_confirmation_message">"Voulez-vous vraiment supprimer le couleur sélectionné?"</string>
-    <string name="color_delete_all_confirmation_message">"Voulez-vous vraiment supprimer TOUTES vos couleurs?"</string>
+    <string name="history_no_item">"Aucune couleur (pour l'instant !)"</string>
+    <string name="color_delete_one_confirmation_message">"Voulez-vous vraiment supprimer le couleur «%s» ?"</string>
+    <string name="color_delete_all_confirmation_message">"Voulez-vous vraiment supprimer TOUTES vos couleurs ?"</string>
     <string name="yes">Oui</string>
     <string name="no">Non</string>
     <string name="history_search_hint">Rechercher une couleur…</string>
@@ -21,4 +21,5 @@
     <string name="settings_viewfinder_pixels_value_1">"3x3 (conseillé)"</string>
     <string name="settings_viewfinder_pixels_value_2">"5x5 (plus stable mais un peu moins précis)"</string>
     <string name="settings_save_camera_options">Enregistrer caméra sélectionnée et niveau de zoom</string>
+    <string name="settings_save_camera_options_off_confirmation_message">Si vous désactivez cette option, la sélection de l’appareil photo et la valeur du zoom seront réinitialisées chaque fois que vous redémarrez l’application.\n\nÊtes-vous sûr?</string>
 </resources>

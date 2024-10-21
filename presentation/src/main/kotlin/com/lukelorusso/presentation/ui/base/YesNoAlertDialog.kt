@@ -1,10 +1,12 @@
-package com.lukelorusso.presentation.ui.history
+package com.lukelorusso.presentation.ui.base
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -12,24 +14,40 @@ import com.lukelorusso.presentation.R
 
 
 @Composable
-fun DeleteAlertDialog(
+fun YesNoAlertDialog(
     text: String,
-    painter: Painter,
+    painter: Painter? = null,
+    imageVector: ImageVector? = null,
+    tint: Color? = null,
     dismissCallback: () -> Unit = {},
     confirmCallback: () -> Unit = {}
 ) {
     AlertDialog(
         text = {
             Row {
-                Icon(
-                    modifier = Modifier
-                        .size(34.dp),
-                    painter = painter,
-                    tint = colorResource(id = R.color.red_delete),
-                    contentDescription = null
-                )
+                painter?.let {
+                    Icon(
+                        modifier = Modifier
+                            .size(34.dp),
+                        painter = painter,
+                        tint = tint ?: colorResource(id = R.color.red_delete),
+                        contentDescription = null
+                    )
 
-                Spacer(modifier = Modifier.width(8.dp))
+                    Spacer(modifier = Modifier.width(8.dp))
+                }
+
+                imageVector?.let {
+                    Icon(
+                        modifier = Modifier
+                            .size(34.dp),
+                        imageVector = imageVector,
+                        tint = tint ?: colorResource(id = R.color.red_delete),
+                        contentDescription = null
+                    )
+
+                    Spacer(modifier = Modifier.width(8.dp))
+                }
 
                 Text(
                     modifier = Modifier.padding(top = 4.dp),

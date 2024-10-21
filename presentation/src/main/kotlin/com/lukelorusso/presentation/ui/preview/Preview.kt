@@ -133,7 +133,7 @@ private fun BottomToolBar(
                 modifier = Modifier
                     .clickable(onClick = shareText),
                 color = Color.White,
-                fontSize = 20.sp,
+                fontSize = 18.sp,
                 fontWeight = FontWeight.W500,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
@@ -146,7 +146,7 @@ private fun BottomToolBar(
                 modifier = Modifier
                     .clickable(onClick = shareText),
                 color = Color.White,
-                fontSize = 16.sp,
+                fontSize = 14.sp,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 text = colorModel.originalColorHex()
@@ -158,7 +158,7 @@ private fun BottomToolBar(
                 modifier = Modifier
                     .clickable(onClick = shareText),
                 color = Color.White,
-                fontSize = 16.sp,
+                fontSize = 14.sp,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 text = colorModel.toRGBPercentString()

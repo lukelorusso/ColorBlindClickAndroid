@@ -5,6 +5,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.WarningAmber
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,8 +22,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.lukelorusso.presentation.R
 import com.lukelorusso.presentation.error.ErrorMessageFactory
-import com.lukelorusso.presentation.ui.base.BottomSheetUpperLine
-import com.lukelorusso.presentation.ui.base.MultiOptionDialog
+import com.lukelorusso.presentation.ui.base.*
 import com.lukelorusso.presentation.ui.error.ErrorAlertDialog
 
 private val viewfinderPixelsValueStringResList = listOf(
@@ -37,6 +38,7 @@ fun Settings(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var showViewfinderMultiOption by remember { mutableStateOf(false) }
+    var showCameraOptionWarningAlertDialog by remember { mutableStateOf(false) }
 
     if (uiState.contentState.isError) {
         ErrorAlertDialog(
@@ -52,6 +54,19 @@ fun Settings(
             selectedPosition = uiState.pixelNeighbourhood,
             dismissCallback = { showViewfinderMultiOption = false },
             onOptionSelected = viewModel::setPixelNeighbourhood
+        )
+    }
+
+    if (showCameraOptionWarningAlertDialog) {
+        YesNoAlertDialog(
+            text = stringResource(R.string.settings_save_camera_options_off_confirmation_message),
+            imageVector = Icons.Default.WarningAmber,
+            tint = colorResource(id = R.color.yellow_warning),
+            confirmCallback = {
+                viewModel.setSaveCameraOptions(false)
+                showCameraOptionWarningAlertDialog = false
+            },
+            dismissCallback = { showCameraOptionWarningAlertDialog = false }
         )
     }
 
@@ -118,8 +133,12 @@ fun Settings(
                                 .scale(1.5F)
                                 .padding(24.dp),
                             checked = uiState.saveCameraOptions,
-                            onCheckedChange = {
-                                viewModel.setSaveCameraOptions(!uiState.saveCameraOptions)
+                            onCheckedChange = { newValue ->
+                                if (newValue) {
+                                    viewModel.setSaveCameraOptions(true)
+                                } else {
+                                    showCameraOptionWarningAlertDialog = true
+                                }
                             }
                         )
                     }

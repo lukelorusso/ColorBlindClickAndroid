@@ -3,6 +3,7 @@
 
     <!--Night-->
     <color name="red_delete">#F46464</color>
+    <color name="yellow_warning">#eed202</color>
     <color name="text_color">@color/gray_C8C8C8</color>
     <color name="progress_background">@color/black_50</color>
     <color name="fragment_background">@color/black_000000</color>

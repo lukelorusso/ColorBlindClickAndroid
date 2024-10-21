@@ -30,8 +30,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.lukelorusso.presentation.R
 import com.lukelorusso.presentation.error.ErrorMessageFactory
 import com.lukelorusso.presentation.extensions.*
-import com.lukelorusso.presentation.ui.base.FAB
-import com.lukelorusso.presentation.ui.base.FAB_SIZE
+import com.lukelorusso.presentation.ui.base.*
 import com.lukelorusso.presentation.ui.error.ErrorAlertDialog
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -90,7 +89,7 @@ fun History(
     }
 
     if (showDeleteAllAlertDialog) {
-        DeleteAlertDialog(
+        YesNoAlertDialog(
             text = stringResource(R.string.color_delete_all_confirmation_message),
             painter = painterResource(id = R.drawable.delete_sweep_white),
             confirmCallback = {
@@ -106,8 +105,8 @@ fun History(
             updateSearch(isSearchingMode = false)
         }
 
-        DeleteAlertDialog(
-            text = stringResource(R.string.color_delete_one_confirmation_message),
+        YesNoAlertDialog(
+            text = stringResource(R.string.color_delete_one_confirmation_message, colorToDelete.colorName),
             painter = painterResource(id = R.drawable.delete_item_white),
             confirmCallback = {
                 viewModel.deleteColor(colorToDelete)

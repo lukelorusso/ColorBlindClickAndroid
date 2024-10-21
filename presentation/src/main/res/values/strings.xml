@@ -9,7 +9,7 @@
     <string name="choose_an_app">Choose an app</string>
     <string name="color_history">Color history</string>
     <string name="history_no_item">"No color to show (yet!)"</string>
-    <string name="color_delete_one_confirmation_message">Are you sure you want to delete this color?</string>
+    <string name="color_delete_one_confirmation_message">Are you sure you want to delete the color «%s»?</string>
     <string name="color_delete_all_confirmation_message">Are you sure you want to delete ALL colors?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
@@ -23,4 +23,5 @@
     <string name="settings_viewfinder_pixels_value_1">"3x3 (default)"</string>
     <string name="settings_viewfinder_pixels_value_2">"5x5 (more stable but a little less precise)"</string>
     <string name="settings_save_camera_options">Save camera selection and zoom level</string>
+    <string name="settings_save_camera_options_off_confirmation_message">If you disable this option, the camera selection and zoom value will be reset every time you restart the app.\n\nAre you sure?</string>
 </resources>

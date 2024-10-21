@@ -19,6 +19,7 @@
 
     <!--Day-->
     <color name="red_delete">#f44336</color>
+    <color name="yellow_warning">#b8aa14</color>
     <color name="text_color">@color/gray_373737</color>
     <color name="progress_background">@color/white_50</color>
     <color name="fragment_background">@color/white_FFFFFF</color>
