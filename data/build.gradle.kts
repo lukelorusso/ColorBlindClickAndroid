@@ -17,20 +17,21 @@ android {
     }
 
     buildTypes {
-        val proguardFolder = "../proguard/"
-
         debug {
             isMinifyEnabled = false
         }
 
         release {
-            isMinifyEnabled = true
+            val proguardFolder = "../proguard/"
+
+            isMinifyEnabled = false
             proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
                 proguardFolder + "dto-rules.pro",
                 proguardFolder + "gson-rules.pro",
                 proguardFolder + "model-rules.pro",
                 proguardFolder + "okhttp-rules.pro",
-                proguardFolder + "retrofitRules-rules.pro"
+                proguardFolder + "retrofit-rules.pro"
             )
         }
 
