@@ -126,11 +126,12 @@ private fun BottomToolBar(
                     color = colorResource(id = R.color.black_50),
                     shape = RoundedCornerShape(16.dp, 16.dp)
                 )
-                .padding(16.dp)
-                .clickable(onClick = shareText),
+                .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
+                modifier = Modifier
+                    .clickable(onClick = shareText),
                 color = Color.White,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.W500,
@@ -142,6 +143,8 @@ private fun BottomToolBar(
             Spacer(modifier = Modifier.height(2.dp))
 
             Text(
+                modifier = Modifier
+                    .clickable(onClick = shareText),
                 color = Color.White,
                 fontSize = 16.sp,
                 maxLines = 1,
@@ -152,6 +155,8 @@ private fun BottomToolBar(
             Spacer(modifier = Modifier.height(2.dp))
 
             Text(
+                modifier = Modifier
+                    .clickable(onClick = shareText),
                 color = Color.White,
                 fontSize = 16.sp,
                 maxLines = 1,

@@ -20,8 +20,8 @@ android {
         applicationId = "com.lukelorusso.colorblindclick"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 60
-        versionName = "3.0.0"
+        versionCode = 61
+        versionName = "3.0.1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
@@ -30,23 +30,27 @@ android {
 
     buildTypes {
         val enableAnalyticsTag = "ENABLE_ANALYTICS"
-        val proguardFolder = "../proguard/"
 
         debug {
-            applicationIdSuffix = ".debug"
-            isShrinkResources = false
+            versionNameSuffix = ".debug"
             isMinifyEnabled = false
             buildConfigField("Boolean", enableAnalyticsTag, "false")
         }
 
         release {
+            val proguardFolder = "../proguard/"
+
             isShrinkResources = true
             isMinifyEnabled = true
-            buildConfigField("Boolean", enableAnalyticsTag, "true")
             proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                proguardFolder + "dto-rules.pro",
                 proguardFolder + "gson-rules.pro",
-                proguardFolder + "model-rules.pro"
+                proguardFolder + "model-rules.pro",
+                proguardFolder + "okhttp-rules.pro",
+                proguardFolder + "retrofit-rules.pro"
             )
+            buildConfigField("Boolean", enableAnalyticsTag, "true")
         }
 
         testBuildType = "debug"
