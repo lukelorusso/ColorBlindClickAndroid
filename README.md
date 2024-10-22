@@ -15,19 +15,19 @@ An iOS version is also available.
 In this project you can find
 
 
-* [Pure Kotlin code](https://kotlinlang.org/)
+* Pure [Kotlin](https://kotlinlang.org/) code
 
 * [Kotlin Coroutines](https://kotlinlang.org/docs/coroutines-overview.html)
 
 * [Jetpack Compose UI](https://developer.android.com/compose)
 
-* [Koin for dependency injection](https://insert-koin.io/)
+* [Koin](https://insert-koin.io/) for dependency injection
 
-* [Retrofit + GSON to consume web services](https://square.github.io/retrofit/)
+* [Retrofit + Json](https://square.github.io/retrofit/) `kotlinx.serialization` to consume web services
 
-* [Fotoapparat API that provide a safe CameraView](https://github.com/RedApparat/Fotoapparat)
+* [Fotoapparat API](https://github.com/RedApparat/Fotoapparat) that provide a safe CameraView
 
-* [Timber for debugging](https://github.com/JakeWharton/timber)
+* [Timber](https://github.com/JakeWharton/timber) for logging
 
 - - -
 

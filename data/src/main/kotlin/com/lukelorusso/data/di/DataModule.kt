@@ -1,6 +1,5 @@
 package com.lukelorusso.data.di
 
-import com.google.gson.Gson
 import com.lukelorusso.data.datasource.*
 import com.lukelorusso.data.datasource.impl.PersistenceDataSourceImpl
 import com.lukelorusso.data.datasource.impl.SharedPrefDataSourceImpl
@@ -10,6 +9,7 @@ import com.lukelorusso.data.net.OkHttpClientFactory
 import com.lukelorusso.data.net.RetrofitFactory
 import com.lukelorusso.data.repository.*
 import com.lukelorusso.domain.repository.*
+import kotlinx.serialization.json.Json
 import org.koin.dsl.module
 import retrofit2.Retrofit
 
@@ -26,7 +26,7 @@ val dataModule = module {
     //endregion
 
     //region Mapper
-    factory { Gson() }
+    factory<Json> { Json { ignoreUnknownKeys = true } }
     factory { ColorMapper() }
     //endregion
 

@@ -1,12 +1,13 @@
 package com.lukelorusso.data.net.dto
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.Serializable
 
 /**
  * @author LukeLorusso on 18-12-2018.
  */
+@Serializable
 data class ColorDetailDTO(
-    @SerializedName("similarityPercentage") val similarityPercentage: String,
-    @SerializedName("colorHexCode") val colorHexCode: String,
-    @SerializedName("colorName") val colorName: String
+    val similarityPercentage: String,
+    val colorHexCode: String,
+    val colorName: String
 )

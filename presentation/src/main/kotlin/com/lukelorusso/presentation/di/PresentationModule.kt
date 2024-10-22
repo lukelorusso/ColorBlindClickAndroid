@@ -35,10 +35,10 @@ val presentationModule = module {
     //endregion
 
     //region ViewModel
-    viewModel { CameraViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
-    viewModel { HistoryViewModel(get(), get(), get(), get(), get()) }
+    viewModel { CameraViewModel(get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { HistoryViewModel(get(), get(), get(), get()) }
     viewModel { InfoViewModel(get(), get(), get(), get()) }
-    viewModel { PreviewViewModel(get(), get(), get()) }
+    viewModel { PreviewViewModel(get(), get()) }
     viewModel { SettingsViewModel(get(), get(), get(), get()) }
     //endregion
 }

@@ -124,22 +124,24 @@ fun Settings(
                 }
 
                 item {
+                    fun setSaveCameraOption(newValue: Boolean) {
+                        if (newValue) {
+                            viewModel.setSaveCameraOptions(true)
+                        } else {
+                            showCameraOptionWarningAlertDialog = true
+                        }
+                    }
+
                     SettingLine(
                         text = stringResource(id = R.string.settings_save_camera_options),
-                        onClick = { viewModel.setSaveCameraOptions(!uiState.saveCameraOptions) }
+                        onClick = { setSaveCameraOption(!uiState.saveCameraOptions) }
                     ) {
                         Switch(
                             modifier = Modifier
                                 .scale(1.5F)
                                 .padding(24.dp),
                             checked = uiState.saveCameraOptions,
-                            onCheckedChange = { newValue ->
-                                if (newValue) {
-                                    viewModel.setSaveCameraOptions(true)
-                                } else {
-                                    showCameraOptionWarningAlertDialog = true
-                                }
-                            }
+                            onCheckedChange = ::setSaveCameraOption
                         )
                     }
                 }

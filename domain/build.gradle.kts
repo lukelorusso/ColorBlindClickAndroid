@@ -1,5 +1,6 @@
 plugins {
     id("kotlin")
+    id(libs.plugins.kotlin.serialization.get().pluginId)
 }
 
 dependencies {

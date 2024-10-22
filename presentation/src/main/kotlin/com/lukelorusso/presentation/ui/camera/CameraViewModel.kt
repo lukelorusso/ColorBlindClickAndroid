@@ -1,8 +1,6 @@
 package com.lukelorusso.presentation.ui.camera
 
 import androidx.lifecycle.viewModelScope
-import com.google.gson.Gson
-import com.lukelorusso.domain.model.Color
 import com.lukelorusso.domain.usecase.*
 import com.lukelorusso.presentation.extensions.getDeviceUdid
 import com.lukelorusso.presentation.helper.TrackerHelper
@@ -11,9 +9,11 @@ import com.lukelorusso.presentation.ui.base.ContentState
 import io.fotoapparat.capability.Capabilities
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import com.lukelorusso.domain.model.Color as ColorModel
 
 class CameraViewModel(
-    private val gson: Gson,
     private val trackerHelper: TrackerHelper,
     private val getLastLensPosition: GetLastLensPositionUseCase,
     private val setLastLensPosition: SetLastLensPositionUseCase,
@@ -24,6 +24,7 @@ class CameraViewModel(
 ) : AppViewModel<CameraUiState>() {
     override val _uiState = MutableStateFlow(CameraUiState())
     override val router = CameraRouter()
+    private val json = Json { ignoreUnknownKeys = true }
 
     init {
         loadData()
@@ -157,6 +158,6 @@ class CameraViewModel(
     fun gotoHistory() =
         router.routeToHistory()
 
-    fun gotoPreview(color: Color) =
-        router.routeToPreview(gson.toJson(color))
+    fun gotoPreview(color: ColorModel) =
+        router.routeToPreview(json.encodeToString<ColorModel>(color))
 }

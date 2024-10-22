@@ -14,13 +14,13 @@ google-firebase-core = "21.1.1"
 google-firebase-crashlytics = "19.2.0"
 google-firebase-crashlytics-plugin = "3.0.2"
 google-services-plugin = "4.4.2"
-gson = "2.11.0"
 junit = "4.13.2"
 okhttp3 = "4.12.0"
 koin = "2.2.3"
 kotlin = "2.0.0"
+kotlinx-serialization-json = "1.6.3"
 paper-db = "2.7.2"
-retrofit = "2.9.0"
+retrofit = "2.11.0"
 timber = "5.0.1"
 verticalseekbar = "1.2.7"
 
@@ -39,44 +39,46 @@ google-android-material = { group = "com.google.android.material", name = "mater
 google-firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics", version.ref = "google-firebase-analytics" }
 google-firebase-core = { group = "com.google.firebase", name = "firebase-core", version.ref = "google-firebase-core" }
 google-firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics", version.ref = "google-firebase-crashlytics" }
-gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 koin-androidx-viewmodel = { group = "io.insert-koin", name = "koin-androidx-viewmodel", version.ref = "koin" }
 koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
 koin-test = { group = "io.insert-koin", name = "koin-test", version.ref = "koin" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
 okhttp3 = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp3" }
 okhttp3-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp3" }
 paper-db = { group = "io.github.pilgr", name = "paperdb", version.ref = "paper-db" }
-retrofit-converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
-retrofit-converter-scalars = { group = "com.squareup.retrofit2", name = "converter-scalars", version.ref = "retrofit" }
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+retrofit-converter-kotlinx-serialization = { group = "com.squareup.retrofit2", name = "converter-kotlinx-serialization", version.ref = "retrofit" }
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 verticalseekbar = { group = "com.github.lukelorusso", name = "VerticalSeekBar", version.ref = "verticalseekbar" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-gradle-plugin" }
 android-library = { id = "com.android.library", version.ref = "android-gradle-plugin" }
-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services-plugin" }
 google-firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "google-firebase-crashlytics-plugin" }
 
 [bundles]
 data = [
     "androidx-preference",
-    "gson",
     "koin-core",
+    "kotlinx-serialization-json",
     "okhttp3",
     "okhttp3-logging-interceptor",
     "paper-db",
-    "retrofit-converter-gson",
-    "retrofit-converter-scalars",
+    "retrofit",
+    "retrofit-converter-kotlinx-serialization",
     "timber"
 ]
 data-test = [
     "junit"
 ]
 domain = [
-    "koin-core"
+    "koin-core",
+    "kotlinx-serialization-json"
 ]
 presentation = [
     "androidx-compose-bom",
@@ -91,7 +93,7 @@ presentation = [
     "google-firebase-analytics",
     "google-firebase-core",
     "google-firebase-crashlytics",
-    "gson",
+    "kotlinx-serialization-json",
     "fotoapparat",
     "koin-core",
     "koin-androidx-viewmodel",

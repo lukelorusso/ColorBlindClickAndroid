@@ -1,15 +1,16 @@
 package com.lukelorusso.data.net.dto
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.Serializable
 
 /**
  * @author LukeLorusso on 18-12-2018.
  */
+@Serializable
 data class ColorResponseDTO(
-    @SerializedName("sourceColorHexCode") val sourceColorHexCode: String,
-    @SerializedName("returnMsg") val returnMsg: String,
-    @SerializedName("numRowsColors") val numRowsColors: Int,
-    @SerializedName("rowsColors") val rowsColors: List<ColorDetailDTO>,
-    @SerializedName("messageToUser") val messageToUser: String,
-    @SerializedName("executionTimeSeconds") val executionTimeSeconds: Double
+    val sourceColorHexCode: String,
+    val returnMsg: String,
+    val numRowsColors: Int,
+    val rowsColors: List<ColorDetailDTO>,
+    val messageToUser: String,
+    val executionTimeSeconds: Double
 )

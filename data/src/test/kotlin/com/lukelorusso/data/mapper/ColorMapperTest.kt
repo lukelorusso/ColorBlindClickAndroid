@@ -1,6 +1,5 @@
 package com.lukelorusso.data.mapper
 
-import com.google.gson.Gson
 import com.lukelorusso.data.repository.impl.ColorRepositoryMockImpl
 import com.lukelorusso.domain.repository.ColorRepository
 import kotlinx.coroutines.runBlocking
@@ -10,16 +9,13 @@ import org.junit.Test
 import org.koin.core.component.KoinApiExtension
 
 class ColorMapperTest {
-
+    private val colorMapper = ColorMapper()
     private lateinit var colorRepository: ColorRepository
 
     @KoinApiExtension
     @Before
     fun setup() {
-        colorRepository = ColorRepositoryMockImpl(
-            Gson(),
-            ColorMapper()
-        )
+        colorRepository = ColorRepositoryMockImpl(colorMapper)
     }
 
     @Test

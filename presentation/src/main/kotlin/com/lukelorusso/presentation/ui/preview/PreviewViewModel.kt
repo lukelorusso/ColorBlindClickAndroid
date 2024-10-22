@@ -2,22 +2,23 @@ package com.lukelorusso.presentation.ui.preview
 
 import android.graphics.Bitmap
 import androidx.lifecycle.viewModelScope
-import com.google.gson.Gson
-import com.lukelorusso.domain.model.Color
 import com.lukelorusso.domain.usecase.GetHomeUrlUseCase
-import com.lukelorusso.presentation.extensions.*
+import com.lukelorusso.presentation.extensions.shareBitmap
+import com.lukelorusso.presentation.extensions.shareText
 import com.lukelorusso.presentation.helper.TrackerHelper
 import com.lukelorusso.presentation.ui.base.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
+import com.lukelorusso.domain.model.Color as ColorModel
 
 class PreviewViewModel(
-    private val gson: Gson,
     private val trackerHelper: TrackerHelper,
     private val getHomeUrl: GetHomeUrlUseCase
 ) : AppViewModel<PreviewUiState>() {
     override val _uiState = MutableStateFlow(PreviewUiState())
     override val router = object : AppRouter() {} // not needed
+    private val json = Json { ignoreUnknownKeys = true }
 
     fun loadData(serializedColor: String?) {
         if (uiState.value.contentState.isLoading) {
@@ -28,7 +29,7 @@ class PreviewViewModel(
 
         viewModelScope.launch {
             try {
-                val color = serializedColor?.let { gson.fromJson<Color>(it) }
+                val color = serializedColor?.let { json.decodeFromString<ColorModel>(it) }
                 val url = getHomeUrl.invoke(Unit)
                 updateUiState {
                     it.copy(

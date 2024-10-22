@@ -4,6 +4,7 @@ buildsystem
 .externalNativeBuild
 .gradle
 .DS_Store
+.kotlin
 
 # LOCAL
 local.properties

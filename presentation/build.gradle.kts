@@ -1,7 +1,8 @@
 plugins {
     id(libs.plugins.android.application.get().pluginId)
     id(libs.plugins.kotlin.android.get().pluginId)
-    id(libs.plugins.compose.compiler.get().pluginId)
+    id(libs.plugins.kotlin.compose.compiler.get().pluginId)
+    id(libs.plugins.kotlin.serialization.get().pluginId)
     id(libs.plugins.google.services.get().pluginId)
     id(libs.plugins.google.firebase.crashlytics.get().pluginId)
 }
@@ -20,8 +21,8 @@ android {
         applicationId = "com.lukelorusso.colorblindclick"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 62
-        versionName = "3.0.2"
+        versionCode = 63
+        versionName = "3.0.3"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
@@ -45,7 +46,6 @@ android {
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 proguardFolder + "dto-rules.pro",
-                proguardFolder + "gson-rules.pro",
                 proguardFolder + "model-rules.pro",
                 proguardFolder + "okhttp-rules.pro",
                 proguardFolder + "retrofit-rules.pro"

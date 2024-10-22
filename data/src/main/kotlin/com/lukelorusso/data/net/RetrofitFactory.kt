@@ -3,23 +3,23 @@ package com.lukelorusso.data.net
 import android.Manifest
 import android.content.Context
 import androidx.annotation.RequiresPermission
-import com.google.gson.Gson
+import kotlinx.serialization.json.Json
+import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.converter.scalars.ScalarsConverterFactory
+import retrofit2.converter.kotlinx.serialization.asConverterFactory
 
 /**
  * Copyright (C) 2021 Luke Lorusso
  * Licensed under the Apache License Version 2.0
  * RetrofitFactory to generate a Retrofit instance.
- * It sets up request logging and a Gson type adapter.
+ * It sets up request logging and type adapters.
  */
 object RetrofitFactory {
 
     private const val COLOR_API_BASE_URL =
         "https://savedev.altervista.org/SD-Frontend/colorblindness/"
     private const val COLOR_BLIND_SITE =
-        "https://savedev.altervista.org/" //"http://www.colorblindclick.com/"
+        "https://savedev.altervista.org/"
     const val COLOR_API_OS = "android"
     const val COLOR_API_VERSION = "1"
     const val COLOR_BLIND_SITE_HELP =
@@ -34,32 +34,14 @@ object RetrofitFactory {
      */
     @RequiresPermission(value = Manifest.permission.INTERNET)
     fun getRetrofitBuilder(
-        context: Context,
-        gson: Gson,
-        okHttpClientFactory: OkHttpClientFactory
+        okHttpClientFactory: OkHttpClientFactory,
+        json: Json,
+        context: Context? = null
     ): Retrofit =
         Retrofit.Builder()
             .baseUrl(COLOR_API_BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .addConverterFactory(ScalarsConverterFactory.create())
+            .addConverterFactory(json.asConverterFactory("application/json; charset=UTF8".toMediaType()))
             .client(okHttpClientFactory.createOkHttpClient(context))
-            .build()
-
-
-    /**
-     * Get [Retrofit] instance for unit tests.
-     * @return instances of [Retrofit]
-     */
-    @RequiresPermission(value = Manifest.permission.INTERNET)
-    fun getRetrofitTestBuilder(
-        gson: Gson,
-        okHttpClientFactory: OkHttpClientFactory
-    ): Retrofit =
-        Retrofit.Builder()
-            .baseUrl(COLOR_API_BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .addConverterFactory(ScalarsConverterFactory.create())
-            .client(okHttpClientFactory.createOkHttpClient())
             .build()
 
 }

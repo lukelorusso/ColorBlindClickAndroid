@@ -1,6 +1,7 @@
 plugins {
     id(libs.plugins.android.library.get().pluginId)
     id(libs.plugins.kotlin.android.get().pluginId)
+    id(libs.plugins.kotlin.serialization.get().pluginId)
 }
 
 android {
@@ -28,7 +29,6 @@ android {
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 proguardFolder + "dto-rules.pro",
-                proguardFolder + "gson-rules.pro",
                 proguardFolder + "model-rules.pro",
                 proguardFolder + "okhttp-rules.pro",
                 proguardFolder + "retrofit-rules.pro"

@@ -1,16 +1,16 @@
 package com.lukelorusso.presentation.ui.history
 
 import androidx.lifecycle.viewModelScope
-import com.google.gson.Gson
-import com.lukelorusso.domain.model.Color
 import com.lukelorusso.domain.usecase.*
 import com.lukelorusso.presentation.helper.TrackerHelper
 import com.lukelorusso.presentation.ui.base.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import com.lukelorusso.domain.model.Color as ColorModel
 
 class HistoryViewModel(
-    private val gson: Gson,
     private val trackerHelper: TrackerHelper,
     private val getSavedColorList: GetSavedColorListUseCase,
     private val deleteSavedColor: DeleteSavedColorUseCase,
@@ -18,6 +18,7 @@ class HistoryViewModel(
 ) : AppViewModel<HistoryUiState>() {
     override val _uiState = MutableStateFlow(HistoryUiState())
     override val router = HistoryRouter()
+    private val json = Json { ignoreUnknownKeys = true }
     private val loadBouncer = Bouncer(BOUNCE_DELAY_IN_MILLIS)
 
     init {
@@ -51,7 +52,7 @@ class HistoryViewModel(
         }
     }
 
-    fun deleteColorFromUiState(param: Color) {
+    fun deleteColorFromUiState(param: ColorModel) {
         updateUiState {
             it.copy(
                 colorList = uiState.value.colorList
@@ -60,7 +61,7 @@ class HistoryViewModel(
         }
     }
 
-    fun restoreColorToUiState(param: Color) {
+    fun restoreColorToUiState(param: ColorModel) {
         updateUiState {
             it.copy(
                 colorList = uiState.value.colorList
@@ -70,7 +71,7 @@ class HistoryViewModel(
         }
     }
 
-    fun deleteColor(param: Color) {
+    fun deleteColor(param: ColorModel) {
         if (uiState.value.contentState.isLoading) {
             return
         } else {
@@ -113,9 +114,6 @@ class HistoryViewModel(
         }
     }
 
-    fun toggleSearchingMode() =
-        toggleSearchingMode(!uiState.value.isSearchingMode)
-
     fun toggleSearchingMode(value: Boolean) {
         updateUiState { it.copy(isSearchingMode = value) }
     }
@@ -132,8 +130,8 @@ class HistoryViewModel(
         }
     }
 
-    fun gotoPreview(color: Color) =
-        router.routeToPreview(gson.toJson(color))
+    fun gotoPreview(color: ColorModel) =
+        router.routeToPreview(json.encodeToString<ColorModel>(color))
 
     fun gotoCamera() =
         router.routeToCamera()

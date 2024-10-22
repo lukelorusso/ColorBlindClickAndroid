@@ -1,5 +1,8 @@
 package com.lukelorusso.domain.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Color(
         var colorHex: String,
         var colorName: String,
