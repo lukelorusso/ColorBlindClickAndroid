@@ -104,7 +104,7 @@ class CameraViewModel(
                     )
                 }
             } catch (t: Throwable) {
-                trackerHelper.track(router.activity, TrackerHelper.Actions.PERSISTENCE_EXCEPTION)
+                trackerHelper.track(TrackerHelper.Actions.PERSISTENCE_EXCEPTION)
                 updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
             }
         }

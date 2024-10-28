@@ -47,7 +47,7 @@ class HistoryViewModel(
                 )
             }
         } catch (t: Throwable) {
-            trackerHelper.track(router.activity, TrackerHelper.Actions.PERSISTENCE_EXCEPTION)
+            trackerHelper.track(TrackerHelper.Actions.PERSISTENCE_EXCEPTION)
             updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
         }
     }
@@ -81,10 +81,10 @@ class HistoryViewModel(
         viewModelScope.launch {
             try {
                 deleteSavedColor.invoke(param)
-                trackerHelper.track(router.activity, TrackerHelper.Actions.DELETED_ITEM)
+                trackerHelper.track(TrackerHelper.Actions.DELETED_ITEM)
                 loadDataSuspend()
             } catch (t: Throwable) {
-                trackerHelper.track(router.activity, TrackerHelper.Actions.PERSISTENCE_EXCEPTION)
+                trackerHelper.track(TrackerHelper.Actions.PERSISTENCE_EXCEPTION)
                 updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
             }
         }
@@ -105,10 +105,10 @@ class HistoryViewModel(
         viewModelScope.launch {
             try {
                 deleteAllSavedColors.invoke(Unit)
-                trackerHelper.track(router.activity, TrackerHelper.Actions.DELETED_ALL_ITEMS)
+                trackerHelper.track(TrackerHelper.Actions.DELETED_ALL_ITEMS)
                 loadDataSuspend()
             } catch (t: Throwable) {
-                trackerHelper.track(router.activity, TrackerHelper.Actions.PERSISTENCE_EXCEPTION)
+                trackerHelper.track(TrackerHelper.Actions.PERSISTENCE_EXCEPTION)
                 updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
             }
         }

@@ -1,6 +1,5 @@
 package com.lukelorusso.presentation.helper
 
-import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -9,7 +8,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 /**
- * Copyright (C) 2021 Luke Lorusso
+ * Copyright (C) 2024 Luke Lorusso
  * Licensed under the Apache License Version 2.0
  */
 class TrackerHelper
@@ -29,19 +28,14 @@ class TrackerHelper
 
     private val firebaseAnalytics = FirebaseAnalytics.getInstance(context)
 
-    fun track(activity: Activity?, action: String) {
-        if (isEnable()) {
-            Timber.d("TrackerHelper: $activity -> $action")
-            activity?.also {
-                //firebaseAnalytics.setCurrentScreen(it, action, null)
-                firebaseAnalytics.logEvent(
-                    FirebaseAnalytics.Event.SCREEN_VIEW,
-                    Bundle().apply { putString(FirebaseAnalytics.Param.SCREEN_NAME, action) }
-                )
-            }
+    fun track(action: String) {
+        if (BuildConfig.ENABLE_ANALYTICS) {
+            Timber.d("TrackerHelper -> $action")
+            firebaseAnalytics.logEvent(
+                FirebaseAnalytics.Event.SCREEN_VIEW,
+                Bundle().apply { putString(FirebaseAnalytics.Param.SCREEN_NAME, action) }
+            )
         }
     }
-
-    private fun isEnable(): Boolean = BuildConfig.ENABLE_ANALYTICS
 
 }

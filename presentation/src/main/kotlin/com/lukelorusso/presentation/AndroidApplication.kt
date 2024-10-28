@@ -25,7 +25,7 @@ class AndroidApplication : Application() {
         super.onCreate()
 
         // Init Crashlytics
-        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true)
+        FirebaseCrashlytics.getInstance().isCrashlyticsCollectionEnabled = BuildConfig.ENABLE_ANALYTICS
 
         // Init Debug log
         if (BuildConfig.DEBUG) {
@@ -41,7 +41,6 @@ class AndroidApplication : Application() {
                 androidLogger(Level.ERROR)
             }
             androidContext(this@AndroidApplication)
-
             modules(modules)
         }
     }
