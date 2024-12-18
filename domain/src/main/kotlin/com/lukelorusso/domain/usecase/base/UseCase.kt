@@ -10,10 +10,10 @@ import org.koin.java.KoinJavaComponent.inject
  * This interface represents an execution unit for different use cases (this means any use case
  * in the application should implement this contract)
  */
-abstract class UseCase<in Params, out Result> {
-
-    open val emitResult = true
-    internal val logger by inject(Logger::class.java)
+abstract class UseCase<in Params, out Result>(
+    open val logResult: Boolean = true
+) {
+    private val logger by inject(Logger::class.java)
     protected abstract suspend fun run(param: Params): Result
 
     /**
@@ -22,9 +22,9 @@ abstract class UseCase<in Params, out Result> {
     @Throws
     suspend operator fun invoke(params: Params): Result {
         return try {
-            logger.log { "$USE_CASE_PREFIX ${javaClass.simpleName} starts" }
+            logger.log { "$USE_CASE_PREFIX ${javaClass.simpleName} starts with params: $params" }
             run(params).also { result ->
-                if (emitResult)
+                if (logResult)
                     logger.log { "$USE_CASE_PREFIX ${javaClass.simpleName} emits $result" }
                 else
                     logger.log { "$USE_CASE_PREFIX ${javaClass.simpleName} emits a result (hidden)" }
