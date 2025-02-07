@@ -1,7 +1,7 @@
 package com.lukelorusso.data.di
 
 import com.lukelorusso.data.datasource.*
-import com.lukelorusso.data.datasource.impl.PersistenceDataSourceTestImpl
+import com.lukelorusso.data.datasource.impl.DatabaseDataSourceTestImpl
 import com.lukelorusso.data.datasource.impl.SharedPrefDataSourceTestImpl
 import com.lukelorusso.data.extensions.api
 import com.lukelorusso.data.mapper.ColorMapper
@@ -47,10 +47,10 @@ val dataTestModule = module {
 
     //region Settings
     factory<SharedPrefDataSource> { SharedPrefDataSourceTestImpl(get()) }
-    factory { SettingsManager(get()) }
+    factory { PersistenceManager(get()) }
     //endregion
 
     //region Persistence
-    factory<PersistenceDataSource> { PersistenceDataSourceTestImpl(get()) }
+    factory<DatabaseDataSource> { DatabaseDataSourceTestImpl(get()) }
     //endregion
 }

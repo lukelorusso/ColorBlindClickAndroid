@@ -9,7 +9,7 @@ import com.lukelorusso.domain.model.Color
  * PaperDB is affected by a RuntimeException that sometimes pops up:
  * https://github.com/pilgr/Paper/issues/108
  */
-interface PersistenceDataSource {
+interface DatabaseDataSource {
     companion object {
         internal const val KEY_COLORS = "KEY_COLORS"
     }

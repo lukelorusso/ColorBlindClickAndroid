@@ -1,7 +1,7 @@
 package com.lukelorusso.data.repository
 
 import com.lukelorusso.data.datasource.HttpManager
-import com.lukelorusso.data.datasource.PersistenceDataSource
+import com.lukelorusso.data.datasource.DatabaseDataSource
 import com.lukelorusso.data.mapper.ColorMapper
 import com.lukelorusso.data.net.api.ColorApi
 import com.lukelorusso.domain.model.Color
@@ -12,7 +12,7 @@ class ColorRepositoryImpl(
     private val api: ColorApi,
     private val httpManager: HttpManager,
     private val colorMapper: ColorMapper,
-    private val persistenceDataSource: PersistenceDataSource
+    private val databaseDataSource: DatabaseDataSource
 ) : ColorRepository {
 
     override suspend fun decodeColorHex(colorHex: String, deviceUdid: String): Color {
@@ -27,12 +27,12 @@ class ColorRepositoryImpl(
             mapper = { colorMapper.transform(it) }
         )
 
-        persistenceDataSource.getColorList().toMutableList().apply {
+        databaseDataSource.getColorList().toMutableList().apply {
             firstOrNull { it.originalColorHex() == newColor.originalColorHex() }?.let { existent ->
                 remove(existent)
             }
             add(0, newColor)
-            persistenceDataSource.saveColorList(this)
+            databaseDataSource.saveColorList(this)
         }
 
         return newColor

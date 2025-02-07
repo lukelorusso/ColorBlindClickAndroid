@@ -1,30 +1,30 @@
 package com.lukelorusso.data.repository
 
-import com.lukelorusso.data.datasource.SettingsManager
+import com.lukelorusso.data.datasource.PersistenceManager
 import com.lukelorusso.domain.repository.SettingsRepository
 
 class SettingsRepositoryImpl(
-    private val settingsManager: SettingsManager
+    private val persistenceManager: PersistenceManager
 ) : SettingsRepository {
 
     override fun getPixelNeighbourhood(): Int {
-        return settingsManager.getPixelNeighbourhood()
+        return persistenceManager.loadPixelNeighbourhood()
     }
 
     override fun setPixelNeighbourhood(param: Int) {
-        settingsManager.setPixelNeighbourhood(param)
+        persistenceManager.persistPixelNeighbourhood(param)
     }
 
     override fun getSaveCameraOptions(): Boolean {
-        return settingsManager.getSaveCameraOptions()
+        return persistenceManager.loadSaveCameraOptions()
     }
 
     override fun setSaveCameraOptions(param: Boolean) {
-        settingsManager.setSaveCameraOptions(param)
+        persistenceManager.persistSaveCameraOptions(param)
 
         if (!param) {
-            settingsManager.deleteLastLensPosition()
-            settingsManager.deleteLastZoomValue()
+            persistenceManager.deleteLastLensPosition()
+            persistenceManager.deleteLastZoomValue()
         }
     }
 
@@ -32,15 +32,15 @@ class SettingsRepositoryImpl(
      * Back camera = 0; Front camera = 1
      */
     override fun getLastLensPosition(): Int {
-        return settingsManager.getLastLensPosition()
+        return persistenceManager.loadLastLensPosition()
     }
 
     /**
      * First, check if the user wants to save the camera options
      */
     override fun setLastLensPosition(position: Int) {
-        if (settingsManager.getSaveCameraOptions()) {
-            settingsManager.setLastLensPosition(position)
+        if (persistenceManager.loadSaveCameraOptions()) {
+            persistenceManager.persistLastLensPosition(position)
         }
     }
 
@@ -48,15 +48,15 @@ class SettingsRepositoryImpl(
      * Min zoom value = 0; Max zoom value = 100
      */
     override fun getLastZoomValue(): Int {
-        return settingsManager.getLastZoomValue()
+        return persistenceManager.loadLastZoomValue()
     }
 
     /**
      * First, check if the user wants to save the camera options
      */
     override fun setLastZoomValue(position: Int) {
-        if (settingsManager.getSaveCameraOptions()) {
-            settingsManager.setLastZoomValue(position)
+        if (persistenceManager.loadSaveCameraOptions()) {
+            persistenceManager.persistLastZoomValue(position)
         }
     }
 }

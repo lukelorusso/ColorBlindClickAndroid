@@ -1,12 +1,12 @@
 package com.lukelorusso.data.datasource.impl
 
-import com.lukelorusso.data.datasource.PersistenceDataSource
-import com.lukelorusso.data.datasource.PersistenceDataSource.Companion.KEY_COLORS
+import com.lukelorusso.data.datasource.DatabaseDataSource
+import com.lukelorusso.data.datasource.DatabaseDataSource.Companion.KEY_COLORS
 import com.lukelorusso.domain.model.Color
 import com.lukelorusso.domain.usecase.base.Logger
 import io.paperdb.Paper
 
-class PersistenceDataSourceImpl(private val logger: Logger) : PersistenceDataSource {
+class DatabaseDataSourceImpl(private val logger: Logger) : DatabaseDataSource {
 
     companion object {
         private const val EXCEPTION_RETRY_TIMES = 3
