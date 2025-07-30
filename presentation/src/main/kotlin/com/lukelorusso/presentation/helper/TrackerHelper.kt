@@ -5,14 +5,13 @@ import android.os.Bundle
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.lukelorusso.presentation.BuildConfig
 import timber.log.Timber
-import javax.inject.Inject
 
 /**
  * Copyright (C) 2024 Luke Lorusso
  * Licensed under the Apache License Version 2.0
  */
 class TrackerHelper
-@Inject internal constructor(context: Context) {
+internal constructor(context: Context) {
 
     object Actions {
         const val DELETED_ITEM = "DELETED_ITEM"
