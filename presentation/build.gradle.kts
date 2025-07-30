@@ -65,6 +65,7 @@ android {
 dependencies {
     implementation(project(":data"))
     implementation(project(":domain"))
+    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.aar", "*.jar"))))
     implementation(libs.bundles.presentation)
     testImplementation(libs.bundles.presentation.test)
 }

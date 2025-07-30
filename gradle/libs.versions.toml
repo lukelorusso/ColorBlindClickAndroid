@@ -7,7 +7,6 @@ androidx-preference = "1.2.1"
 androidx-compose = "1.7.4"
 androidx-compose-bom = '2024.10.00'
 androidx-lifecycle-runtime-compose = "2.8.6"
-fotoapparat = "2.7.0"
 google-android-material = "1.12.0"
 google-firebase-analytics = "22.1.2"
 google-firebase-core = "21.1.1"
@@ -34,7 +33,6 @@ androidx-compose-ui-android = { group = "androidx.compose.ui", name = "ui-androi
 androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "androidx-compose" }
 androidx-preference = { group = "androidx.preference", name = "preference", version.ref = "androidx-preference" }
 androidx-lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-lifecycle-runtime-compose" }
-fotoapparat = { group = "io.fotoapparat", name = "fotoapparat", version.ref = "fotoapparat" }
 google-android-material = { group = "com.google.android.material", name = "material", version.ref = "google-android-material" }
 google-firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics", version.ref = "google-firebase-analytics" }
 google-firebase-core = { group = "com.google.firebase", name = "firebase-core", version.ref = "google-firebase-core" }
@@ -94,7 +92,6 @@ presentation = [
     "google-firebase-core",
     "google-firebase-crashlytics",
     "kotlinx-serialization-json",
-    "fotoapparat",
     "koin-core",
     "koin-androidx-viewmodel",
     "paper-db",
