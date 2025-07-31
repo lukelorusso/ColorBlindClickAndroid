@@ -21,8 +21,8 @@ android {
         applicationId = "com.lukelorusso.colorblindclick"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.compileSdk.get().toInt()
-        versionCode = 64
-        versionName = "3.0.4"
+        versionCode = 65
+        versionName = "3.0.5"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
