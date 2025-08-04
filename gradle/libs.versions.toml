@@ -2,10 +2,11 @@
 android-gradle-plugin = "8.6.1"
 android-compileSdk = "35"
 android-minSdk = "23"
-androidx-preference = "1.2.1"
+androidx-camerax = "1.4.2"
 androidx-compose = "1.8.3"
 androidx-compose-bom = '2025.07.00'
 androidx-compose-material-icons-extended = "1.7.8"
+androidx-preference = "1.2.1"
 androidx-lifecycle-runtime-compose = "2.9.2"
 google-android-material = "1.12.0"
 google-firebase-analytics = "23.0.0"
@@ -24,6 +25,11 @@ timber = "5.0.1"
 verticalseekbar = "1.2.7"
 
 [libraries]
+androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "androidx-camerax" }
+androidx-camera-core = { module = "androidx.camera:camera-core", version.ref = "androidx-camerax" }
+androidx-camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "androidx-camerax" }
+androidx-camera-video = { group = "androidx.camera", name = "camera-video", version.ref = "androidx-camerax" }
+androidx-camera-view = { group = "androidx.camera", name = "camera-view", version.ref = "androidx-camerax" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "androidx-compose-bom" }
 androidx-compose-fundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "androidx-compose" }
 androidx-compose-material = { group = "androidx.compose.material", name = "material", version.ref = "androidx-compose" }
@@ -79,6 +85,11 @@ domain = [
     "kotlinx-serialization-json"
 ]
 presentation = [
+    "androidx-camera-camera2",
+    "androidx-camera-core",
+    "androidx-camera-lifecycle",
+    "androidx-camera-video",
+    "androidx-camera-view",
     "androidx-compose-bom",
     "androidx-compose-fundation",
     "androidx-compose-material",

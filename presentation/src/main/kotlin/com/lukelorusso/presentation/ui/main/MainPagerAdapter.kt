@@ -1,7 +1,7 @@
 package com.lukelorusso.presentation.ui.main
 
 import androidx.fragment.app.*
-import com.lukelorusso.presentation.ui.camera.CameraFragment
+import com.lukelorusso.presentation.ui.camera.CameraXFragment
 import com.lukelorusso.presentation.ui.history.HistoryFragment
 import com.lukelorusso.presentation.ui.info.InfoFragment
 import java.lang.ref.WeakReference
@@ -15,7 +15,7 @@ class MainPagerAdapter(private var fragmentManager: FragmentManager) :
 
     private val tabTitleList = listOf(
         InfoFragment.TAG,
-        CameraFragment.TAG,
+        CameraXFragment.TAG,
         HistoryFragment.TAG
     )
 
@@ -38,7 +38,7 @@ class MainPagerAdapter(private var fragmentManager: FragmentManager) :
 
     private fun newInstanceAt(position: Int): Fragment = when (position) {
         0 -> InfoFragment.newInstance()
-        1 -> CameraFragment.newInstance()
+        1 -> CameraXFragment.newInstance()
         2 -> HistoryFragment.newInstance()
         else -> Fragment()
     }
