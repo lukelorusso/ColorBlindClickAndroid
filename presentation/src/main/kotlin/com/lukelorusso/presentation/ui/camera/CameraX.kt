@@ -15,18 +15,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.*
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.*
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.lukelorusso.presentation.R
 import com.lukelorusso.presentation.error.ErrorMessageFactory
 import com.lukelorusso.presentation.extensions.*
+import kotlin.math.roundToInt
 import com.lukelorusso.domain.model.Color as ColorModel
 
 @Composable
@@ -37,17 +39,35 @@ fun CameraX(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val imageCaptureUseCase = remember { ImageCapture.Builder().build() }
     var previewView by remember { mutableStateOf<PreviewView?>(null) }
+    var screenSizeInPx by remember { mutableStateOf(IntSize.Zero) }
 
     Surface {
         Box(
             modifier = Modifier
                 .fillMaxSize()
+                .onGloballyPositioned { coordinates ->
+                    screenSizeInPx = coordinates.size
+                }
                 .background(colorResource(id = R.color.fragment_background)),
             contentAlignment = Alignment.Center
         ) {
+            val lensFacing: Int = when (uiState.lastLensPosition) {
+                0 -> CameraSelector.LENS_FACING_BACK
+                1 -> CameraSelector.LENS_FACING_FRONT
+                else -> CameraSelector.LENS_FACING_UNKNOWN
+            }
+
+            val zoomLevel: Float? = uiState.lastZoomValue?.let { zoomValue ->
+                when {
+                    zoomValue < 0 -> 0.1f
+                    zoomValue >= 100 -> 1f
+                    else -> zoomValue / 100f
+                }
+            }
+
             CameraPreview(
-                lensPosition = uiState.lastLensPosition,
-                zoomValue = uiState.lastZoomValue,
+                lensFacing = lensFacing,
+                zoomLevel = zoomLevel,
                 imageCaptureUseCase = imageCaptureUseCase,
                 onPreviewReady = { preview ->
                     previewView = preview
@@ -59,6 +79,14 @@ fun CameraX(
                 contentDescription = null
             )
 
+            if (screenSizeInPx != IntSize.Zero && zoomLevel != null) {
+                ZoomHandler(
+                    screenSizeInPx = screenSizeInPx,
+                    zoomLevel = zoomLevel,
+                    onLevelChange = { viewModel.setLastZoomValue((it * 100).roundToInt()) }
+                )
+            }
+
             TopToolbar(
                 isNextCameraAvailable = true,
                 isNextCameraFront = true,
@@ -68,6 +96,7 @@ fun CameraX(
             )
 
             BottomToolbar(
+                screenSizeInPx = screenSizeInPx,
                 colorModel = uiState.color,
                 errorMessage = uiState.contentState.error?.let(errorMessageFactory::getLocalizedMessage),
                 isLoading = uiState.contentState.isLoading,
@@ -87,22 +116,12 @@ fun CameraX(
 
 @Composable
 fun CameraPreview(
-    lensPosition: Int?,
-    zoomValue: Int?, // between 0 and 100
+    lensFacing: Int,
+    zoomLevel: Float?,
     imageCaptureUseCase: ImageCapture,
     onPreviewReady: (PreviewView) -> Unit
 ) {
     val localContext = LocalContext.current
-    val lensFacing: Int = when (lensPosition) {
-        0 -> CameraSelector.LENS_FACING_BACK
-        1 -> CameraSelector.LENS_FACING_FRONT
-        else -> CameraSelector.LENS_FACING_UNKNOWN
-    }
-    val zoomLevel: Float = when {
-        zoomValue == null || zoomValue < 0 -> 0.1f
-        zoomValue >= 100 -> 1f
-        else -> zoomValue / 100f
-    }
     val previewUseCase = remember { Preview.Builder().build() }
     var camera by remember { mutableStateOf<Camera?>(null) }
     var cameraControl by remember { mutableStateOf<CameraControl?>(null) }
@@ -121,6 +140,7 @@ fun CameraPreview(
                 imageCaptureUseCase
             )
             cameraControl = camera?.cameraControl
+            zoomLevel?.let { level -> cameraControl?.setLinearZoom(level) }
         }
     }
 
@@ -134,7 +154,7 @@ fun CameraPreview(
     }
 
     LaunchedEffect(zoomLevel) {
-        cameraControl?.setLinearZoom(zoomLevel)
+        zoomLevel?.let { level -> cameraControl?.setLinearZoom(level) }
     }
 
     AndroidView(
@@ -148,6 +168,31 @@ fun CameraPreview(
                 this
             }
         }
+    )
+}
+
+@Composable
+fun ZoomHandler(
+    screenSizeInPx: IntSize,
+    zoomLevel: Float,
+    onLevelChange: (Float) -> Unit
+) {
+    Slider(
+        modifier = Modifier
+            .graphicsLayer(
+                scaleX = 1.1f,
+                scaleY = 1.1f,
+                rotationZ = 270f,
+                translationX = screenSizeInPx.width / 2.5f,
+                translationY = screenSizeInPx.height / 14f * -1
+            ),
+        value = zoomLevel,
+        onValueChange = onLevelChange,
+        colors = SliderDefaults.colors(
+            thumbColor = colorResource(id = R.color.color_primary),
+            activeTrackColor = colorResource(id = R.color.color_accent),
+            inactiveTrackColor = colorResource(id = R.color.white_FFFFFF),
+        )
     )
 }
 
@@ -210,6 +255,7 @@ fun TopToolbar(
 
 @Composable
 fun BottomToolbar(
+    screenSizeInPx: IntSize,
     colorModel: ColorModel?,
     errorMessage: String?,
     isLoading: Boolean,
@@ -270,16 +316,18 @@ fun BottomToolbar(
                     color = colorResource(id = R.color.color_accent)
                 )
             } else {
-                IconButton(
-                    modifier = Modifier
-                        .size(commonSize)
-                        .padding(commonPadding),
-                    onClick = onShutterSelected
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.camera_big_white),
-                        contentDescription = null
-                    )
+                AnimatedVisibility(screenSizeInPx != IntSize.Zero) {
+                    IconButton(
+                        modifier = Modifier
+                            .size(commonSize)
+                            .padding(commonPadding),
+                        onClick = onShutterSelected
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.camera_big_white),
+                            contentDescription = null
+                        )
+                    }
                 }
             }
 
