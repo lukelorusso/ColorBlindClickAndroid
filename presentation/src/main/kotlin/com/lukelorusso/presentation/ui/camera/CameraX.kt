@@ -3,6 +3,7 @@ package com.lukelorusso.presentation.ui.camera
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.lifecycle.awaitInstance
+import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.PreviewView
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.*
@@ -37,9 +38,13 @@ fun CameraX(
     errorMessageFactory: ErrorMessageFactory
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
     val imageCaptureUseCase = remember { ImageCapture.Builder().build() }
     var previewView by remember { mutableStateOf<PreviewView?>(null) }
     var screenSizeInPx by remember { mutableStateOf(IntSize.Zero) }
+    val cameraController = LifecycleCameraController(context)
+    cameraController.bindToLifecycle(context as LifecycleOwner)
+    previewView?.controller = cameraController
 
     Surface {
         Box(
@@ -87,13 +92,20 @@ fun CameraX(
                 )
             }
 
-            TopToolbar(
-                isNextCameraAvailable = true,
-                isNextCameraFront = true,
-                isFlashAvailable = true,
-                onNextCameraSelected = {},
-                onFlashSelected = {}
-            )
+            if (cameraController.initializationFuture.isDone) {
+                TopToolbar(
+                    isNextCameraAvailable = cameraController
+                        .run { canSwitchToFront() || canSwitchToBack() },
+                    isNextCameraFront = lensFacing == CameraSelector.LENS_FACING_BACK,
+                    isFlashAvailable = true,
+                    isFlashOn = false,
+                    onNextCameraSelected = {
+                        val newPosition = if (lensFacing == CameraSelector.LENS_FACING_BACK) 1 else 0
+                        viewModel.setLastLensPosition(newPosition)
+                    },
+                    onFlashSelected = { }
+                )
+            }
 
             BottomToolbar(
                 screenSizeInPx = screenSizeInPx,
@@ -121,7 +133,7 @@ fun CameraPreview(
     imageCaptureUseCase: ImageCapture,
     onPreviewReady: (PreviewView) -> Unit
 ) {
-    val localContext = LocalContext.current
+    val context = LocalContext.current
     val previewUseCase = remember { Preview.Builder().build() }
     var camera by remember { mutableStateOf<Camera?>(null) }
     var cameraControl by remember { mutableStateOf<CameraControl?>(null) }
@@ -134,7 +146,7 @@ fun CameraPreview(
                 .build()
             cameraProvider.unbindAll()
             camera = cameraProvider.bindToLifecycle(
-                localContext as LifecycleOwner,
+                context as LifecycleOwner,
                 cameraSelector,
                 previewUseCase,
                 imageCaptureUseCase
@@ -145,7 +157,7 @@ fun CameraPreview(
     }
 
     LaunchedEffect(Unit) {
-        cameraProvider = ProcessCameraProvider.awaitInstance(localContext)
+        cameraProvider = ProcessCameraProvider.awaitInstance(context)
         rebindCameraProvider()
     }
 
@@ -201,6 +213,7 @@ fun TopToolbar(
     isNextCameraAvailable: Boolean,
     isNextCameraFront: Boolean,
     isFlashAvailable: Boolean,
+    isFlashOn: Boolean,
     onNextCameraSelected: () -> Unit,
     onFlashSelected: () -> Unit
 ) {
@@ -242,7 +255,10 @@ fun TopToolbar(
                     onClick = onFlashSelected
                 ) {
                     Icon(
-                        painter = painterResource(id = R.drawable.flash_on_white),
+                        painter = painterResource(
+                            id = if (isFlashOn) R.drawable.flash_off_white
+                            else R.drawable.flash_on_white
+                        ),
                         contentDescription = null
                     )
                 }
