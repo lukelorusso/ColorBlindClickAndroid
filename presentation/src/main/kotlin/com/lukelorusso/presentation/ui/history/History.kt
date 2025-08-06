@@ -30,11 +30,11 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.lukelorusso.presentation.R
 import com.lukelorusso.presentation.error.ErrorMessageFactory
-import com.lukelorusso.presentation.extensions.*
+import com.lukelorusso.presentation.extensions.getLocalizedDateTime
+import com.lukelorusso.presentation.extensions.parseToColor
 import com.lukelorusso.presentation.ui.base.*
 import com.lukelorusso.presentation.ui.error.ErrorAlertDialog
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import com.lukelorusso.domain.model.Color as ColorModel
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -44,9 +44,10 @@ fun History(
     errorMessageFactory: ErrorMessageFactory
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val filteredColors = uiState.colorList.filter { item ->
-        item.toString().matchSearch(uiState.searchText)
-    }
+    val filteredColors by viewModel.filteredColors.collectAsState(
+        initial = emptyList(),
+        context = Dispatchers.IO
+    )
     val focusRequester = remember { FocusRequester() }
     val coroutineScope = rememberCoroutineScope()
     var localSearchText by remember { mutableStateOf("") }
