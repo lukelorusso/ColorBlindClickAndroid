@@ -12,6 +12,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,9 +40,9 @@ fun CameraX(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
-    val imageCaptureUseCase = remember { ImageCapture.Builder().build() }
-    var previewView by remember { mutableStateOf<PreviewView?>(null) }
     var screenSizeInPx by remember { mutableStateOf(IntSize.Zero) }
+    var previewView by remember { mutableStateOf<PreviewView?>(null) }
+    val camera = remember { mutableStateOf<Camera?>(null) }
     val cameraController = LifecycleCameraController(context)
     cameraController.bindToLifecycle(context as LifecycleOwner)
     previewView?.controller = cameraController
@@ -71,9 +72,9 @@ fun CameraX(
             }
 
             CameraPreview(
+                camera = camera,
                 lensFacing = lensFacing,
                 zoomLevel = zoomLevel,
-                imageCaptureUseCase = imageCaptureUseCase,
                 onPreviewReady = { preview ->
                     previewView = preview
                 }
@@ -93,17 +94,20 @@ fun CameraX(
             }
 
             if (cameraController.initializationFuture.isDone) {
+                val torchState = camera.value?.cameraInfo?.torchState?.observeAsState()
+                val isFlashOn = torchState?.value == TorchState.ON
+
                 TopToolbar(
                     isNextCameraAvailable = cameraController
                         .run { canSwitchToFront() || canSwitchToBack() },
                     isNextCameraFront = lensFacing == CameraSelector.LENS_FACING_BACK,
-                    isFlashAvailable = true,
-                    isFlashOn = false,
+                    isFlashAvailable = camera.value?.cameraInfo?.hasFlashUnit() == true,
+                    isFlashOn = isFlashOn,
                     onNextCameraSelected = {
                         val newPosition = if (lensFacing == CameraSelector.LENS_FACING_BACK) 1 else 0
                         viewModel.setLastLensPosition(newPosition)
                     },
-                    onFlashSelected = { }
+                    onFlashSelected = { camera.value?.cameraControl?.enableTorch(!isFlashOn) }
                 )
             }
 
@@ -128,30 +132,28 @@ fun CameraX(
 
 @Composable
 fun CameraPreview(
+    camera: MutableState<Camera?>,
     lensFacing: Int,
     zoomLevel: Float?,
-    imageCaptureUseCase: ImageCapture,
     onPreviewReady: (PreviewView) -> Unit
 ) {
     val context = LocalContext.current
     val previewUseCase = remember { Preview.Builder().build() }
-    var camera by remember { mutableStateOf<Camera?>(null) }
     var cameraControl by remember { mutableStateOf<CameraControl?>(null) }
     var cameraProvider by remember { mutableStateOf<ProcessCameraProvider?>(null) }
 
     fun rebindCameraProvider() {
         cameraProvider?.let { cameraProvider ->
+            cameraProvider.unbindAll()
             val cameraSelector = CameraSelector.Builder()
                 .requireLensFacing(lensFacing)
                 .build()
-            cameraProvider.unbindAll()
-            camera = cameraProvider.bindToLifecycle(
+            camera.value = cameraProvider.bindToLifecycle(
                 context as LifecycleOwner,
                 cameraSelector,
-                previewUseCase,
-                imageCaptureUseCase
+                previewUseCase
             )
-            cameraControl = camera?.cameraControl
+            cameraControl = camera.value?.cameraControl
             zoomLevel?.let { level -> cameraControl?.setLinearZoom(level) }
         }
     }

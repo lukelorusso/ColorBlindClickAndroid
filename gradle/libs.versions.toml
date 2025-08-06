@@ -28,12 +28,12 @@ verticalseekbar = "1.2.7"
 androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "androidx-camerax" }
 androidx-camera-core = { module = "androidx.camera:camera-core", version.ref = "androidx-camerax" }
 androidx-camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "androidx-camerax" }
-androidx-camera-video = { group = "androidx.camera", name = "camera-video", version.ref = "androidx-camerax" }
 androidx-camera-view = { group = "androidx.camera", name = "camera-view", version.ref = "androidx-camerax" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "androidx-compose-bom" }
 androidx-compose-fundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "androidx-compose" }
 androidx-compose-material = { group = "androidx.compose.material", name = "material", version.ref = "androidx-compose" }
 androidx-compose-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "androidx-compose-material-icons-extended" }
+androidx-compose-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "androidx-compose" }
 androidx-compose-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "androidx-compose" }
 androidx-compose-ui-android = { group = "androidx.compose.ui", name = "ui-android", version.ref = "androidx-compose" }
 androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "androidx-compose" }
@@ -88,12 +88,12 @@ presentation = [
     "androidx-camera-camera2",
     "androidx-camera-core",
     "androidx-camera-lifecycle",
-    "androidx-camera-video",
     "androidx-camera-view",
     "androidx-compose-bom",
     "androidx-compose-fundation",
     "androidx-compose-material",
     "androidx-compose-material-icons-extended",
+    "androidx-compose-runtime-livedata",
     "androidx-compose-ui",
     "androidx-compose-ui-android",
     "androidx-compose-ui-tooling",
