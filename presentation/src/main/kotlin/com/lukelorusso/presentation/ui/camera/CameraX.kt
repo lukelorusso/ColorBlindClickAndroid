@@ -59,6 +59,14 @@ fun CameraX(
                 contentDescription = null
             )
 
+            TopToolbar(
+                isNextCameraAvailable = true,
+                isNextCameraFront = true,
+                isFlashAvailable = true,
+                onNextCameraSelected = {},
+                onFlashSelected = {}
+            )
+
             BottomToolbar(
                 colorModel = uiState.color,
                 errorMessage = uiState.contentState.error?.let(errorMessageFactory::getLocalizedMessage),
@@ -141,6 +149,63 @@ fun CameraPreview(
             }
         }
     )
+}
+
+@Composable
+fun TopToolbar(
+    isNextCameraAvailable: Boolean,
+    isNextCameraFront: Boolean,
+    isFlashAvailable: Boolean,
+    onNextCameraSelected: () -> Unit,
+    onFlashSelected: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        Row(
+            modifier = Modifier
+                .statusBarsPadding()
+                .navigationBarsPadding()
+                .fillMaxWidth()
+                .background(colorResource(id = R.color.black_50)),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            val commonPadding = 10.dp
+
+            if (isNextCameraAvailable) {
+                IconButton(
+                    modifier = Modifier
+                        .padding(commonPadding),
+                    onClick = onNextCameraSelected
+                ) {
+                    Icon(
+                        painter = painterResource(
+                            id = if (isNextCameraFront) R.drawable.camera_front_white
+                            else R.drawable.camera_rear_white
+                        ),
+                        contentDescription = null
+                    )
+                }
+            }
+
+            if (isFlashAvailable) {
+                IconButton(
+                    modifier = Modifier
+                        .padding(commonPadding),
+                    onClick = onFlashSelected
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.flash_on_white),
+                        contentDescription = null
+                    )
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.weight(1f))
+    }
 }
 
 @Composable
