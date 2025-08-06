@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.Clear
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
@@ -387,7 +388,8 @@ private fun ColorLine(
                         2.dp,
                         colorResource(id = R.color.text_color),
                         CircleShape
-                    ),
+                    )
+                    .clip(CircleShape),
                 onDraw = {
                     drawCircle(color = item.originalColorHex().parseToColor())
                 }

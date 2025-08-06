@@ -6,7 +6,6 @@ import io.fotoapparat.capability.Capabilities
 
 data class CameraUiState(
     val contentState: ContentState = ContentState.CONTENT,
-    val cameraCapabilities: Capabilities? = null,
     val lastLensPosition: Int? = null,
     val lastZoomValue: Int? = null,
     val pixelNeighbourhood: Int = -1,

@@ -63,17 +63,17 @@ class CameraXFragment : Fragment() {
     }
 
     private fun isToolbarColorVisible(): Boolean {
-        return false // TODO
+        return viewModel.uiState.value.run { contentState.isError || color != null }
     }
 
     private fun hideToolbarColor() {
         if (isToolbarColorVisible()) {
-            // TODO
+            viewModel.dismissErrorAndColor()
         }
     }
 
     fun reloadData() {
-        //viewModel.reloadData(isFrontCamera.toInt(), binding.cameraZoomSeekBar.progress) // TODO
+        viewModel.reloadData()
     }
 
     companion object {

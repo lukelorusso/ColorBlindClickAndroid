@@ -46,6 +46,7 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
     // Properties
     private val isFrontCamera
         get() = viewModel.uiState.value.lastLensPosition == 1
+    private var cameraCapabilities: Capabilities? = null
     private val cameraConfiguration by lazy {
         CameraConfiguration(
             previewResolution = firstAvailable(
@@ -112,7 +113,7 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
     // region RENDER
     private fun render(data: CameraUiState) {
         showLoading(data.contentState == ContentState.LOADING)
-        renderCamera(data.lastLensPosition, data.lastZoomValue, data.cameraCapabilities)
+        renderCamera(data.lastLensPosition, data.lastZoomValue, cameraCapabilities)
         renderColorResult(data.color)
         renderError(data.contentState.error?.let(errorMessageFactory::getLocalizedMessage))
     }
@@ -287,7 +288,7 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
         Handler(Looper.getMainLooper()).post {
             camera?.also { camera ->
                 camera.getCapabilities().whenAvailable { capabilities ->
-                    viewModel.setCameraCapabilities(capabilities)
+                    this.cameraCapabilities = capabilities
                 }
             }
         }

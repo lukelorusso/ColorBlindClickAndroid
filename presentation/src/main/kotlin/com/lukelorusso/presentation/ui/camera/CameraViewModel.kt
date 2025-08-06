@@ -6,7 +6,6 @@ import com.lukelorusso.presentation.extensions.getDeviceUdid
 import com.lukelorusso.presentation.helper.TrackerHelper
 import com.lukelorusso.presentation.ui.base.AppViewModel
 import com.lukelorusso.presentation.ui.base.ContentState
-import io.fotoapparat.capability.Capabilities
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
@@ -56,15 +55,15 @@ class CameraViewModel(
         }
     }
 
-    fun reloadData(lastLensPosition: Int, lastZoomValue: Int) {
+    fun reloadData(lastLensPosition: Int? = null, lastZoomValue: Int? = null) {
         if (uiState.value.contentState.isLoading) {
             return
         }
 
         viewModelScope.launch {
             try {
-                setLastLensPosition.invoke(lastLensPosition)
-                setLastZoomValue.invoke(lastZoomValue)
+                lastLensPosition?.let { setLastLensPosition.invoke(it) }
+                lastZoomValue?.let { setLastZoomValue.invoke(it) }
                 val pixelNeighbourhood = getPixelNeighbourhood.invoke(Unit)
                 updateUiState {
                     it.copy(
@@ -148,8 +147,14 @@ class CameraViewModel(
         }
     }
 
-    fun setCameraCapabilities(capabilities: Capabilities?) {
-        updateUiState { it.copy(cameraCapabilities = capabilities) }
+    fun dismissErrorAndColor(onDismiss: (() -> Unit)? = null) {
+        updateUiState {
+            it.copy(
+                contentState = ContentState.CONTENT,
+                color = null
+            )
+        }
+        onDismiss?.invoke()
     }
 
     fun gotoInfo() =

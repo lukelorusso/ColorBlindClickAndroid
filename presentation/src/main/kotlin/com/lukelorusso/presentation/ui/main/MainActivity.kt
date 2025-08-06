@@ -14,7 +14,7 @@ import com.lukelorusso.presentation.R
 import com.lukelorusso.presentation.databinding.ActivityMainBinding
 import com.lukelorusso.presentation.extensions.*
 import com.lukelorusso.presentation.ui.base.SwipeViewPager
-import com.lukelorusso.presentation.ui.camera.CameraFragment
+import com.lukelorusso.presentation.ui.camera.CameraXFragment
 import com.lukelorusso.presentation.ui.history.HistoryFragment
 import com.lukelorusso.presentation.ui.info.InfoFragment
 import com.lukelorusso.presentation.ui.preview.PreviewDialogFragment
@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
             when (val f =
                 pagerAdapter.getItem(binding.viewPager.currentItem)) { // pick the current fragment
                 is InfoFragment -> if (!f.onBackPressHandled()) finish()
-                is CameraFragment -> if (!f.onBackPressHandled()) finish()
+                is CameraXFragment -> if (!f.onBackPressHandled()) finish()
                 is HistoryFragment -> if (!f.onBackPressHandled()) finish()
                 else -> finish()
             }
@@ -158,7 +158,7 @@ class MainActivity : AppCompatActivity() {
                         if (newPage != lastPage) {
                             val f = pagerAdapter.getItem(newPage)
                             (f as? HistoryFragment)?.reloadData()
-                            (f as? CameraFragment)?.reloadData()
+                            (f as? CameraXFragment)?.reloadData()
                         }
                         direction = when (newPage) {
                             0 ->

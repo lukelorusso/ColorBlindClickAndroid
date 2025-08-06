@@ -61,9 +61,9 @@ fun Preview(
 
                     Canvas(
                         modifier = Modifier
+                            .padding(64.dp)
                             .fillMaxWidth()
                             .aspectRatio(1f)
-                            .padding(64.dp)
                             .border(
                                 2.dp,
                                 colorResource(id = R.color.text_color),
@@ -83,15 +83,15 @@ fun Preview(
                         dimensionResource(id = R.dimen.color_picker_dimens_big).roundToPx()
                     }
 
-                    BottomToolBar(
+                    BottomToolbar(
                         colorModel = colorModel,
-                        shareText = {
+                        onTextClick = {
                             viewModel.shareText(
                                 text = description,
                                 popupLabel = textPopupLabel
                             )
                         },
-                        shareBitmap = {
+                        onColorClick = {
                             viewModel.shareBitmap(
                                 bitmap = createBitmap(
                                     size,
@@ -110,10 +110,10 @@ fun Preview(
 }
 
 @Composable
-private fun BottomToolBar(
+private fun BottomToolbar(
     colorModel: ColorModel,
-    shareText: () -> Unit,
-    shareBitmap: () -> Unit
+    onTextClick: () -> Unit,
+    onColorClick: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -131,7 +131,7 @@ private fun BottomToolBar(
         ) {
             Text(
                 modifier = Modifier
-                    .clickable(onClick = shareText),
+                    .clickable(onClick = onTextClick),
                 color = Color.White,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.W500,
@@ -144,7 +144,7 @@ private fun BottomToolBar(
 
             Text(
                 modifier = Modifier
-                    .clickable(onClick = shareText),
+                    .clickable(onClick = onTextClick),
                 color = Color.White,
                 fontSize = 14.sp,
                 maxLines = 1,
@@ -156,7 +156,7 @@ private fun BottomToolBar(
 
             Text(
                 modifier = Modifier
-                    .clickable(onClick = shareText),
+                    .clickable(onClick = onTextClick),
                 color = Color.White,
                 fontSize = 14.sp,
                 maxLines = 1,
@@ -167,7 +167,7 @@ private fun BottomToolBar(
 
         FAB(
             painter = painterResource(id = R.drawable.share_white),
-            onClick = shareBitmap
+            onClick = onColorClick
         )
     }
 }
