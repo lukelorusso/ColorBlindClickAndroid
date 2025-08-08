@@ -2,7 +2,5 @@
 <resources>
 
     <integer name="splash_screen_duration">500</integer>
-    <integer name="fading_effect_duration_default">400</integer>
-    <integer name="fading_effect_duration_fast">150</integer>
 
 </resources>

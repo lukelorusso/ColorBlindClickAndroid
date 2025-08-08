@@ -14,7 +14,7 @@ import com.lukelorusso.presentation.R
 import com.lukelorusso.presentation.databinding.ActivityMainBinding
 import com.lukelorusso.presentation.extensions.*
 import com.lukelorusso.presentation.ui.base.SwipeViewPager
-import com.lukelorusso.presentation.ui.camera.CameraXFragment
+import com.lukelorusso.presentation.ui.capture.CaptureFragment
 import com.lukelorusso.presentation.ui.history.HistoryFragment
 import com.lukelorusso.presentation.ui.info.InfoFragment
 import com.lukelorusso.presentation.ui.preview.PreviewDialogFragment
@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
             when (val f =
                 pagerAdapter.getItem(binding.viewPager.currentItem)) { // pick the current fragment
                 is InfoFragment -> if (!f.onBackPressHandled()) finish()
-                is CameraXFragment -> if (!f.onBackPressHandled()) finish()
+                is CaptureFragment -> if (!f.onBackPressHandled()) finish()
                 is HistoryFragment -> if (!f.onBackPressHandled()) finish()
                 else -> finish()
             }
@@ -115,10 +115,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    @Suppress("SameParameterValue")
-    private fun isPageVisible(position: Int): Boolean =
-        !isBrokenViewVisible() && binding.viewPager.currentItem == position
-
     private fun isBrokenViewVisible(): Boolean =
         binding.brokenScreen.root.visibility == View.VISIBLE
                 && binding.viewPager.visibility == View.GONE
@@ -158,7 +154,7 @@ class MainActivity : AppCompatActivity() {
                         if (newPage != lastPage) {
                             val f = pagerAdapter.getItem(newPage)
                             (f as? HistoryFragment)?.reloadData()
-                            (f as? CameraXFragment)?.reloadData()
+                            (f as? CaptureFragment)?.reloadData()
                         }
                         direction = when (newPage) {
                             0 ->

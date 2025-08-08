@@ -1,4 +1,4 @@
-package com.lukelorusso.presentation.ui.camera
+package com.lukelorusso.presentation.ui.capture
 
 import androidx.lifecycle.viewModelScope
 import com.lukelorusso.domain.usecase.*
@@ -12,7 +12,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import com.lukelorusso.domain.model.Color as ColorModel
 
-class CameraViewModel(
+class CaptureViewModel(
     private val trackerHelper: TrackerHelper,
     private val getLastLensPosition: GetLastLensPositionUseCase,
     private val setLastLensPosition: SetLastLensPositionUseCase,
@@ -20,9 +20,9 @@ class CameraViewModel(
     private val setLastZoomValue: SetLastZoomValueUseCase,
     private val getPixelNeighbourhood: GetPixelNeighbourhoodUseCase,
     private val decodeColorHex: DecodeColorHexUseCase
-) : AppViewModel<CameraUiState>() {
-    override val _uiState = MutableStateFlow(CameraUiState())
-    override val router = CameraRouter()
+) : AppViewModel<CaptureUiState>() {
+    override val _uiState = MutableStateFlow(CaptureUiState())
+    override val router = CaptureRouter()
     private val json = Json { ignoreUnknownKeys = true }
 
     init {

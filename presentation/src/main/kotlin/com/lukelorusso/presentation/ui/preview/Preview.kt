@@ -1,10 +1,9 @@
 package com.lukelorusso.presentation.ui.preview
 
-import androidx.compose.foundation.*
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -12,18 +11,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.*
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.lukelorusso.presentation.R
 import com.lukelorusso.presentation.error.ErrorMessageFactory
 import com.lukelorusso.presentation.extensions.*
 import com.lukelorusso.presentation.ui.base.BottomSheetUpperLine
-import com.lukelorusso.presentation.ui.base.FAB
 import com.lukelorusso.presentation.ui.error.ErrorAlertDialog
-import com.lukelorusso.domain.model.Color as ColorModel
 
 @Composable
 fun Preview(
@@ -106,68 +100,5 @@ fun Preview(
                 }
             }
         }
-    }
-}
-
-@Composable
-private fun BottomToolbar(
-    colorModel: ColorModel,
-    onTextClick: () -> Unit,
-    onColorClick: () -> Unit
-) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(
-                    color = colorResource(id = R.color.black_50),
-                    shape = RoundedCornerShape(16.dp, 16.dp)
-                )
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                modifier = Modifier
-                    .clickable(onClick = onTextClick),
-                color = Color.White,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.W500,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                text = colorModel.colorName
-            )
-
-            Spacer(modifier = Modifier.height(2.dp))
-
-            Text(
-                modifier = Modifier
-                    .clickable(onClick = onTextClick),
-                color = Color.White,
-                fontSize = 14.sp,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                text = colorModel.originalColorHex()
-            )
-
-            Spacer(modifier = Modifier.height(2.dp))
-
-            Text(
-                modifier = Modifier
-                    .clickable(onClick = onTextClick),
-                color = Color.White,
-                fontSize = 14.sp,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                text = colorModel.toRGBPercentString()
-            )
-        }
-
-        FAB(
-            painter = painterResource(id = R.drawable.share_white),
-            onClick = onColorClick
-        )
     }
 }

@@ -1,4 +1,4 @@
-package com.lukelorusso.presentation.ui.camera
+package com.lukelorusso.presentation.ui.capture
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,8 +14,8 @@ import com.lukelorusso.presentation.ui.theme.AppTheme
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class CameraXFragment : Fragment() {
-    private val viewModel: CameraViewModel by viewModel()
+class CaptureFragment : Fragment() {
+    private val viewModel: CaptureViewModel by viewModel()
     private val errorMessageFactory by inject<ErrorMessageFactory>()
 
     fun onBackPressHandled(): Boolean {
@@ -53,7 +53,7 @@ class CameraXFragment : Fragment() {
     ): View = ComposeView(context = requireContext()).apply {
         setContent {
             AppTheme {
-                CameraX(
+                Capture(
                     viewModel = viewModel,
                     errorMessageFactory = errorMessageFactory
                 )
@@ -79,6 +79,6 @@ class CameraXFragment : Fragment() {
     companion object {
         val TAG: String = this::class.java.simpleName
 
-        fun newInstance(): CameraXFragment = CameraXFragment()
+        fun newInstance(): CaptureFragment = CaptureFragment()
     }
 }

@@ -22,7 +22,6 @@ kotlinx-serialization-json = "1.7.3"
 paper-db = "2.7.2"
 retrofit = "2.11.0"
 timber = "5.0.1"
-verticalseekbar = "1.2.7"
 
 [libraries]
 androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "androidx-camerax" }
@@ -54,7 +53,6 @@ paper-db = { group = "io.github.pilgr", name = "paperdb", version.ref = "paper-d
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 retrofit-converter-kotlinx-serialization = { group = "com.squareup.retrofit2", name = "converter-kotlinx-serialization", version.ref = "retrofit" }
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
-verticalseekbar = { group = "com.github.lukelorusso", name = "VerticalSeekBar", version.ref = "verticalseekbar" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-gradle-plugin" }
@@ -106,8 +104,7 @@ presentation = [
     "koin-core",
     "koin-androidx-viewmodel",
     "paper-db",
-    "timber",
-    "verticalseekbar"
+    "timber"
 ]
 presentation-test = [
     "junit",
