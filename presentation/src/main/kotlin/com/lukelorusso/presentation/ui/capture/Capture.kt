@@ -120,7 +120,7 @@ fun Capture(
                 onInfoSelected = viewModel::gotoInfo,
                 onShutterSelected = {
                     previewView?.bitmap?.let { bitmap ->
-                        val pixel = bitmap.getAveragePixel(viewModel.uiState.value.pixelNeighbourhood)
+                        val pixel = bitmap.getCentralColor(viewModel.uiState.value.pixelNeighbourhood)
                         viewModel.decodeColor(pixel.pixelColorToHash())
                     }
                 },
