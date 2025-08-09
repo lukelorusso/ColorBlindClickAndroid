@@ -13,7 +13,7 @@ import org.koin.java.KoinJavaComponent.inject
 abstract class UseCase<in Params, out Result>(
     open val logResult: Boolean = true
 ) {
-    private val logger by inject(Logger::class.java)
+    private val logger: Logger by inject(Logger::class.java)
     protected abstract suspend fun run(param: Params): Result
 
     /**

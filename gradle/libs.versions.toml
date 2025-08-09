@@ -1,5 +1,5 @@
 [versions]
-android-gradle-plugin = "8.6.1"
+android-gradle-plugin = "8.11.1"
 android-compileSdk = "35"
 android-minSdk = "23"
 androidx-camerax = "1.4.2"
@@ -12,15 +12,15 @@ google-android-material = "1.12.0"
 google-firebase-analytics = "23.0.0"
 google-firebase-core = "21.1.1"
 google-firebase-crashlytics = "20.0.0"
-google-firebase-crashlytics-plugin = "3.0.5"
+google-firebase-crashlytics-plugin = "3.0.6"
 google-services-plugin = "4.4.3"
 junit = "4.13.2"
-okhttp3 = "4.12.0"
-koin = "2.2.3"
-kotlin = "2.1.21"
-kotlinx-serialization-json = "1.7.3"
+okhttp3 = "5.1.0"
+koin = "4.1.0"
+kotlin = "2.2.0"
+kotlinx-serialization-json = "1.9.0"
 paper-db = "2.7.2"
-retrofit = "2.11.0"
+retrofit = "3.0.0"
 timber = "5.0.1"
 
 [libraries]
@@ -43,7 +43,7 @@ google-firebase-analytics = { group = "com.google.firebase", name = "firebase-an
 google-firebase-core = { group = "com.google.firebase", name = "firebase-core", version.ref = "google-firebase-core" }
 google-firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics", version.ref = "google-firebase-crashlytics" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
-koin-androidx-viewmodel = { group = "io.insert-koin", name = "koin-androidx-viewmodel", version.ref = "koin" }
+koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
 koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
 koin-test = { group = "io.insert-koin", name = "koin-test", version.ref = "koin" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
@@ -100,9 +100,9 @@ presentation = [
     "google-firebase-analytics",
     "google-firebase-core",
     "google-firebase-crashlytics",
-    "kotlinx-serialization-json",
+    "koin-android",
     "koin-core",
-    "koin-androidx-viewmodel",
+    "kotlinx-serialization-json",
     "paper-db",
     "timber"
 ]

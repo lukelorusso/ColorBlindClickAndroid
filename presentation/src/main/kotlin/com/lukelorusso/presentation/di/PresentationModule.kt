@@ -10,7 +10,7 @@ import com.lukelorusso.presentation.ui.history.HistoryViewModel
 import com.lukelorusso.presentation.ui.info.InfoViewModel
 import com.lukelorusso.presentation.ui.preview.PreviewViewModel
 import com.lukelorusso.presentation.ui.settings.SettingsViewModel
-import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 /**
