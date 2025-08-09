@@ -2,9 +2,10 @@ package com.lukelorusso.presentation.ui.history
 
 import androidx.lifecycle.viewModelScope
 import com.lukelorusso.domain.usecase.*
+import com.lukelorusso.presentation.extensions.matchSearch
 import com.lukelorusso.presentation.helper.TrackerHelper
 import com.lukelorusso.presentation.ui.base.*
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -20,6 +21,12 @@ class HistoryViewModel(
     override val router = HistoryRouter()
     private val json = Json { ignoreUnknownKeys = true }
     private val loadBouncer = Bouncer(BOUNCE_DELAY_IN_MILLIS)
+    val filteredColors: Flow<List<ColorModel>>
+        get() = uiState.map { uiState ->
+            uiState.colorList.filter { item ->
+                item.toString().matchSearch(uiState.searchText)
+            }
+        }
 
     init {
         loadData()
@@ -116,6 +123,7 @@ class HistoryViewModel(
 
     fun toggleSearchingMode(value: Boolean) {
         updateUiState { it.copy(isSearchingMode = value) }
+        if (!value) updateUiState { it.copy(searchText = "") }
     }
 
     fun updateSearchText(newText: String) {

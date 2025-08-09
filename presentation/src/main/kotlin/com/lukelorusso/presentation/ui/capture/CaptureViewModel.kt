@@ -1,4 +1,4 @@
-package com.lukelorusso.presentation.ui.camera
+package com.lukelorusso.presentation.ui.capture
 
 import androidx.lifecycle.viewModelScope
 import com.lukelorusso.domain.usecase.*
@@ -6,14 +6,13 @@ import com.lukelorusso.presentation.extensions.getDeviceUdid
 import com.lukelorusso.presentation.helper.TrackerHelper
 import com.lukelorusso.presentation.ui.base.AppViewModel
 import com.lukelorusso.presentation.ui.base.ContentState
-import io.fotoapparat.capability.Capabilities
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import com.lukelorusso.domain.model.Color as ColorModel
 
-class CameraViewModel(
+class CaptureViewModel(
     private val trackerHelper: TrackerHelper,
     private val getLastLensPosition: GetLastLensPositionUseCase,
     private val setLastLensPosition: SetLastLensPositionUseCase,
@@ -21,9 +20,9 @@ class CameraViewModel(
     private val setLastZoomValue: SetLastZoomValueUseCase,
     private val getPixelNeighbourhood: GetPixelNeighbourhoodUseCase,
     private val decodeColorHex: DecodeColorHexUseCase
-) : AppViewModel<CameraUiState>() {
-    override val _uiState = MutableStateFlow(CameraUiState())
-    override val router = CameraRouter()
+) : AppViewModel<CaptureUiState>() {
+    override val _uiState = MutableStateFlow(CaptureUiState())
+    override val router = CaptureRouter()
     private val json = Json { ignoreUnknownKeys = true }
 
     init {
@@ -56,15 +55,15 @@ class CameraViewModel(
         }
     }
 
-    fun reloadData(lastLensPosition: Int, lastZoomValue: Int) {
+    fun reloadData(lastLensPosition: Int? = null, lastZoomValue: Int? = null) {
         if (uiState.value.contentState.isLoading) {
             return
         }
 
         viewModelScope.launch {
             try {
-                setLastLensPosition.invoke(lastLensPosition)
-                setLastZoomValue.invoke(lastZoomValue)
+                lastLensPosition?.let { setLastLensPosition.invoke(it) }
+                lastZoomValue?.let { setLastZoomValue.invoke(it) }
                 val pixelNeighbourhood = getPixelNeighbourhood.invoke(Unit)
                 updateUiState {
                     it.copy(
@@ -148,8 +147,14 @@ class CameraViewModel(
         }
     }
 
-    fun setCameraCapabilities(capabilities: Capabilities?) {
-        updateUiState { it.copy(cameraCapabilities = capabilities) }
+    fun dismissErrorAndColor(onDismiss: (() -> Unit)? = null) {
+        updateUiState {
+            it.copy(
+                contentState = ContentState.CONTENT,
+                color = null
+            )
+        }
+        onDismiss?.invoke()
     }
 
     fun gotoInfo() =

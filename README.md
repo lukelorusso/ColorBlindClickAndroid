@@ -21,11 +21,11 @@ In this project you can find
 
 * [Jetpack Compose UI](https://developer.android.com/compose)
 
+* [Jetpack CameraX](https://developer.android.com/media/camera/camerax) that provides a Camera PreviewView
+
 * [Koin](https://insert-koin.io/) for dependency injection
 
 * [Retrofit + Json](https://square.github.io/retrofit/) `kotlinx.serialization` to consume web services
-
-* [Fotoapparat API](https://github.com/RedApparat/Fotoapparat) that provide a safe CameraView
 
 * [Timber](https://github.com/JakeWharton/timber) for logging
 

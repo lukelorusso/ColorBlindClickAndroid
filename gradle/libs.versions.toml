@@ -2,10 +2,11 @@
 android-gradle-plugin = "8.6.1"
 android-compileSdk = "35"
 android-minSdk = "23"
-androidx-preference = "1.2.1"
+androidx-camerax = "1.4.2"
 androidx-compose = "1.8.3"
 androidx-compose-bom = '2025.07.00'
 androidx-compose-material-icons-extended = "1.7.8"
+androidx-preference = "1.2.1"
 androidx-lifecycle-runtime-compose = "2.9.2"
 google-android-material = "1.12.0"
 google-firebase-analytics = "23.0.0"
@@ -21,13 +22,17 @@ kotlinx-serialization-json = "1.7.3"
 paper-db = "2.7.2"
 retrofit = "2.11.0"
 timber = "5.0.1"
-verticalseekbar = "1.2.7"
 
 [libraries]
+androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "androidx-camerax" }
+androidx-camera-core = { module = "androidx.camera:camera-core", version.ref = "androidx-camerax" }
+androidx-camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "androidx-camerax" }
+androidx-camera-view = { group = "androidx.camera", name = "camera-view", version.ref = "androidx-camerax" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "androidx-compose-bom" }
 androidx-compose-fundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "androidx-compose" }
 androidx-compose-material = { group = "androidx.compose.material", name = "material", version.ref = "androidx-compose" }
 androidx-compose-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "androidx-compose-material-icons-extended" }
+androidx-compose-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "androidx-compose" }
 androidx-compose-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "androidx-compose" }
 androidx-compose-ui-android = { group = "androidx.compose.ui", name = "ui-android", version.ref = "androidx-compose" }
 androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "androidx-compose" }
@@ -48,7 +53,6 @@ paper-db = { group = "io.github.pilgr", name = "paperdb", version.ref = "paper-d
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 retrofit-converter-kotlinx-serialization = { group = "com.squareup.retrofit2", name = "converter-kotlinx-serialization", version.ref = "retrofit" }
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
-verticalseekbar = { group = "com.github.lukelorusso", name = "VerticalSeekBar", version.ref = "verticalseekbar" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-gradle-plugin" }
@@ -79,10 +83,15 @@ domain = [
     "kotlinx-serialization-json"
 ]
 presentation = [
+    "androidx-camera-camera2",
+    "androidx-camera-core",
+    "androidx-camera-lifecycle",
+    "androidx-camera-view",
     "androidx-compose-bom",
     "androidx-compose-fundation",
     "androidx-compose-material",
     "androidx-compose-material-icons-extended",
+    "androidx-compose-runtime-livedata",
     "androidx-compose-ui",
     "androidx-compose-ui-android",
     "androidx-compose-ui-tooling",
@@ -95,8 +104,7 @@ presentation = [
     "koin-core",
     "koin-androidx-viewmodel",
     "paper-db",
-    "timber",
-    "verticalseekbar"
+    "timber"
 ]
 presentation-test = [
     "junit",

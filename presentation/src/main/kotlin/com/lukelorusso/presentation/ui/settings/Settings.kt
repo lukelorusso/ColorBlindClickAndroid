@@ -1,7 +1,6 @@
 package com.lukelorusso.presentation.ui.settings
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
@@ -132,7 +131,7 @@ fun Settings(
                         }
                     }
 
-                    SettingLine(
+                    SettingRow(
                         text = stringResource(id = R.string.settings_save_camera_options),
                         onClick = { setSaveCameraOption(!uiState.saveCameraOptions) }
                     ) {
@@ -146,77 +145,6 @@ fun Settings(
                     }
                 }
             }
-        }
-    }
-}
-
-@Composable
-fun SettingColumn(
-    text: String,
-    onClick: (() -> Unit)? = null,
-    optionContent: @Composable (RowScope.() -> Unit)
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .run {
-                if (onClick != null) clickable(onClick = onClick)
-                else this
-            }
-    ) {
-        Text(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    start = 16.dp,
-                    top = 16.dp,
-                    end = 16.dp,
-                    bottom = 2.dp
-                ),
-            color = colorResource(id = R.color.text_color),
-            fontSize = 20.sp,
-            text = text
-        )
-
-        Row(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            optionContent()
-        }
-    }
-}
-
-@Composable
-fun SettingLine(
-    text: String,
-    onClick: (() -> Unit)? = null,
-    optionContent: @Composable (RowScope.() -> Unit)
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .run {
-                if (onClick != null) clickable(onClick = onClick)
-                else this
-            }
-    ) {
-        Text(
-            modifier = Modifier
-                .weight(1.2F)
-                .padding(16.dp),
-            color = colorResource(id = R.color.text_color),
-            fontSize = 20.sp,
-            text = text
-        )
-
-        Spacer(modifier = Modifier.width(5.dp))
-
-        Row(
-            modifier = Modifier
-                .weight(0.8F),
-            horizontalArrangement = Arrangement.End
-        ) {
-            optionContent()
         }
     }
 }

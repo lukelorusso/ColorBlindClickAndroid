@@ -4,7 +4,7 @@ import com.lukelorusso.domain.usecase.base.Logger
 import com.lukelorusso.presentation.error.ErrorMessageFactory
 import com.lukelorusso.presentation.helper.TrackerHelper
 import com.lukelorusso.presentation.logger.TimberLogger
-import com.lukelorusso.presentation.ui.camera.CameraViewModel
+import com.lukelorusso.presentation.ui.capture.CaptureViewModel
 import com.lukelorusso.presentation.ui.error.ErrorMessageFactoryImpl
 import com.lukelorusso.presentation.ui.history.HistoryViewModel
 import com.lukelorusso.presentation.ui.info.InfoViewModel
@@ -35,7 +35,7 @@ val presentationModule = module {
     //endregion
 
     //region ViewModel
-    viewModel { CameraViewModel(get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { CaptureViewModel(get(), get(), get(), get(), get(), get(), get()) }
     viewModel { HistoryViewModel(get(), get(), get(), get()) }
     viewModel { InfoViewModel(get(), get(), get(), get()) }
     viewModel { PreviewViewModel(get(), get()) }

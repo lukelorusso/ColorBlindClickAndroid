@@ -1,4 +1,4 @@
-package com.lukelorusso.presentation.ui.camera
+package com.lukelorusso.presentation.ui.capture
 
 import androidx.lifecycle.ViewModel
 import com.lukelorusso.domain.model.Color
@@ -10,14 +10,14 @@ import org.junit.Test
 import org.koin.core.component.KoinApiExtension
 import org.koin.core.component.get
 
-class CameraTest : AppTest() {
+class CaptureTest : AppTest() {
 
-    private lateinit var viewModel: CameraTestViewModel
+    private lateinit var viewModel: CaptureTestViewModel
 
     @KoinApiExtension
     @Before
     fun setup() {
-        viewModel = CameraTestViewModel(get())
+        viewModel = CaptureTestViewModel(get())
     }
 
     @Test
@@ -26,7 +26,7 @@ class CameraTest : AppTest() {
         assert(colorModel.originalColorHex() == "#52851E")
     }
 
-    class CameraTestViewModel(private val decodeColorHex: DecodeColorHexUseCase) : ViewModel() {
+    class CaptureTestViewModel(private val decodeColorHex: DecodeColorHexUseCase) : ViewModel() {
         suspend fun decodeColorHex(param: DecodeColorHexUseCase.Param): Color =
             decodeColorHex.invoke(param)
     }
