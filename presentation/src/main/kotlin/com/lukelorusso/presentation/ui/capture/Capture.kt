@@ -159,7 +159,7 @@ fun Capture(
                 modifier = Modifier
                     .align(Alignment.TopStart)
                     .padding(horizontal = 16.dp)
-                    .padding(top = 112.dp)
+                    .padding(top = 136.dp)
                     .size(FAB_DEFAULT_SIZE.dp),
                 painter = painterResource(id = R.drawable.gallery_white),
                 onClick = {
