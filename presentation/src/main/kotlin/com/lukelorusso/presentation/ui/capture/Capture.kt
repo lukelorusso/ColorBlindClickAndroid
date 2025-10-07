@@ -1,5 +1,6 @@
 package com.lukelorusso.presentation.ui.capture
 
+import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -30,6 +31,7 @@ import com.lukelorusso.presentation.error.ErrorMessageFactory
 import com.lukelorusso.presentation.extensions.*
 import com.lukelorusso.presentation.ui.base.FAB
 import com.lukelorusso.presentation.ui.base.FAB_DEFAULT_SIZE
+import com.lukelorusso.presentation.ui.imagepicker.ImagePickerActivity
 import timber.log.Timber
 import kotlin.math.roundToInt
 
@@ -48,7 +50,14 @@ fun Capture(
     var screenIntSize by remember { mutableStateOf(IntSize.Zero) }
     val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
-        onResult = { uri -> Timber.d("Image selected -> $uri") }
+        onResult = { uri ->
+            Timber.d("Image selected -> $uri")
+            uri?.let {
+                val intent = Intent(context, ImagePickerActivity::class.java)
+                intent.putExtra(ImagePickerActivity.EXTRA_URI, it)
+                context.startActivity(intent)
+            }
+        }
     )
 
     Surface {
