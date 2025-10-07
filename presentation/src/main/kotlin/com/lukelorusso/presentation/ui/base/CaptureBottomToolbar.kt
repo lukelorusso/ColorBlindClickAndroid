@@ -1,4 +1,4 @@
-package com.lukelorusso.presentation.ui.capture
+package com.lukelorusso.presentation.ui.base
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.*
@@ -21,11 +21,14 @@ import androidx.compose.ui.unit.sp
 import com.lukelorusso.presentation.R
 import com.lukelorusso.presentation.extensions.parseToColor
 import com.lukelorusso.presentation.extensions.toRGBPercentString
+import com.lukelorusso.presentation.ui.capture.ICON_BUTTON_PADDING
+import com.lukelorusso.presentation.ui.capture.ICON_BUTTON_SIZE
+import com.lukelorusso.presentation.ui.capture.ICON_SIZE
 import com.lukelorusso.domain.model.Color as ColorModel
 
 
 @Composable
-internal fun BottomToolbar(
+internal fun CaptureBottomToolbar(
     showShutterButton: Boolean = true,
     colorModel: ColorModel?,
     errorMessage: String?,

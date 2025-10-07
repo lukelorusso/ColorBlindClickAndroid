@@ -7,6 +7,7 @@ import com.lukelorusso.presentation.logger.TimberLogger
 import com.lukelorusso.presentation.ui.capture.CaptureViewModel
 import com.lukelorusso.presentation.ui.error.ErrorMessageFactoryImpl
 import com.lukelorusso.presentation.ui.history.HistoryViewModel
+import com.lukelorusso.presentation.ui.imagepicker.ImagePickerViewModel
 import com.lukelorusso.presentation.ui.info.InfoViewModel
 import com.lukelorusso.presentation.ui.preview.PreviewViewModel
 import com.lukelorusso.presentation.ui.settings.SettingsViewModel
@@ -40,5 +41,6 @@ val presentationModule = module {
     viewModel { InfoViewModel(get(), get(), get(), get()) }
     viewModel { PreviewViewModel(get(), get()) }
     viewModel { SettingsViewModel(get(), get(), get(), get()) }
+    viewModel { ImagePickerViewModel(get(), get(), get()) }
     //endregion
 }

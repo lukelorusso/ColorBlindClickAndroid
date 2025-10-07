@@ -30,6 +30,7 @@ class CaptureFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         viewModel.initRouter(
             requireActivity() as AppCompatActivity,
             fragment = this

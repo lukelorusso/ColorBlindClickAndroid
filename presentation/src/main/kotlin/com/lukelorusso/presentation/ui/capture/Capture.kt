@@ -29,6 +29,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.lukelorusso.presentation.R
 import com.lukelorusso.presentation.error.ErrorMessageFactory
 import com.lukelorusso.presentation.extensions.*
+import com.lukelorusso.presentation.ui.base.CaptureBottomToolbar
 import com.lukelorusso.presentation.ui.base.FAB
 import com.lukelorusso.presentation.ui.base.FAB_DEFAULT_SIZE
 import com.lukelorusso.presentation.ui.imagepicker.ImagePickerActivity
@@ -49,10 +50,12 @@ fun Capture(
     var camera by remember { mutableStateOf<Camera?>(null) }
     var previewView by remember { mutableStateOf<PreviewView?>(null) }
     var screenIntSize by remember { mutableStateOf(IntSize.Zero) }
+    var showPhotoPickerFAB by remember { mutableStateOf(true) }
     val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = { uri ->
             Timber.d("Image selected -> $uri")
+            showPhotoPickerFAB = true
             uri?.let {
                 val intent = Intent(context, ImagePickerActivity::class.java)
                 intent.putExtra(ImagePickerActivity.EXTRA_URI, it)
@@ -106,7 +109,7 @@ fun Capture(
             )
 
             if (screenIntSize != IntSize.Zero && zoomLevel != null) {
-                ZoomHandler(
+                CaptureZoomHandler(
                     screenIntSize = screenIntSize,
                     zoomLevel = zoomLevel,
                     onLevelChange = { viewModel.setLastZoomValue((it * 100).roundToInt()) }
@@ -118,7 +121,7 @@ fun Capture(
                 val isFlashOn = torchState?.value == TorchState.ON
                 val isNextCameraFront = lensFacing == CameraSelector.LENS_FACING_BACK
 
-                TopToolbar(
+                CaptureTopToolbar(
                     isNextCameraAvailable = previewView
                         ?.controller
                         ?.run { canSwitchToFront() || canSwitchToBack() }
@@ -134,7 +137,7 @@ fun Capture(
                 )
             }
 
-            BottomToolbar(
+            CaptureBottomToolbar(
                 showShutterButton = screenIntSize != IntSize.Zero,
                 colorModel = uiState.color,
                 errorMessage = uiState.contentState.error?.let(errorMessageFactory::getLocalizedMessage),
@@ -152,7 +155,7 @@ fun Capture(
                 onPreviewSelected = viewModel::gotoPreview
             )
 
-            FAB(
+            if (showPhotoPickerFAB) FAB(
                 modifier = Modifier
                     .align(Alignment.TopStart)
                     .padding(horizontal = 16.dp)
@@ -163,6 +166,7 @@ fun Capture(
                     singlePhotoPickerLauncher.launch(
                         PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                     )
+                    showPhotoPickerFAB = false
                 }
             )
         }

@@ -13,7 +13,7 @@ import com.lukelorusso.presentation.R
 
 
 @Composable
-internal fun TopToolbar(
+internal fun CaptureTopToolbar(
     isNextCameraAvailable: Boolean,
     isNextCameraFront: Boolean,
     isFlashAvailable: Boolean,
