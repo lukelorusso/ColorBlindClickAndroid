@@ -1,11 +1,16 @@
 package com.lukelorusso.presentation.ui.capture
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.*
 import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
 import androidx.compose.material.Surface
 import androidx.compose.runtime.*
@@ -23,6 +28,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.lukelorusso.presentation.R
 import com.lukelorusso.presentation.error.ErrorMessageFactory
 import com.lukelorusso.presentation.extensions.*
+import com.lukelorusso.presentation.ui.base.FAB
+import com.lukelorusso.presentation.ui.base.FAB_DEFAULT_SIZE
+import timber.log.Timber
 import kotlin.math.roundToInt
 
 val ICON_PADDING = 5.dp
@@ -38,6 +46,10 @@ fun Capture(
     var camera by remember { mutableStateOf<Camera?>(null) }
     var previewView by remember { mutableStateOf<PreviewView?>(null) }
     var screenIntSize by remember { mutableStateOf(IntSize.Zero) }
+    val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia(),
+        onResult = { uri -> Timber.d("Image selected -> $uri") }
+    )
 
     Surface {
         Box(
@@ -126,6 +138,20 @@ fun Capture(
                 },
                 onHistorySelected = viewModel::gotoHistory,
                 gotoPreview = viewModel::gotoPreview
+            )
+
+            FAB(
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .padding(horizontal = 16.dp)
+                    .padding(top = 112.dp)
+                    .size(FAB_DEFAULT_SIZE.dp),
+                painter = painterResource(id = R.drawable.gallery_white),
+                onClick = {
+                    singlePhotoPickerLauncher.launch(
+                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                    )
+                }
             )
         }
     }
