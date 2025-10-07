@@ -34,6 +34,7 @@ class ImagePickerViewModel(
 
         viewModelScope.launch {
             try {
+                trackerHelper.track(TrackerHelper.Action.GOTO_IMAGE_PICKER)
                 val pixelNeighbourhood = getPixelNeighbourhood.invoke(Unit)
                 updateUiState {
                     it.copy(
@@ -73,7 +74,7 @@ class ImagePickerViewModel(
                     )
                 }
             } catch (t: Throwable) {
-                trackerHelper.track(TrackerHelper.Actions.PERSISTENCE_EXCEPTION)
+                trackerHelper.track(TrackerHelper.Action.PERSISTENCE_EXCEPTION)
                 updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
             }
         }

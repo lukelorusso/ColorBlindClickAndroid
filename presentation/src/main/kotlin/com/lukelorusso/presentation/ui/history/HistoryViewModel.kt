@@ -7,7 +7,6 @@ import com.lukelorusso.presentation.helper.TrackerHelper
 import com.lukelorusso.presentation.ui.base.*
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import com.lukelorusso.domain.model.Color as ColorModel
 
@@ -54,7 +53,7 @@ class HistoryViewModel(
                 )
             }
         } catch (t: Throwable) {
-            trackerHelper.track(TrackerHelper.Actions.PERSISTENCE_EXCEPTION)
+            trackerHelper.track(TrackerHelper.Action.PERSISTENCE_EXCEPTION)
             updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
         }
     }
@@ -88,10 +87,10 @@ class HistoryViewModel(
         viewModelScope.launch {
             try {
                 deleteSavedColor.invoke(param)
-                trackerHelper.track(TrackerHelper.Actions.DELETED_ITEM)
+                trackerHelper.track(TrackerHelper.Action.DELETED_ITEM)
                 loadDataSuspend()
             } catch (t: Throwable) {
-                trackerHelper.track(TrackerHelper.Actions.PERSISTENCE_EXCEPTION)
+                trackerHelper.track(TrackerHelper.Action.PERSISTENCE_EXCEPTION)
                 updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
             }
         }
@@ -112,10 +111,10 @@ class HistoryViewModel(
         viewModelScope.launch {
             try {
                 deleteAllSavedColors.invoke(Unit)
-                trackerHelper.track(TrackerHelper.Actions.DELETED_ALL_ITEMS)
+                trackerHelper.track(TrackerHelper.Action.DELETED_ALL_ITEMS)
                 loadDataSuspend()
             } catch (t: Throwable) {
-                trackerHelper.track(TrackerHelper.Actions.PERSISTENCE_EXCEPTION)
+                trackerHelper.track(TrackerHelper.Action.PERSISTENCE_EXCEPTION)
                 updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
             }
         }

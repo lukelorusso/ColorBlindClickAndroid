@@ -17,7 +17,7 @@ fun View.screenshot(
         val bitmap = Bitmap.createBitmap(
             bounds.width.toInt(),
             bounds.height.toInt(),
-            Bitmap.Config.ARGB_8888,
+            Bitmap.Config.ARGB_8888
         )
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

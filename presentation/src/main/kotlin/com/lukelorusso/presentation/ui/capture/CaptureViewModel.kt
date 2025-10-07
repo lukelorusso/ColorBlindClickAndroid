@@ -102,7 +102,7 @@ class CaptureViewModel(
                     )
                 }
             } catch (t: Throwable) {
-                trackerHelper.track(TrackerHelper.Actions.PERSISTENCE_EXCEPTION)
+                trackerHelper.track(TrackerHelper.Action.PERSISTENCE_EXCEPTION)
                 updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
             }
         }
