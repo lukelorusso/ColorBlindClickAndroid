@@ -26,7 +26,7 @@ import com.lukelorusso.presentation.extensions.*
 import kotlin.math.roundToInt
 
 val ICON_PADDING = 5.dp
-val ICON_SIZE = 72.dp
+val ICON_SIZE = 62.dp
 
 @Composable
 fun Capture(

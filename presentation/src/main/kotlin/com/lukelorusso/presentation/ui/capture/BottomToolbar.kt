@@ -64,8 +64,8 @@ internal fun BottomToolbar(
         ) {
             IconButton(
                 modifier = Modifier
-                    .size(ICON_SIZE)
-                    .padding(ICON_PADDING),
+                    .padding(ICON_PADDING)
+                    .size(ICON_SIZE),
                 onClick = onInfoSelected
             ) {
                 Icon(
@@ -74,22 +74,22 @@ internal fun BottomToolbar(
                 )
             }
 
-            val shutterSize = 80.dp
+            val shutterSize = 60.dp
             val shutterPadding = 5.dp
             if (isLoading) {
-                val differenceInDp = 5.dp
+                val differenceInDp = 6.dp
                 CircularProgressIndicator(
                     modifier = Modifier
-                        .size(shutterSize - differenceInDp)
-                        .padding(shutterPadding + differenceInDp),
+                        .padding(shutterPadding)
+                        .size(shutterSize - differenceInDp),
                     color = colorResource(id = R.color.color_accent)
                 )
             } else {
                 AnimatedVisibility(screenIntSize != IntSize.Zero) {
                     IconButton(
                         modifier = Modifier
-                            .size(shutterSize)
-                            .padding(shutterPadding),
+                            .padding(shutterPadding)
+                            .size(shutterSize),
                         onClick = onShutterSelected
                     ) {
                         Icon(
@@ -102,8 +102,8 @@ internal fun BottomToolbar(
 
             IconButton(
                 modifier = Modifier
-                    .size(ICON_SIZE)
-                    .padding(ICON_PADDING),
+                    .padding(ICON_PADDING)
+                    .size(ICON_SIZE),
                 onClick = onHistorySelected
             ) {
                 Icon(

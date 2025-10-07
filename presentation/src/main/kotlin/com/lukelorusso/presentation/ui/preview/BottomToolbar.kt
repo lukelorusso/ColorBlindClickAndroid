@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.sp
 import com.lukelorusso.presentation.R
 import com.lukelorusso.presentation.extensions.toRGBPercentString
 import com.lukelorusso.presentation.ui.base.FAB
+import com.lukelorusso.presentation.ui.base.FAB_DEFAULT_SIZE
 import com.lukelorusso.domain.model.Color as ColorModel
 
 
@@ -78,6 +79,10 @@ internal fun BottomToolbar(
         }
 
         FAB(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(16.dp)
+                .size(FAB_DEFAULT_SIZE.dp),
             painter = painterResource(id = R.drawable.share_white),
             onClick = onColorClick
         )

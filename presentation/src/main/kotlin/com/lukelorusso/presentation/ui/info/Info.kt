@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.*
 import androidx.compose.ui.unit.dp
@@ -14,7 +15,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.lukelorusso.presentation.R
 import com.lukelorusso.presentation.error.ErrorMessageFactory
 import com.lukelorusso.presentation.ui.base.FAB
-import com.lukelorusso.presentation.ui.base.FAB_SIZE
+import com.lukelorusso.presentation.ui.base.FAB_DEFAULT_SIZE
 import com.lukelorusso.presentation.ui.error.ErrorAlertDialog
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -84,11 +85,15 @@ fun Info(
                 }
 
                 item {
-                    Spacer(modifier = Modifier.height(FAB_SIZE.dp))
+                    Spacer(modifier = Modifier.height(FAB_DEFAULT_SIZE.dp))
                 }
             }
 
             FAB(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(16.dp)
+                    .size(FAB_DEFAULT_SIZE.dp),
                 painter = painterResource(id = R.drawable.camera_white),
                 onClick = viewModel::gotoCamera
             )

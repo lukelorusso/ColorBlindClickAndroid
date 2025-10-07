@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.res.*
@@ -163,11 +164,15 @@ fun History(
                 }
 
                 item {
-                    Spacer(modifier = Modifier.height(FAB_SIZE.dp))
+                    Spacer(modifier = Modifier.height(FAB_DEFAULT_SIZE.dp))
                 }
             }
 
             FAB(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(16.dp)
+                    .size(FAB_DEFAULT_SIZE.dp),
                 painter = painterResource(id = R.drawable.camera_white),
                 onClick = viewModel::gotoCamera
             )
