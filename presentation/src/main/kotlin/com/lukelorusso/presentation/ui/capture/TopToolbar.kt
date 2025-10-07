@@ -37,8 +37,8 @@ internal fun TopToolbar(
             if (isNextCameraAvailable) {
                 IconButton(
                     modifier = Modifier
-                        .padding(ICON_PADDING)
-                        .size(ICON_SIZE),
+                        .padding(ICON_BUTTON_PADDING)
+                        .size(ICON_BUTTON_SIZE),
                     onClick = onNextCameraSelected
                 ) {
                     Icon(
@@ -54,8 +54,8 @@ internal fun TopToolbar(
             if (isFlashAvailable) {
                 IconButton(
                     modifier = Modifier
-                        .padding(ICON_PADDING)
-                        .size(ICON_SIZE),
+                        .padding(ICON_BUTTON_PADDING)
+                        .size(ICON_BUTTON_SIZE),
                     onClick = onFlashSelected
                 ) {
                     Icon(

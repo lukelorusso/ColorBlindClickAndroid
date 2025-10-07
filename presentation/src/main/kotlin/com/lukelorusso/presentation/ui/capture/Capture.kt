@@ -35,8 +35,9 @@ import com.lukelorusso.presentation.ui.imagepicker.ImagePickerActivity
 import timber.log.Timber
 import kotlin.math.roundToInt
 
-val ICON_PADDING = 5.dp
-val ICON_SIZE = 62.dp
+val ICON_BUTTON_PADDING = 5.dp
+val ICON_BUTTON_SIZE = 62.dp
+val ICON_SIZE = 40.dp
 
 @Composable
 fun Capture(
@@ -134,19 +135,21 @@ fun Capture(
             }
 
             BottomToolbar(
-                screenIntSize = screenIntSize,
+                showShutterButton = screenIntSize != IntSize.Zero,
                 colorModel = uiState.color,
                 errorMessage = uiState.contentState.error?.let(errorMessageFactory::getLocalizedMessage),
                 isLoading = uiState.contentState.isLoading,
-                onInfoSelected = viewModel::gotoInfo,
+                leftButtonPainter = painterResource(id = R.drawable.info_outline_white),
+                onLeftButtonSelected = viewModel::gotoInfo,
+                rightButtonPainter = painterResource(id = R.drawable.history_big_white),
+                onRightButtonSelected = viewModel::gotoHistory,
                 onShutterSelected = {
                     previewView?.bitmap?.let { bitmap ->
                         val pixel = bitmap.getCentralColor(viewModel.uiState.value.pixelNeighbourhood)
                         viewModel.decodeColor(pixel.pixelColorToHash())
                     }
                 },
-                onHistorySelected = viewModel::gotoHistory,
-                gotoPreview = viewModel::gotoPreview
+                onPreviewSelected = viewModel::gotoPreview
             )
 
             FAB(

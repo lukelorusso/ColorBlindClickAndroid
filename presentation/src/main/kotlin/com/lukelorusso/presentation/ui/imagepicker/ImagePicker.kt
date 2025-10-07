@@ -2,20 +2,22 @@ package com.lukelorusso.presentation.ui.imagepicker
 
 import android.net.Uri
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.AsyncImagePainter.State.Loading
 import coil.compose.rememberAsyncImagePainter
 import com.lukelorusso.presentation.R
-import com.lukelorusso.presentation.ui.base.FAB
-import com.lukelorusso.presentation.ui.base.FAB_DEFAULT_SIZE
+import com.lukelorusso.presentation.ui.capture.BottomToolbar
 import com.lukelorusso.zoomableimagebox.ui.view.ZoomableImageBox
 
 
@@ -31,37 +33,47 @@ internal fun ImagePicker(uri: Uri) {
     )
 
     Surface {
-        /**
-         * The [key] is a workaround to trigger the recomposition of the manipulator
-         */
-        key(resetKey) {
-            ImageManipulator(
-                painter = painter,
-                onGestureDetected = { showResetButton = true }
-            )
-        }
-
-        if (isLoading) Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            CircularProgressIndicator(
-                modifier = Modifier
-                    .size(60.dp)
-                    .padding(15.dp)
-            )
-        }
-
-        if (showResetButton) FAB(
+        Box(
             modifier = Modifier
-                .padding(16.dp)
-                .size(FAB_DEFAULT_SIZE.dp),
-            painter = painterResource(id = R.drawable.camera_white),
-            onClick = {
+                .fillMaxSize()
+                .background(colorResource(id = R.color.fragment_background)),
+            contentAlignment = Alignment.Center
+        ) {
+            /**
+             * The [key] is a workaround to trigger the recomposition of the manipulator
+             */
+            key(resetKey) {
+                ImageManipulator(
+                    painter = painter,
+                    onGestureDetected = { showResetButton = true }
+                )
+            }
+
+            Icon(
+                painter = painterResource(id = R.drawable.viewfinder),
+                contentDescription = null
+            )
+
+            val onRightButtonSelected: (() -> Unit)? = if (showResetButton) ({
                 resetKey++
                 showResetButton = false
-            }
-        )
+            }) else null
+
+            BottomToolbar(
+                showShutterButton = true,
+                colorModel = null, // TODO
+                errorMessage = null, // TODO
+                isLoading = isLoading,
+                rightButtonImageVector = Icons.Default.Refresh,
+                onRightButtonSelected = onRightButtonSelected,
+                onShutterSelected = {
+                    // TODO
+                },
+                onPreviewSelected = {
+                    // TODO
+                }
+            )
+        }
     }
 }
 
