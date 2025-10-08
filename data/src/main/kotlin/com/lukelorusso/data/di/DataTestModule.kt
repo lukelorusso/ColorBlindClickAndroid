@@ -4,9 +4,11 @@ import com.lukelorusso.data.datasource.*
 import com.lukelorusso.data.datasource.impl.DatabaseDataSourceTestImpl
 import com.lukelorusso.data.datasource.impl.SharedPrefDataSourceTestImpl
 import com.lukelorusso.data.extensions.api
-import com.lukelorusso.data.mapper.ColorMapper
+import com.lukelorusso.data.mapper.SaveDevMapper
+import com.lukelorusso.data.mapper.TheColorMapper
 import com.lukelorusso.data.net.OkHttpClientFactory
-import com.lukelorusso.data.net.RetrofitFactory
+import com.lukelorusso.data.net.SaveDevRetrofitFactory
+import com.lukelorusso.data.net.TheColorRetrofitFactory
 import com.lukelorusso.data.repository.*
 import com.lukelorusso.domain.repository.*
 import kotlinx.serialization.json.Json
@@ -23,17 +25,27 @@ val dataTestModule = module {
     //region Net
     factory { HttpManager() }
     factory { OkHttpClientFactory() }
-    factory { RetrofitFactory.getRetrofitBuilder(get(), get()) }
+    factory { SaveDevRetrofitFactory.getRetrofitBuilder(get(), get()) }
+    factory { TheColorRetrofitFactory.getRetrofitBuilder(get(), get()) }
     //endregion
 
     //region Mapper
     factory<Json> { Json { ignoreUnknownKeys = true } }
-    factory { ColorMapper() }
+    factory { SaveDevMapper() }
+    factory { TheColorMapper() }
     //endregion
 
     //region Repository
-    factory<ColorRepository> {
-        ColorRepositoryImpl(
+    factory<SaveDevRepository> {
+        SaveDevRepositoryImpl(
+            (get() as Retrofit).api(),
+            get(),
+            get(),
+            get()
+        )
+    }
+    factory<TheColorRepository> {
+        TheColorRepositoryImpl(
             (get() as Retrofit).api(),
             get(),
             get(),

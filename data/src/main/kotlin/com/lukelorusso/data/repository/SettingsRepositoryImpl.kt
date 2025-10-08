@@ -2,6 +2,7 @@ package com.lukelorusso.data.repository
 
 import com.lukelorusso.data.datasource.PersistenceManager
 import com.lukelorusso.domain.repository.SettingsRepository
+import java.util.Locale
 
 class SettingsRepositoryImpl(
     private val persistenceManager: PersistenceManager
@@ -28,35 +29,31 @@ class SettingsRepositoryImpl(
         }
     }
 
-    /**
-     * Back camera = 0; Front camera = 1
-     */
     override fun getLastLensPosition(): Int {
         return persistenceManager.loadLastLensPosition()
     }
 
-    /**
-     * First, check if the user wants to save the camera options
-     */
     override fun setLastLensPosition(position: Int) {
         if (persistenceManager.loadSaveCameraOptions()) {
             persistenceManager.persistLastLensPosition(position)
         }
     }
 
-    /**
-     * Min zoom value = 0; Max zoom value = 100
-     */
     override fun getLastZoomValue(): Int {
         return persistenceManager.loadLastZoomValue()
     }
 
-    /**
-     * First, check if the user wants to save the camera options
-     */
     override fun setLastZoomValue(position: Int) {
         if (persistenceManager.loadSaveCameraOptions()) {
             persistenceManager.persistLastZoomValue(position)
         }
+    }
+
+    override fun getDeviceLanguage(): String {
+        val language = Locale.getDefault().language
+        if (!APP_SUPPORTED_LANGUAGES.contains(language)) {
+            return APP_SUPPORTED_LANGUAGES[0]
+        }
+        return language
     }
 }

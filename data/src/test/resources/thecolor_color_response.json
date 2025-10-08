@@ -1,0 +1,84 @@
+{
+  "hex": {
+    "value": "#2AB564",
+    "clean": "2AB564"
+  },
+  "rgb": {
+    "fraction": {
+      "r": 0.164705882352941,
+      "g": 0.709803921568628,
+      "b": 0.392156862745098
+    },
+    "r": 42,
+    "g": 181,
+    "b": 100,
+    "value": "rgb(42, 181, 100)"
+  },
+  "hsl": {
+    "fraction": {
+      "h": 0.402877697841727,
+      "s": 0.623318385650224,
+      "l": 0.437254901960784
+    },
+    "h": 145,
+    "s": 62,
+    "l": 44,
+    "value": "hsl(145, 62%, 44%)"
+  },
+  "hsv": {
+    "fraction": {
+      "h": 0.402877697841727,
+      "s": 0.767955801104972,
+      "v": 0.709803921568628
+    },
+    "value": "hsv(145, 77%, 71%)",
+    "h": 145,
+    "s": 77,
+    "v": 71
+  },
+  "name": {
+    "value": "Jungle Green",
+    "closest_named_hex": "#29AB87",
+    "exact_match_name": false,
+    "distance": 1744
+  },
+  "cmyk": {
+    "fraction": {
+      "c": 0.767955801104972,
+      "m": 0,
+      "y": 0.447513812154696,
+      "k": 0.290196078431373
+    },
+    "value": "cmyk(77, 0, 45, 29)",
+    "c": 77,
+    "m": 0,
+    "y": 45,
+    "k": 29
+  },
+  "XYZ": {
+    "fraction": {
+      "X": 0.392534901960784,
+      "Y": 0.570981960784314,
+      "Z": 0.460532549019608
+    },
+    "value": "XYZ(39, 57, 46)",
+    "X": 39,
+    "Y": 57,
+    "Z": 46
+  },
+  "image": {
+    "bare": "https://www.thecolorapi.com/id?format=svg&named=false&hex=2AB564",
+    "named": "https://www.thecolorapi.com/id?format=svg&hex=2AB564"
+  },
+  "contrast": {
+    "value": "#000000"
+  },
+  "_links": {
+    "self": {
+      "href": "/id?hex=2AB564"
+    }
+  },
+  "_embedded": {
+
+  }
+}

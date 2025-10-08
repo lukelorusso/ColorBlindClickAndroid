@@ -1,38 +1,27 @@
 package com.lukelorusso.data.repository
 
-import com.lukelorusso.data.net.RetrofitFactory.COLOR_BLIND_SITE_ABOUT_ME
-import com.lukelorusso.data.net.RetrofitFactory.COLOR_BLIND_SITE_HELP
-import com.lukelorusso.data.net.RetrofitFactory.COLOR_BLIND_SITE_HOME
+import com.lukelorusso.data.net.SaveDevRetrofitFactory
+import com.lukelorusso.data.net.TheColorRetrofitFactory
 import com.lukelorusso.domain.repository.InfoRepository
-import java.util.*
 
 class InfoRepositoryImpl : InfoRepository {
-    override fun getHelpUrl(): String {
-        return String.format(
-            COLOR_BLIND_SITE_HELP,
-            getDeviceLanguage()
+    override fun getHelpUrl(deviceLanguage: String): String =
+        if (deviceLanguage == "en") TheColorRetrofitFactory.WEBSITE_HELP
+        else String.format(
+            SaveDevRetrofitFactory.WEBSITE_HELP,
+            deviceLanguage
         )
-    }
 
-    override fun getHomeUrl(): String {
-        return String.format(
-            COLOR_BLIND_SITE_HOME,
-            getDeviceLanguage()
+    override fun getHomeUrl(deviceLanguage: String): String =
+        if (deviceLanguage == "en") TheColorRetrofitFactory.WEBSITE
+        else String.format(
+            SaveDevRetrofitFactory.WEBSITE_HOME,
+            deviceLanguage
         )
-    }
 
-    override fun getAboutMeUrl(): String {
-        return String.format(
-            COLOR_BLIND_SITE_ABOUT_ME,
-            getDeviceLanguage()
-        )
-    }
+    override fun getAboutMeUrl(): String =
+        WEBSITE_ABOUT_ME
 
-    private fun getDeviceLanguage(): String {
-        val language = Locale.getDefault().language
-        if (!APP_SUPPORTED_LANGUAGES.contains(language)) {
-            return APP_SUPPORTED_LANGUAGES[0]
-        }
-        return language
-    }
+    override fun getStoreUrl(): String =
+        GOOGLE_PLAY_STORE_URL
 }

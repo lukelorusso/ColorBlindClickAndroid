@@ -68,7 +68,7 @@ fun Preview(
                         }
                     )
 
-                    val description = (stringResource(id = R.string.credits) + " " + uiState.homeUrl).let { credits ->
+                    val description = (stringResource(id = R.string.credits) + " " + uiState.storeUrl).let { credits ->
                         colorModel.sharableDescription(credits)
                     }
                     val textPopupLabel = stringResource(id = R.string.choose_an_app)
