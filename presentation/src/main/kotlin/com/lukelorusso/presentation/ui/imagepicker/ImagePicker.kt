@@ -2,6 +2,7 @@ package com.lukelorusso.presentation.ui.imagepicker
 
 import android.net.Uri
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -23,6 +24,9 @@ import com.lukelorusso.presentation.extensions.pixelColorToHash
 import com.lukelorusso.presentation.ui.base.CaptureBottomToolbar
 import com.lukelorusso.zoomableimagebox.ui.view.ZoomableImageBox
 import com.smarttoolfactory.screenshot.*
+import kotlinx.coroutines.delay
+
+private const val DELAY_IN_MILLIS = 100L
 
 
 @OptIn(ExperimentalCoilApi::class)
@@ -33,17 +37,26 @@ internal fun ImagePicker(
     errorMessageFactory: ErrorMessageFactory
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    var isLoading by remember { mutableStateOf(false) }
-    var showResetButton by remember { mutableStateOf(false) }
+    var isCapturing by remember { mutableStateOf(false) }
+    var isGestureDetected by remember { mutableStateOf(false) }
+    var isPainterLoading by remember { mutableStateOf(false) }
     var resetKey by remember { mutableIntStateOf(0) }
     val painter = rememberAsyncImagePainter(
         model = uri,
-        onState = { state -> isLoading = state is Loading }
+        onState = { state -> isPainterLoading = state is Loading }
     )
-    val screenshotState = rememberScreenshotState()
+    val screenshotState = rememberScreenshotState(DELAY_IN_MILLIS)
     val imageResult = screenshotState.imageState.value
 
+    LaunchedEffect(isCapturing) {
+        if (isCapturing) {
+            delay(DELAY_IN_MILLIS)
+            screenshotState.capture()
+        }
+    }
+
     LaunchedEffect(imageResult) {
+        isCapturing = false
         when (imageResult) {
             is ImageResult.Success ->
                 screenshotState.bitmap?.let { bitmap ->
@@ -59,12 +72,11 @@ internal fun ImagePicker(
     }
 
     Surface {
-        ScreenshotBox(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(colorResource(id = R.color.fragment_background)),
-            contentAlignment = Alignment.Center,
-            screenshotState = screenshotState
+            contentAlignment = Alignment.Center
         ) {
             /**
              * The [key] is a workaround to trigger the recomposition of the manipulator
@@ -72,28 +84,29 @@ internal fun ImagePicker(
             key(resetKey) {
                 ImageManipulator(
                     painter = painter,
-                    onGestureDetected = { showResetButton = true }
+                    screenshotState = screenshotState,
+                    onGestureDetected = { isGestureDetected = true }
                 )
             }
 
-            Icon(
+            if (!isCapturing) Icon(
                 painter = painterResource(id = R.drawable.viewfinder),
                 contentDescription = null
             )
 
-            val onRightButtonSelected: (() -> Unit)? = if (showResetButton) ({
+            val onRightButtonSelected: (() -> Unit)? = if (isGestureDetected) ({
                 resetKey++
-                showResetButton = false
+                isGestureDetected = false
             }) else null
 
             CaptureBottomToolbar(
                 showShutterButton = true,
                 color = uiState.color,
                 errorMessage = uiState.contentState.error?.let(errorMessageFactory::getLocalizedMessage),
-                isLoading = uiState.contentState.isLoading || isLoading,
+                isLoading = isCapturing || isPainterLoading || uiState.contentState.isLoading,
                 rightButtonImageVector = Icons.Default.Refresh,
                 onRightButtonSelected = onRightButtonSelected,
-                onShutterSelected = screenshotState::capture,
+                onShutterSelected = { isCapturing = true },
                 onPreviewSelected = viewModel::gotoPreview
             )
         }
@@ -103,15 +116,22 @@ internal fun ImagePicker(
 @Composable
 private fun ImageManipulator(
     painter: Painter,
+    screenshotState: ScreenshotState,
     onGestureDetected: () -> Unit
 ) {
-    ZoomableImageBox(
+    ScreenshotBox(
         modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colors.background),
-        painter = painter,
-        shouldRotate = true,
-        showResetIconButton = false,
-        onGestureDataChanged = { if (it.isGestureDetected) onGestureDetected() }
-    )
+            .fillMaxSize(),
+        screenshotState = screenshotState
+    ) {
+        ZoomableImageBox(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colors.background),
+            painter = painter,
+            shouldRotate = true,
+            showResetIconButton = false,
+            onGestureDataChanged = { if (it.isGestureDetected) onGestureDetected() }
+        )
+    }
 }
