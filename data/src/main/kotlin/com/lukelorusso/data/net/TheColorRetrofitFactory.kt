@@ -10,10 +10,12 @@ import retrofit2.converter.kotlinx.serialization.asConverterFactory
 
 object TheColorRetrofitFactory {
 
-    private const val COLOR_API_BASE_URL =
+    private const val API_BASE_URL =
         "https://www.thecolorapi.com/"
-    private const val COLOR_API_SITE =
+    const val WEBSITE =
         "https://www.thecolorapi.com/"
+    const val WEBSITE_HELP =
+        WEBSITE + "docs"
 
     /**
      * Get [Retrofit] instance for main webservice.
@@ -26,7 +28,7 @@ object TheColorRetrofitFactory {
         context: Context? = null
     ): Retrofit =
         Retrofit.Builder()
-            .baseUrl(COLOR_API_BASE_URL)
+            .baseUrl(API_BASE_URL)
             .addConverterFactory(json.asConverterFactory("application/json; charset=UTF8".toMediaType()))
             .client(okHttpClientFactory.createOkHttpClient(context))
             .build()

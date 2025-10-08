@@ -13,8 +13,8 @@ interface SaveDevApi {
         @Query("color_hex") colorHex: String,
         @Query("lang") language: String,
         @Query("udid") udid: String,
-        @Query("os") os: String = SaveDevRetrofitFactory.COLOR_API_OS,
-        @Query("v") version: String = SaveDevRetrofitFactory.COLOR_API_VERSION
+        @Query("os") os: String = SaveDevRetrofitFactory.API_OS,
+        @Query("v") version: String = SaveDevRetrofitFactory.API_VERSION
     ): Response<SaveDevResponseDTO>
 
 }

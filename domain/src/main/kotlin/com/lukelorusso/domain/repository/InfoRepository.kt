@@ -2,9 +2,9 @@ package com.lukelorusso.domain.repository
 
 interface InfoRepository {
 
-    fun getHelpUrl(): String
+    fun getHelpUrl(deviceLanguage: String): String
 
-    fun getHomeUrl(): String
+    fun getHomeUrl(deviceLanguage: String): String
 
     fun getAboutMeUrl(): String
 
