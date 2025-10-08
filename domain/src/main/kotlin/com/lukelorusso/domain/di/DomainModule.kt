@@ -5,7 +5,7 @@ import org.koin.dsl.module
 
 val domainModule = module {
     //region UseCase
-    factory { DecodeColorHexUseCase(get()) }
+    factory { DecodeColorHexUseCase(get(), get(), get()) }
 
     factory { GetAboutMeUrlUseCase(get()) }
     factory { GetHelpUrlUseCase(get()) }

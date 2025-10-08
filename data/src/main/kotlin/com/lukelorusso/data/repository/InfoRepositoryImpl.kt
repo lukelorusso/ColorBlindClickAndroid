@@ -1,8 +1,8 @@
 package com.lukelorusso.data.repository
 
-import com.lukelorusso.data.net.RetrofitFactory.COLOR_BLIND_SITE_ABOUT_ME
-import com.lukelorusso.data.net.RetrofitFactory.COLOR_BLIND_SITE_HELP
-import com.lukelorusso.data.net.RetrofitFactory.COLOR_BLIND_SITE_HOME
+import com.lukelorusso.data.net.SaveDevRetrofitFactory.COLOR_BLIND_SITE_ABOUT_ME
+import com.lukelorusso.data.net.SaveDevRetrofitFactory.COLOR_BLIND_SITE_HELP
+import com.lukelorusso.data.net.SaveDevRetrofitFactory.COLOR_BLIND_SITE_HOME
 import com.lukelorusso.domain.repository.InfoRepository
 import java.util.*
 

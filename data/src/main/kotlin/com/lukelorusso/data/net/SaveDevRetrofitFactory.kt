@@ -8,24 +8,18 @@ import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
 
-/**
- * Copyright (C) 2021 Luke Lorusso
- * Licensed under the Apache License Version 2.0
- * RetrofitFactory to generate a Retrofit instance.
- * It sets up request logging and type adapters.
- */
-object RetrofitFactory {
+object SaveDevRetrofitFactory {
 
     private const val COLOR_API_BASE_URL =
         "https://savedev.altervista.org/SD-Frontend/colorblindness/"
-    private const val COLOR_BLIND_SITE =
+    private const val COLOR_API_SITE =
         "https://savedev.altervista.org/"
     const val COLOR_API_OS = "android"
     const val COLOR_API_VERSION = "1"
     const val COLOR_BLIND_SITE_HELP =
-        COLOR_BLIND_SITE + "SD-Frontend/colorblindclick/help.php?lang=%s"
+        COLOR_API_SITE + "SD-Frontend/colorblindclick/help.php?lang=%s"
     const val COLOR_BLIND_SITE_HOME =
-        COLOR_BLIND_SITE + "SD-Frontend/colorblindclick/index.php?setlang=%s"
+        COLOR_API_SITE + "SD-Frontend/colorblindclick/index.php?setlang=%s"
     const val COLOR_BLIND_SITE_ABOUT_ME = "https://www.lukelorusso.com/"
 
     /**
