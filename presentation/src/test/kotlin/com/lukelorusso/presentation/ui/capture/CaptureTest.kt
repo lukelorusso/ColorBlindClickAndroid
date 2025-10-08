@@ -1,7 +1,7 @@
 package com.lukelorusso.presentation.ui.capture
 
 import androidx.lifecycle.ViewModel
-import com.lukelorusso.domain.model.Color
+import com.lukelorusso.domain.model.Color as ColorEntity
 import com.lukelorusso.domain.usecase.DecodeColorHexUseCase
 import com.lukelorusso.presentation.ui.base.AppTest
 import kotlinx.coroutines.runBlocking
@@ -22,12 +22,12 @@ class CaptureTest : AppTest() {
 
     @Test
     fun decodeColorHex(): Unit = runBlocking {
-        val colorModel = viewModel.decodeColorHex(DecodeColorHexUseCase.Param(hex = "#52851E", deviceUdid = "JUnit"))
-        assert(colorModel.originalColorHex() == "#52851E")
+        val color = viewModel.decodeColorHex(DecodeColorHexUseCase.Param(hex = "#52851E", deviceUdid = "JUnit"))
+        assert(color.originalColorHex() == "#52851E")
     }
 
     class CaptureTestViewModel(private val decodeColorHex: DecodeColorHexUseCase) : ViewModel() {
-        suspend fun decodeColorHex(param: DecodeColorHexUseCase.Param): Color =
+        suspend fun decodeColorHex(param: DecodeColorHexUseCase.Param): ColorEntity =
             decodeColorHex.invoke(param)
     }
 }

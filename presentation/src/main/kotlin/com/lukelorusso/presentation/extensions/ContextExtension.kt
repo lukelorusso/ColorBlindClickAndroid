@@ -33,7 +33,6 @@ fun Context?.getDeviceUdid(): String {
             Settings.Secure.ANDROID_ID
         )
     } ?: ""
-
 }
 
 fun Context.gotoAppDetailsSettings() {

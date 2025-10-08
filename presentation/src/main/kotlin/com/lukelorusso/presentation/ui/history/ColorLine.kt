@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.sp
 import com.lukelorusso.presentation.R
 import com.lukelorusso.presentation.extensions.getLocalizedDateTime
 import com.lukelorusso.presentation.extensions.parseToColor
-import com.lukelorusso.domain.model.Color as ColorModel
+import com.lukelorusso.domain.model.Color as ColorEntity
 
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -27,9 +27,9 @@ import com.lukelorusso.domain.model.Color as ColorModel
 internal fun ColorLine(
     isLoading: Boolean,
     isEven: Boolean,
-    item: ColorModel,
-    onClick: (ColorModel) -> Unit,
-    onDeleteColor: (ColorModel) -> Unit
+    item: ColorEntity,
+    onClick: (ColorEntity) -> Unit,
+    onDeleteColor: (ColorEntity) -> Unit
 ) {
     @ColorRes val colorRes = if (isEven)
         R.color.item_background_evens

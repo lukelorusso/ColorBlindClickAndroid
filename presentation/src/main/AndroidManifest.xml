@@ -33,6 +33,14 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".ui.imagepicker.ImagePickerActivity"
+            android:alwaysRetainTaskState="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/Base.ThemeNoActionBar"
+            android:exported="true">
+        </activity>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}"

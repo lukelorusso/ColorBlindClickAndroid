@@ -11,7 +11,7 @@ import com.lukelorusso.presentation.R
 
 
 @Composable
-internal fun ZoomHandler(
+internal fun CaptureZoomHandler(
     screenIntSize: IntSize,
     zoomLevel: Float,
     onLevelChange: (Float) -> Unit

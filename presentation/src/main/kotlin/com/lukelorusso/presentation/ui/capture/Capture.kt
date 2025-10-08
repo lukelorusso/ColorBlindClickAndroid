@@ -1,11 +1,17 @@
 package com.lukelorusso.presentation.ui.capture
 
+import android.content.Intent
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.*
 import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
 import androidx.compose.material.Surface
 import androidx.compose.runtime.*
@@ -23,10 +29,16 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.lukelorusso.presentation.R
 import com.lukelorusso.presentation.error.ErrorMessageFactory
 import com.lukelorusso.presentation.extensions.*
+import com.lukelorusso.presentation.ui.base.CaptureBottomToolbar
+import com.lukelorusso.presentation.ui.base.FAB
+import com.lukelorusso.presentation.ui.base.FAB_DEFAULT_SIZE
+import com.lukelorusso.presentation.ui.imagepicker.ImagePickerActivity
+import timber.log.Timber
 import kotlin.math.roundToInt
 
-val ICON_PADDING = 5.dp
-val ICON_SIZE = 62.dp
+val ICON_BUTTON_PADDING = 5.dp
+val ICON_BUTTON_SIZE = 62.dp
+val ICON_SIZE = 40.dp
 
 @Composable
 fun Capture(
@@ -38,6 +50,19 @@ fun Capture(
     var camera by remember { mutableStateOf<Camera?>(null) }
     var previewView by remember { mutableStateOf<PreviewView?>(null) }
     var screenIntSize by remember { mutableStateOf(IntSize.Zero) }
+    var showPhotoPickerFAB by remember { mutableStateOf(true) }
+    val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia(),
+        onResult = { uri ->
+            Timber.d("Image selected -> $uri")
+            showPhotoPickerFAB = true
+            uri?.let {
+                val intent = Intent(context, ImagePickerActivity::class.java)
+                intent.putExtra(ImagePickerActivity.EXTRA_URI, it)
+                context.startActivity(intent)
+            }
+        }
+    )
 
     Surface {
         Box(
@@ -84,7 +109,7 @@ fun Capture(
             )
 
             if (screenIntSize != IntSize.Zero && zoomLevel != null) {
-                ZoomHandler(
+                CaptureZoomHandler(
                     screenIntSize = screenIntSize,
                     zoomLevel = zoomLevel,
                     onLevelChange = { viewModel.setLastZoomValue((it * 100).roundToInt()) }
@@ -96,7 +121,7 @@ fun Capture(
                 val isFlashOn = torchState?.value == TorchState.ON
                 val isNextCameraFront = lensFacing == CameraSelector.LENS_FACING_BACK
 
-                TopToolbar(
+                CaptureTopToolbar(
                     isNextCameraAvailable = previewView
                         ?.controller
                         ?.run { canSwitchToFront() || canSwitchToBack() }
@@ -112,20 +137,37 @@ fun Capture(
                 )
             }
 
-            BottomToolbar(
-                screenIntSize = screenIntSize,
-                colorModel = uiState.color,
+            CaptureBottomToolbar(
+                showShutterButton = screenIntSize != IntSize.Zero,
+                color = uiState.color,
                 errorMessage = uiState.contentState.error?.let(errorMessageFactory::getLocalizedMessage),
                 isLoading = uiState.contentState.isLoading,
-                onInfoSelected = viewModel::gotoInfo,
+                leftButtonPainter = painterResource(id = R.drawable.info_outline_white),
+                onLeftButtonSelected = viewModel::gotoInfo,
+                rightButtonPainter = painterResource(id = R.drawable.history_big_white),
+                onRightButtonSelected = viewModel::gotoHistory,
                 onShutterSelected = {
                     previewView?.bitmap?.let { bitmap ->
                         val pixel = bitmap.getCentralColor(viewModel.uiState.value.pixelNeighbourhood)
                         viewModel.decodeColor(pixel.pixelColorToHash())
                     }
                 },
-                onHistorySelected = viewModel::gotoHistory,
-                gotoPreview = viewModel::gotoPreview
+                onPreviewSelected = viewModel::gotoPreview
+            )
+
+            if (showPhotoPickerFAB) FAB(
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .padding(horizontal = 16.dp)
+                    .padding(top = 136.dp)
+                    .size(FAB_DEFAULT_SIZE.dp),
+                painter = painterResource(id = R.drawable.gallery_white),
+                onClick = {
+                    singlePhotoPickerLauncher.launch(
+                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                    )
+                    showPhotoPickerFAB = false
+                }
             )
         }
     }

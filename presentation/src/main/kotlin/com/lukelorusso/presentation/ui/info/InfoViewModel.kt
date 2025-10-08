@@ -38,7 +38,7 @@ class InfoViewModel(
         viewModelScope.launch {
             try {
                 val url = getHomeUrl.invoke(Unit)
-                trackerHelper.track(TrackerHelper.Actions.GOTO_HOME_PAGE)
+                trackerHelper.track(TrackerHelper.Action.GOTO_HOME_PAGE)
                 router.routeToBrowser(url)
             } catch (t: Throwable) {
                 updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
@@ -51,7 +51,7 @@ class InfoViewModel(
         viewModelScope.launch {
             try {
                 val url = getHelpUrl.invoke(Unit)
-                trackerHelper.track(TrackerHelper.Actions.GOTO_HELP_PAGE)
+                trackerHelper.track(TrackerHelper.Action.GOTO_HELP_PAGE)
                 router.routeToBrowser(url)
             } catch (t: Throwable) {
                 updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
@@ -64,7 +64,7 @@ class InfoViewModel(
         viewModelScope.launch {
             try {
                 val url = getAboutMeUrl.invoke(Unit)
-                trackerHelper.track(TrackerHelper.Actions.GOTO_ABOUT_ME_PAGE)
+                trackerHelper.track(TrackerHelper.Action.GOTO_ABOUT_ME_PAGE)
                 router.routeToBrowser(url)
             } catch (t: Throwable) {
                 updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
@@ -73,7 +73,7 @@ class InfoViewModel(
     }
 
     fun gotoSettings() {
-        trackerHelper.track(TrackerHelper.Actions.GOTO_SETTINGS)
+        trackerHelper.track(TrackerHelper.Action.GOTO_SETTINGS)
         router.routeToSettings()
     }
 

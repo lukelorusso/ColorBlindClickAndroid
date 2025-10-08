@@ -1,4 +1,4 @@
-package com.lukelorusso.presentation.ui.capture
+package com.lukelorusso.presentation.ui.base
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.*
@@ -11,26 +11,36 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.*
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.*
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.lukelorusso.presentation.R
 import com.lukelorusso.presentation.extensions.parseToColor
 import com.lukelorusso.presentation.extensions.toRGBPercentString
-import com.lukelorusso.domain.model.Color as ColorModel
+import com.lukelorusso.presentation.ui.capture.ICON_BUTTON_PADDING
+import com.lukelorusso.presentation.ui.capture.ICON_BUTTON_SIZE
+import com.lukelorusso.presentation.ui.capture.ICON_SIZE
+import com.lukelorusso.domain.model.Color as ColorEntity
 
 
 @Composable
-internal fun BottomToolbar(
-    screenIntSize: IntSize,
-    colorModel: ColorModel?,
+internal fun CaptureBottomToolbar(
+    showShutterButton: Boolean = true,
+    color: ColorEntity?,
     errorMessage: String?,
     isLoading: Boolean,
-    onInfoSelected: () -> Unit,
+    leftButtonPainter: Painter? = null,
+    leftButtonImageVector: ImageVector? = null,
+    onLeftButtonSelected: (() -> Unit)? = null,
+    rightButtonPainter: Painter? = null,
+    rightButtonImageVector: ImageVector? = null,
+    onRightButtonSelected: (() -> Unit)? = null,
     onShutterSelected: () -> Unit,
-    onHistorySelected: () -> Unit,
-    gotoPreview: (ColorModel) -> Unit
+    onPreviewSelected: (ColorEntity) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -39,16 +49,16 @@ internal fun BottomToolbar(
         Spacer(modifier = Modifier.weight(1f))
 
         AnimatedVisibility(
-            visible = colorModel != null || errorMessage != null
+            visible = color != null || errorMessage != null
         ) {
             val clickCallback = {
-                if (colorModel != null) gotoPreview(colorModel)
+                if (color != null) onPreviewSelected(color)
             }
             ResultToolbar(
-                textLine1 = colorModel?.colorName,
-                textLine2 = colorModel?.originalColorHex() ?: errorMessage,
-                textLine3 = colorModel?.toRGBPercentString(),
-                color = colorModel?.originalColorHex()?.parseToColor(),
+                textLine1 = color?.colorName,
+                textLine2 = color?.originalColorHex() ?: errorMessage,
+                textLine3 = color?.toRGBPercentString(),
+                color = color?.originalColorHex()?.parseToColor(),
                 onTextClick = clickCallback,
                 onColorClick = clickCallback
             )
@@ -62,17 +72,33 @@ internal fun BottomToolbar(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(
-                modifier = Modifier
-                    .padding(ICON_PADDING)
-                    .size(ICON_SIZE),
-                onClick = onInfoSelected
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.info_outline_white),
-                    contentDescription = null
-                )
-            }
+            val sideIconButtonModifier = Modifier
+                .padding(ICON_BUTTON_PADDING)
+                .size(ICON_BUTTON_SIZE)
+
+            val sideIconModifier = Modifier
+                .size(ICON_SIZE)
+
+            onLeftButtonSelected?.let { callback ->
+                IconButton(
+                    modifier = sideIconButtonModifier,
+                    onClick = callback
+                ) {
+                    leftButtonPainter?.let { painter ->
+                        Icon(
+                            modifier = sideIconModifier,
+                            painter = painter,
+                            contentDescription = null
+                        )
+                    } ?: leftButtonImageVector?.let { imageVector ->
+                        Icon(
+                            modifier = sideIconModifier,
+                            imageVector = imageVector,
+                            contentDescription = null
+                        )
+                    }
+                }
+            } ?: Spacer(modifier = sideIconButtonModifier)
 
             val shutterSize = 60.dp
             val shutterPadding = 5.dp
@@ -85,7 +111,7 @@ internal fun BottomToolbar(
                     color = colorResource(id = R.color.color_accent)
                 )
             } else {
-                AnimatedVisibility(screenIntSize != IntSize.Zero) {
+                AnimatedVisibility(showShutterButton) {
                     IconButton(
                         modifier = Modifier
                             .padding(shutterPadding)
@@ -100,17 +126,26 @@ internal fun BottomToolbar(
                 }
             }
 
-            IconButton(
-                modifier = Modifier
-                    .padding(ICON_PADDING)
-                    .size(ICON_SIZE),
-                onClick = onHistorySelected
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.history_big_white),
-                    contentDescription = null
-                )
-            }
+            onRightButtonSelected?.let { callback ->
+                IconButton(
+                    modifier = sideIconButtonModifier,
+                    onClick = callback
+                ) {
+                    rightButtonPainter?.let { painter ->
+                        Icon(
+                            modifier = sideIconModifier,
+                            painter = painter,
+                            contentDescription = null
+                        )
+                    } ?: rightButtonImageVector?.let { imageVector ->
+                        Icon(
+                            modifier = sideIconModifier,
+                            imageVector = imageVector,
+                            contentDescription = null
+                        )
+                    }
+                }
+            } ?: Spacer(modifier = sideIconButtonModifier)
         }
     }
 }

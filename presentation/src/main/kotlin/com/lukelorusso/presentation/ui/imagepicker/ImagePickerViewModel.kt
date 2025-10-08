@@ -1,7 +1,8 @@
-package com.lukelorusso.presentation.ui.capture
+package com.lukelorusso.presentation.ui.imagepicker
 
 import androidx.lifecycle.viewModelScope
-import com.lukelorusso.domain.usecase.*
+import com.lukelorusso.domain.usecase.DecodeColorHexUseCase
+import com.lukelorusso.domain.usecase.GetPixelNeighbourhoodUseCase
 import com.lukelorusso.presentation.extensions.getDeviceUdid
 import com.lukelorusso.presentation.helper.TrackerHelper
 import com.lukelorusso.presentation.ui.base.AppViewModel
@@ -11,17 +12,13 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import com.lukelorusso.domain.model.Color as ColorEntity
 
-class CaptureViewModel(
+class ImagePickerViewModel(
     private val trackerHelper: TrackerHelper,
-    private val getLastLensPosition: GetLastLensPositionUseCase,
-    private val setLastLensPosition: SetLastLensPositionUseCase,
-    private val getLastZoomValue: GetLastZoomValueUseCase,
-    private val setLastZoomValue: SetLastZoomValueUseCase,
     private val getPixelNeighbourhood: GetPixelNeighbourhoodUseCase,
     private val decodeColorHex: DecodeColorHexUseCase
-) : AppViewModel<CaptureUiState>() {
-    override val _uiState = MutableStateFlow(CaptureUiState())
-    override val router = CaptureRouter()
+) : AppViewModel<ImagePickerUiState>() {
+    override val _uiState = MutableStateFlow(ImagePickerUiState())
+    override val router = ImagePickerRouter()
     private val json = Json { ignoreUnknownKeys = true }
 
     init {
@@ -37,32 +34,7 @@ class CaptureViewModel(
 
         viewModelScope.launch {
             try {
-                val lastLensPosition = getLastLensPosition.invoke(Unit)
-                val lastZoomValue = getLastZoomValue.invoke(Unit)
-                val pixelNeighbourhood = getPixelNeighbourhood.invoke(Unit)
-                updateUiState {
-                    it.copy(
-                        contentState = ContentState.CONTENT,
-                        lastLensPosition = lastLensPosition,
-                        lastZoomValue = lastZoomValue,
-                        pixelNeighbourhood = pixelNeighbourhood
-                    )
-                }
-            } catch (t: Throwable) {
-                updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
-            }
-        }
-    }
-
-    fun reloadData(lastLensPosition: Int? = null, lastZoomValue: Int? = null) {
-        if (uiState.value.contentState.isLoading) {
-            return
-        }
-
-        viewModelScope.launch {
-            try {
-                lastLensPosition?.let { setLastLensPosition.invoke(it) }
-                lastZoomValue?.let { setLastZoomValue.invoke(it) }
+                trackerHelper.track(TrackerHelper.Action.GOTO_IMAGE_PICKER)
                 val pixelNeighbourhood = getPixelNeighbourhood.invoke(Unit)
                 updateUiState {
                     it.copy(
@@ -108,48 +80,14 @@ class CaptureViewModel(
         }
     }
 
-    fun setLastLensPosition(param: Int) {
-        viewModelScope.launch {
-            try {
-                setLastLensPosition.invoke(param)
-                updateUiState {
-                    it.copy(
-                        lastLensPosition = param,
-                        lastZoomValue = -1
-                    )
-                }
-            } catch (t: Throwable) {
-                updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
-            }
-        }
-    }
-
-    fun setLastZoomValue(param: Int) {
-        viewModelScope.launch {
-            try {
-                setLastZoomValue.invoke(param)
-                updateUiState { it.copy(lastZoomValue = param) }
-            } catch (t: Throwable) {
-                updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
-            }
-        }
-    }
-
-    fun dismissErrorAndColor(onDismiss: (() -> Unit)? = null) {
+    fun setError(exception: Exception) {
         updateUiState {
             it.copy(
-                contentState = ContentState.CONTENT,
+                contentState = ContentState.ERROR(exception),
                 color = null
             )
         }
-        onDismiss?.invoke()
     }
-
-    fun gotoInfo() =
-        router.routeToInfo()
-
-    fun gotoHistory() =
-        router.routeToHistory()
 
     fun gotoPreview(color: ColorEntity) =
         router.routeToPreview(json.encodeToString<ColorEntity>(color))

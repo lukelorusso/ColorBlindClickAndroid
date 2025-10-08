@@ -46,13 +46,11 @@ fun Preview(
                     .align(Alignment.TopCenter)
             )
 
-            uiState.color?.let { colorModel ->
+            uiState.color?.let { color ->
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                 ) {
-                    val color = colorModel.originalColorHex().parseToColor()
-
                     Canvas(
                         modifier = Modifier
                             .padding(64.dp)
@@ -64,12 +62,12 @@ fun Preview(
                                 RectangleShape
                             ),
                         onDraw = {
-                            drawRect(color = colorModel.originalColorHex().parseToColor())
+                            drawRect(color = color.originalColorHex().parseToColor())
                         }
                     )
 
                     val description = (stringResource(id = R.string.credits) + " " + uiState.storeUrl).let { credits ->
-                        colorModel.sharableDescription(credits)
+                        color.sharableDescription(credits)
                     }
                     val textPopupLabel = stringResource(id = R.string.choose_an_app)
                     val bitmapPopupLabel = stringResource(id = R.string.share_color)
@@ -78,7 +76,7 @@ fun Preview(
                     }
 
                     BottomToolbar(
-                        colorModel = colorModel,
+                        color = color,
                         onTextClick = {
                             viewModel.shareText(
                                 text = description,
@@ -90,7 +88,7 @@ fun Preview(
                                 bitmap = createBitmap(
                                     size,
                                     size,
-                                    color.toArgb()
+                                    color.originalColorHex().parseToColor().toArgb()
                                 ),
                                 description = description,
                                 popupLabel = bitmapPopupLabel

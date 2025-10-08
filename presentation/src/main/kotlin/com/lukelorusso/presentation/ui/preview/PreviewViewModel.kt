@@ -10,7 +10,7 @@ import com.lukelorusso.presentation.ui.base.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
-import com.lukelorusso.domain.model.Color as ColorModel
+import com.lukelorusso.domain.model.Color as ColorEntity
 
 class PreviewViewModel(
     private val trackerHelper: TrackerHelper,
@@ -29,7 +29,7 @@ class PreviewViewModel(
 
         viewModelScope.launch {
             try {
-                val color = serializedColor?.let { json.decodeFromString<ColorModel>(it) }
+                val color = serializedColor?.let { json.decodeFromString<ColorEntity>(it) }
                 val url = getStoreUrl.invoke(Unit)
                 updateUiState {
                     it.copy(
@@ -47,14 +47,14 @@ class PreviewViewModel(
     fun shareText(text: String, popupLabel: String?) {
         router.activity?.let { activity ->
             activity.applicationContext.shareText(text, popupLabel)
-            trackerHelper.track(TrackerHelper.Actions.SHARED_TEXT)
+            trackerHelper.track(TrackerHelper.Action.SHARED_TEXT)
         }
     }
 
     fun shareBitmap(bitmap: Bitmap, description: String, popupLabel: String?) {
         router.activity?.let { activity ->
             activity.applicationContext.shareBitmap(bitmap, description, popupLabel)
-            trackerHelper.track(TrackerHelper.Actions.SHARED_PREVIEW)
+            trackerHelper.track(TrackerHelper.Action.SHARED_PREVIEW)
         }
     }
 

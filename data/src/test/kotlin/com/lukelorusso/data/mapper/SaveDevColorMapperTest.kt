@@ -20,9 +20,9 @@ class SaveDevColorMapperTest {
 
     @Test
     fun transform(): Unit = runBlocking {
-        val colorModel = repository.decodeColorHex("#52851E", "junit")
-        assertEquals(colorModel.colorHex, "#6B8E23")
-        assertEquals(colorModel.colorName, "Olive Green")
-        assertEquals(colorModel.originalColorHex(), "#52851E")
+        val color = repository.decodeColorHex("#52851E", "junit")
+        assertEquals(color.colorHex, "#6B8E23")
+        assertEquals(color.colorName, "Olive Green")
+        assertEquals(color.originalColorHex(), "#52851E")
     }
 }

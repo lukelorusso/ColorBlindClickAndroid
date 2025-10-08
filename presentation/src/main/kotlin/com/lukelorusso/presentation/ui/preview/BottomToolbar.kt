@@ -19,12 +19,12 @@ import com.lukelorusso.presentation.R
 import com.lukelorusso.presentation.extensions.toRGBPercentString
 import com.lukelorusso.presentation.ui.base.FAB
 import com.lukelorusso.presentation.ui.base.FAB_DEFAULT_SIZE
-import com.lukelorusso.domain.model.Color as ColorModel
+import com.lukelorusso.domain.model.Color as ColorEntity
 
 
 @Composable
 internal fun BottomToolbar(
-    colorModel: ColorModel,
+    color: ColorEntity,
     onTextClick: () -> Unit,
     onColorClick: () -> Unit
 ) {
@@ -50,7 +50,7 @@ internal fun BottomToolbar(
                 fontWeight = FontWeight.W500,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                text = colorModel.colorName
+                text = color.colorName
             )
 
             Spacer(modifier = Modifier.height(2.dp))
@@ -62,7 +62,7 @@ internal fun BottomToolbar(
                 fontSize = 14.sp,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                text = colorModel.originalColorHex()
+                text = color.originalColorHex()
             )
 
             Spacer(modifier = Modifier.height(2.dp))
@@ -74,7 +74,7 @@ internal fun BottomToolbar(
                 fontSize = 14.sp,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                text = colorModel.toRGBPercentString()
+                text = color.toRGBPercentString()
             )
         }
 
