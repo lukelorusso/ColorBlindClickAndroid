@@ -139,7 +139,7 @@ fun Capture(
 
             CaptureBottomToolbar(
                 showShutterButton = screenIntSize != IntSize.Zero,
-                colorModel = uiState.color,
+                color = uiState.color,
                 errorMessage = uiState.contentState.error?.let(errorMessageFactory::getLocalizedMessage),
                 isLoading = uiState.contentState.isLoading,
                 leftButtonPainter = painterResource(id = R.drawable.info_outline_white),

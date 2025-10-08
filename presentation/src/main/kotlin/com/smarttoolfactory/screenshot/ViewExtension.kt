@@ -1,31 +1,31 @@
 package com.smarttoolfactory.screenshot
 
 import android.app.Activity
-import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.os.*
 import android.view.PixelCopy
 import android.view.View
 import androidx.compose.ui.geometry.Rect
-import androidx.compose.ui.graphics.toAndroidRect
+import androidx.core.graphics.createBitmap
 
 fun View.screenshot(
     bounds: Rect,
     bitmapCallback: (ImageResult) -> Unit
 ) {
     try {
-        val bitmap = Bitmap.createBitmap(
-            bounds.width.toInt(),
-            bounds.height.toInt(),
-            Bitmap.Config.ARGB_8888
-        )
+        val bitmap = createBitmap(bounds.width.toInt(), bounds.height.toInt())
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // Above Android O not using PixelCopy throws exception
             // https://stackoverflow.com/questions/58314397/java-lang-illegalstateexception-software-rendering-doesnt-support-hardware-bit
             PixelCopy.request(
                 (this.context as Activity).window,
-                bounds.toAndroidRect(),
+                android.graphics.Rect(
+                    bounds.left.toInt(),
+                    bounds.top.toInt(),
+                    bounds.right.toInt(),
+                    bounds.bottom.toInt()
+                ),
                 bitmap,
                 {
                     when (it) {

@@ -10,7 +10,7 @@ import com.lukelorusso.presentation.ui.base.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
-import com.lukelorusso.domain.model.Color as ColorModel
+import com.lukelorusso.domain.model.Color as ColorEntity
 
 class PreviewViewModel(
     private val trackerHelper: TrackerHelper,
@@ -29,7 +29,7 @@ class PreviewViewModel(
 
         viewModelScope.launch {
             try {
-                val color = serializedColor?.let { json.decodeFromString<ColorModel>(it) }
+                val color = serializedColor?.let { json.decodeFromString<ColorEntity>(it) }
                 val url = getHomeUrl.invoke(Unit)
                 updateUiState {
                     it.copy(

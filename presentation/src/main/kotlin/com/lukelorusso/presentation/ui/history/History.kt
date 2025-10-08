@@ -21,7 +21,7 @@ import com.lukelorusso.presentation.error.ErrorMessageFactory
 import com.lukelorusso.presentation.ui.base.*
 import com.lukelorusso.presentation.ui.error.ErrorAlertDialog
 import kotlinx.coroutines.*
-import com.lukelorusso.domain.model.Color as ColorModel
+import com.lukelorusso.domain.model.Color as ColorEntity
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -38,7 +38,7 @@ fun History(
     val coroutineScope = rememberCoroutineScope()
     var localSearchText by remember { mutableStateOf("") }
     var showDeleteAllAlertDialog by remember { mutableStateOf(false) }
-    var shouldDeleteColor by remember { mutableStateOf<ColorModel?>(null) }
+    var shouldDeleteColor by remember { mutableStateOf<ColorEntity?>(null) }
 
     // use this function instead of playing directly with the viewModel
     fun updateSearch(
@@ -149,16 +149,16 @@ fun History(
 
                 itemsIndexed(
                     items = filteredColors,
-                    key = { _, colorModel -> colorModel.timestamp } // setting a key will solve graphical glitches on SwipeToDismiss
-                ) { index, colorModel ->
+                    key = { _, color -> color.timestamp } // setting a key will solve graphical glitches on SwipeToDismiss
+                ) { index, color ->
                     ColorLine(
                         isLoading = uiState.contentState.isLoading,
                         isEven = index % 2 == 0,
-                        item = colorModel,
+                        item = color,
                         onClick = viewModel::gotoPreview,
                         onDeleteColor = {
-                            viewModel.deleteColorFromUiState(colorModel)
-                            shouldDeleteColor = colorModel
+                            viewModel.deleteColorFromUiState(color)
+                            shouldDeleteColor = color
                         }
                     )
                 }

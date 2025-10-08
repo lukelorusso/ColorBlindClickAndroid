@@ -8,7 +8,7 @@ import com.lukelorusso.presentation.ui.base.*
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
-import com.lukelorusso.domain.model.Color as ColorModel
+import com.lukelorusso.domain.model.Color as ColorEntity
 
 class HistoryViewModel(
     private val trackerHelper: TrackerHelper,
@@ -20,7 +20,7 @@ class HistoryViewModel(
     override val router = HistoryRouter()
     private val json = Json { ignoreUnknownKeys = true }
     private val loadBouncer = Bouncer(BOUNCE_DELAY_IN_MILLIS)
-    val filteredColors: Flow<List<ColorModel>>
+    val filteredColors: Flow<List<ColorEntity>>
         get() = uiState.map { uiState ->
             uiState.colorList.filter { item ->
                 item.toString().matchSearch(uiState.searchText)
@@ -58,7 +58,7 @@ class HistoryViewModel(
         }
     }
 
-    fun deleteColorFromUiState(param: ColorModel) {
+    fun deleteColorFromUiState(param: ColorEntity) {
         updateUiState {
             it.copy(
                 colorList = uiState.value.colorList
@@ -67,7 +67,7 @@ class HistoryViewModel(
         }
     }
 
-    fun restoreColorToUiState(param: ColorModel) {
+    fun restoreColorToUiState(param: ColorEntity) {
         updateUiState {
             it.copy(
                 colorList = uiState.value.colorList
@@ -77,7 +77,7 @@ class HistoryViewModel(
         }
     }
 
-    fun deleteColor(param: ColorModel) {
+    fun deleteColor(param: ColorEntity) {
         if (uiState.value.contentState.isLoading) {
             return
         } else {
@@ -137,8 +137,8 @@ class HistoryViewModel(
         }
     }
 
-    fun gotoPreview(color: ColorModel) =
-        router.routeToPreview(json.encodeToString<ColorModel>(color))
+    fun gotoPreview(color: ColorEntity) =
+        router.routeToPreview(json.encodeToString<ColorEntity>(color))
 
     fun gotoCamera() =
         router.routeToCamera()

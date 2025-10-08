@@ -24,13 +24,13 @@ import com.lukelorusso.presentation.extensions.toRGBPercentString
 import com.lukelorusso.presentation.ui.capture.ICON_BUTTON_PADDING
 import com.lukelorusso.presentation.ui.capture.ICON_BUTTON_SIZE
 import com.lukelorusso.presentation.ui.capture.ICON_SIZE
-import com.lukelorusso.domain.model.Color as ColorModel
+import com.lukelorusso.domain.model.Color as ColorEntity
 
 
 @Composable
 internal fun CaptureBottomToolbar(
     showShutterButton: Boolean = true,
-    colorModel: ColorModel?,
+    color: ColorEntity?,
     errorMessage: String?,
     isLoading: Boolean,
     leftButtonPainter: Painter? = null,
@@ -40,7 +40,7 @@ internal fun CaptureBottomToolbar(
     rightButtonImageVector: ImageVector? = null,
     onRightButtonSelected: (() -> Unit)? = null,
     onShutterSelected: () -> Unit,
-    onPreviewSelected: (ColorModel) -> Unit
+    onPreviewSelected: (ColorEntity) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -49,16 +49,16 @@ internal fun CaptureBottomToolbar(
         Spacer(modifier = Modifier.weight(1f))
 
         AnimatedVisibility(
-            visible = colorModel != null || errorMessage != null
+            visible = color != null || errorMessage != null
         ) {
             val clickCallback = {
-                if (colorModel != null) onPreviewSelected(colorModel)
+                if (color != null) onPreviewSelected(color)
             }
             ResultToolbar(
-                textLine1 = colorModel?.colorName,
-                textLine2 = colorModel?.originalColorHex() ?: errorMessage,
-                textLine3 = colorModel?.toRGBPercentString(),
-                color = colorModel?.originalColorHex()?.parseToColor(),
+                textLine1 = color?.colorName,
+                textLine2 = color?.originalColorHex() ?: errorMessage,
+                textLine3 = color?.toRGBPercentString(),
+                color = color?.originalColorHex()?.parseToColor(),
                 onTextClick = clickCallback,
                 onColorClick = clickCallback
             )

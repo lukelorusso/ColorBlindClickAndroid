@@ -10,7 +10,7 @@ import com.lukelorusso.presentation.ui.base.ContentState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
-import com.lukelorusso.domain.model.Color as ColorModel
+import com.lukelorusso.domain.model.Color as ColorEntity
 
 class ImagePickerViewModel(
     private val trackerHelper: TrackerHelper,
@@ -66,11 +66,11 @@ class ImagePickerViewModel(
                     hex = pixelColorToHash,
                     deviceUdid = router.activity.getDeviceUdid()
                 )
-                val colorModel = decodeColorHex.invoke(param)
+                val color = decodeColorHex.invoke(param)
                 updateUiState {
                     it.copy(
                         contentState = ContentState.CONTENT,
-                        color = colorModel
+                        color = color
                     )
                 }
             } catch (t: Throwable) {
@@ -89,6 +89,6 @@ class ImagePickerViewModel(
         }
     }
 
-    fun gotoPreview(color: ColorModel) =
-        router.routeToPreview(json.encodeToString<ColorModel>(color))
+    fun gotoPreview(color: ColorEntity) =
+        router.routeToPreview(json.encodeToString<ColorEntity>(color))
 }
