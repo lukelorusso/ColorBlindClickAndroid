@@ -10,6 +10,7 @@ val domainModule = module {
     factory { GetAboutMeUrlUseCase(get()) }
     factory { GetHelpUrlUseCase(get(), get()) }
     factory { GetHomeUrlUseCase(get(), get()) }
+    factory { GetStoreUrlUseCase(get()) }
 
     factory { GetPixelNeighbourhoodUseCase(get()) }
     factory { SetPixelNeighbourhoodUseCase(get()) }

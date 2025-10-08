@@ -21,4 +21,7 @@ class InfoRepositoryImpl : InfoRepository {
 
     override fun getAboutMeUrl(): String =
         WEBSITE_ABOUT_ME
+
+    override fun getStoreUrl(): String =
+        GOOGLE_PLAY_STORE_URL
 }

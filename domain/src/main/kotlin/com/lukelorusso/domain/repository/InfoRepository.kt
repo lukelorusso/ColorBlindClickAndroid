@@ -8,4 +8,6 @@ interface InfoRepository {
 
     fun getAboutMeUrl(): String
 
+    fun getStoreUrl(): String
+
 }

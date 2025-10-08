@@ -2,7 +2,7 @@ package com.lukelorusso.presentation.ui.preview
 
 import android.graphics.Bitmap
 import androidx.lifecycle.viewModelScope
-import com.lukelorusso.domain.usecase.GetHomeUrlUseCase
+import com.lukelorusso.domain.usecase.GetStoreUrlUseCase
 import com.lukelorusso.presentation.extensions.shareBitmap
 import com.lukelorusso.presentation.extensions.shareText
 import com.lukelorusso.presentation.helper.TrackerHelper
@@ -14,7 +14,7 @@ import com.lukelorusso.domain.model.Color as ColorModel
 
 class PreviewViewModel(
     private val trackerHelper: TrackerHelper,
-    private val getHomeUrl: GetHomeUrlUseCase
+    private val getStoreUrl: GetStoreUrlUseCase
 ) : AppViewModel<PreviewUiState>() {
     override val _uiState = MutableStateFlow(PreviewUiState())
     override val router = object : AppRouter() {} // not needed
@@ -30,12 +30,12 @@ class PreviewViewModel(
         viewModelScope.launch {
             try {
                 val color = serializedColor?.let { json.decodeFromString<ColorModel>(it) }
-                val url = getHomeUrl.invoke(Unit)
+                val url = getStoreUrl.invoke(Unit)
                 updateUiState {
                     it.copy(
                         contentState = ContentState.CONTENT,
                         color = color,
-                        homeUrl = url
+                        storeUrl = url
                     )
                 }
             } catch (t: Throwable) {
