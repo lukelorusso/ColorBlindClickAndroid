@@ -8,10 +8,7 @@ import androidx.camera.core.*
 import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material.Surface
 import androidx.compose.runtime.*
@@ -24,14 +21,12 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.lukelorusso.presentation.R
 import com.lukelorusso.presentation.error.ErrorMessageFactory
 import com.lukelorusso.presentation.extensions.*
-import com.lukelorusso.presentation.ui.base.CaptureBottomToolbar
-import com.lukelorusso.presentation.ui.base.FAB
-import com.lukelorusso.presentation.ui.base.FAB_DEFAULT_SIZE
+import com.lukelorusso.presentation.ui.base.*
 import com.lukelorusso.presentation.ui.imagepicker.ImagePickerActivity
 import timber.log.Timber
 import kotlin.math.roundToInt
@@ -48,6 +43,7 @@ fun Capture(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
     var camera by remember { mutableStateOf<Camera?>(null) }
+    var isCameraReady by remember { mutableStateOf(false) }
     var previewView by remember { mutableStateOf<PreviewView?>(null) }
     var screenIntSize by remember { mutableStateOf(IntSize.Zero) }
     var showPhotoPickerFAB by remember { mutableStateOf(true) }
@@ -74,12 +70,12 @@ fun Capture(
                 .background(colorResource(id = R.color.fragment_background)),
             contentAlignment = Alignment.Center
         ) {
+            val lifecycleOwner = LocalLifecycleOwner.current
             val lensFacing: Int = when (uiState.lastLensPosition) {
                 0 -> CameraSelector.LENS_FACING_BACK
                 1 -> CameraSelector.LENS_FACING_FRONT
                 else -> CameraSelector.LENS_FACING_UNKNOWN
             }
-
             val zoomLevel: Float? = uiState.lastZoomValue?.let { zoomValue ->
                 when {
                     zoomValue < 0 -> 0.1f
@@ -95,8 +91,15 @@ fun Capture(
                     cameraReady?.let { camera = it }
                     previewViewReady?.let {
                         previewView = it
+                        it.previewStreamState.observe(lifecycleOwner) { streamState ->
+                            if (streamState == PreviewView.StreamState.STREAMING) {
+                                isCameraReady = true
+                            } else if (streamState == PreviewView.StreamState.IDLE) {
+                                isCameraReady = false
+                            }
+                        }
                         LifecycleCameraController(context).run {
-                            bindToLifecycle(context as LifecycleOwner)
+                            bindToLifecycle(lifecycleOwner)
                             it.controller = this
                         }
                     }
@@ -116,7 +119,7 @@ fun Capture(
                 )
             }
 
-            if (previewView?.controller?.initializationFuture?.isDone == true) {
+            if (isCameraReady) {
                 val torchState = camera?.cameraInfo?.torchState?.observeAsState()
                 val isFlashOn = torchState?.value == TorchState.ON
                 val isNextCameraFront = lensFacing == CameraSelector.LENS_FACING_BACK

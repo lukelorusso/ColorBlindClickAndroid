@@ -19,6 +19,8 @@ import com.lukelorusso.presentation.ui.history.HistoryFragment
 import com.lukelorusso.presentation.ui.info.InfoFragment
 import com.lukelorusso.presentation.ui.preview.PreviewDialogFragment
 import com.lukelorusso.presentation.ui.settings.SettingsDialogFragment
+import androidx.core.view.isVisible
+import androidx.core.view.isGone
 
 
 class MainActivity : AppCompatActivity() {
@@ -116,8 +118,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun isBrokenViewVisible(): Boolean =
-        binding.brokenScreen.root.visibility == View.VISIBLE
-                && binding.viewPager.visibility == View.GONE
+        binding.brokenScreen.root.isVisible && binding.viewPager.isGone
 
     private fun showBrokenView() {
         binding.splash.root.visibility = View.GONE
