@@ -38,7 +38,7 @@ val presentationModule = module {
     //region ViewModel
     viewModel { CaptureViewModel(get(), get(), get(), get(), get(), get(), get()) }
     viewModel { HistoryViewModel(get(), get(), get(), get()) }
-    viewModel { InfoViewModel(get(), get(), get(), get()) }
+    viewModel { InfoViewModel(get(), get(), get(), get(), get()) }
     viewModel { PreviewViewModel(get(), get()) }
     viewModel { SettingsViewModel(get(), get(), get(), get()) }
     viewModel { ImagePickerViewModel(get(), get(), get()) }

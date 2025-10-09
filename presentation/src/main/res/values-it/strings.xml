@@ -12,8 +12,9 @@
     <string name="yes">Si</string>
     <string name="no">No</string>
     <string name="history_search_hint">Cerca un colore…</string>
-    <string name="info_home">Web Page</string>
-    <string name="info_help">Aiuto</string>
+    <string name="info_app">Informazioni su questa app</string>
+    <string name="info_home">Pagina del servizio Web</string>
+    <string name="info_help">Aiuto del servizio Web</string>
     <string name="info_about_me">Luke Lorusso (su di me)</string>
     <string name="info_settings">Impostazioni</string>
     <string name="settings_viewfinder_pixels">Griglia di pixel del mirino</string>

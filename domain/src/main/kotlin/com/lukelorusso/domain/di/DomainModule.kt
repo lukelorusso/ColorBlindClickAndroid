@@ -7,9 +7,10 @@ val domainModule = module {
     //region UseCase
     factory { DecodeColorHexUseCase(get(), get(), get()) }
 
+    factory { GetAboutAppUrlUseCase(get()) }
+    factory { GetApiHomeUrlUseCase(get(), get()) }
+    factory { GetApiHelpUrlUseCase(get(), get()) }
     factory { GetAboutMeUrlUseCase(get()) }
-    factory { GetHelpUrlUseCase(get(), get()) }
-    factory { GetHomeUrlUseCase(get(), get()) }
     factory { GetStoreUrlUseCase(get()) }
 
     factory { GetPixelNeighbourhoodUseCase(get()) }

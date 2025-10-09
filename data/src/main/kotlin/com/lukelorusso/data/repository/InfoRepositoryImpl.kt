@@ -5,19 +5,22 @@ import com.lukelorusso.data.net.TheColorRetrofitFactory
 import com.lukelorusso.domain.repository.InfoRepository
 
 class InfoRepositoryImpl : InfoRepository {
-    override fun getHelpUrl(deviceLanguage: String): String =
+    override fun getApiHomeUrl(deviceLanguage: String): String =
+        if (deviceLanguage == "en") TheColorRetrofitFactory.WEBSITE
+        else String.format(
+            SaveDevRetrofitFactory.WEBSITE_HOME,
+            deviceLanguage
+        )
+
+    override fun getApiHelpUrl(deviceLanguage: String): String =
         if (deviceLanguage == "en") TheColorRetrofitFactory.WEBSITE_HELP
         else String.format(
             SaveDevRetrofitFactory.WEBSITE_HELP,
             deviceLanguage
         )
 
-    override fun getHomeUrl(deviceLanguage: String): String =
-        if (deviceLanguage == "en") TheColorRetrofitFactory.WEBSITE
-        else String.format(
-            SaveDevRetrofitFactory.WEBSITE_HOME,
-            deviceLanguage
-        )
+    override fun getAboutAppUrl(): String =
+        WEBSITE_ABOUT_APP
 
     override fun getAboutMeUrl(): String =
         WEBSITE_ABOUT_ME

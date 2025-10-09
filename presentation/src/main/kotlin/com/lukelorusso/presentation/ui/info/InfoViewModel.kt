@@ -11,8 +11,9 @@ import kotlinx.coroutines.launch
 
 class InfoViewModel(
     private val trackerHelper: TrackerHelper,
-    private val getHelpUrl: GetHelpUrlUseCase,
-    private val getHomeUrl: GetHomeUrlUseCase,
+    private val getAboutAppUrl: GetAboutAppUrlUseCase,
+    private val getApiHomeUrl: GetApiHomeUrlUseCase,
+    private val getApiHelpUrl: GetApiHelpUrlUseCase,
     private val getAboutMeUrl: GetAboutMeUrlUseCase
 ) : AppViewModel<InfoUiState>() {
     override val _uiState = MutableStateFlow(InfoUiState())
@@ -33,11 +34,24 @@ class InfoViewModel(
     fun gotoCamera() =
         router.routeToCamera()
 
-    fun gotoHome() {
+    fun gotoAboutApp() {
         dismissError()
         viewModelScope.launch {
             try {
-                val url = getHomeUrl.invoke(Unit)
+                val url = getAboutAppUrl.invoke(Unit)
+                trackerHelper.track(TrackerHelper.Action.GOTO_ABOUT_APP_PAGE)
+                router.routeToBrowser(url)
+            } catch (t: Throwable) {
+                updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
+            }
+        }
+    }
+
+    fun gotoApiHome() {
+        dismissError()
+        viewModelScope.launch {
+            try {
+                val url = getApiHomeUrl.invoke(Unit)
                 trackerHelper.track(TrackerHelper.Action.GOTO_HOME_PAGE)
                 router.routeToBrowser(url)
             } catch (t: Throwable) {
@@ -46,11 +60,11 @@ class InfoViewModel(
         }
     }
 
-    fun gotoHelp() {
+    fun gotoApiHelp() {
         dismissError()
         viewModelScope.launch {
             try {
-                val url = getHelpUrl.invoke(Unit)
+                val url = getApiHelpUrl.invoke(Unit)
                 trackerHelper.track(TrackerHelper.Action.GOTO_HELP_PAGE)
                 router.routeToBrowser(url)
             } catch (t: Throwable) {

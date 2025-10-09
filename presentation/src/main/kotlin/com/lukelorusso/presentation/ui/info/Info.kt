@@ -51,24 +51,33 @@ fun Info(
                 item {
                     InfoItem(
                         isEven = true,
-                        iconPainter = painterResource(id = R.drawable.info_home),
-                        text = stringResource(id = R.string.info_home),
-                        onClick = viewModel::gotoHome
+                        iconPainter = painterResource(id = R.drawable.info_app),
+                        text = stringResource(id = R.string.info_app),
+                        onClick = viewModel::gotoAboutApp
                     )
                 }
 
                 item {
                     InfoItem(
                         isEven = false,
-                        iconPainter = painterResource(id = R.drawable.info_help),
-                        text = stringResource(id = R.string.info_help),
-                        onClick = viewModel::gotoHelp
+                        iconPainter = painterResource(id = R.drawable.info_home),
+                        text = stringResource(id = R.string.info_home),
+                        onClick = viewModel::gotoApiHome
                     )
                 }
 
                 item {
                     InfoItem(
                         isEven = true,
+                        iconPainter = painterResource(id = R.drawable.info_help),
+                        text = stringResource(id = R.string.info_help),
+                        onClick = viewModel::gotoApiHelp
+                    )
+                }
+
+                item {
+                    InfoItem(
+                        isEven = false,
                         iconPainter = painterResource(id = R.drawable.info_about_me),
                         text = stringResource(id = R.string.info_about_me),
                         onClick = viewModel::gotoAboutMe
@@ -77,7 +86,7 @@ fun Info(
 
                 item {
                     InfoItem(
-                        isEven = false,
+                        isEven = true,
                         iconPainter = painterResource(id = R.drawable.info_settings),
                         text = stringResource(id = R.string.info_settings),
                         onClick = viewModel::gotoSettings

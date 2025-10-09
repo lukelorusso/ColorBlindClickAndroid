@@ -15,6 +15,7 @@ class TrackerHelper internal constructor(context: Context) {
     object Action {
         const val DELETED_ITEM = "DELETED_ITEM"
         const val DELETED_ALL_ITEMS = "DELETED_ALL_ITEMS"
+        const val GOTO_ABOUT_APP_PAGE = "GOTO_ABOUT_APP_PAGE"
         const val GOTO_HOME_PAGE = "GOTO_HOME_PAGE"
         const val GOTO_HELP_PAGE = "GOTO_HELP_PAGE"
         const val GOTO_ABOUT_ME_PAGE = "GOTO_ABOUT_ME_PAGE"

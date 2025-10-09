@@ -12,8 +12,9 @@
     <string name="yes">Oui</string>
     <string name="no">Non</string>
     <string name="history_search_hint">Rechercher une couleur…</string>
-    <string name="info_home">Site Web</string>
-    <string name="info_help">Aide</string>
+    <string name="info_app">À propos de cette application</string>
+    <string name="info_home">Page du service Web</string>
+    <string name="info_help">Aide du service Web</string>
     <string name="info_about_me">Luke Lorusso (à propos de moi)</string>
     <string name="info_settings">Paramètres</string>
     <string name="settings_viewfinder_pixels">Grille de pixels du viseur</string>
