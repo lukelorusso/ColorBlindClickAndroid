@@ -1,16 +1,22 @@
 package com.lukelorusso.domain.usecase
 
-import com.lukelorusso.domain.repository.InfoRepository
-import com.lukelorusso.domain.repository.SettingsRepository
+import com.lukelorusso.domain.repository.*
+import com.lukelorusso.domain.repository.ApiRepository.Companion.getApiByLanguage
 import com.lukelorusso.domain.usecase.base.UseCase
 
 class GetApiHomeUrlUseCase(
-    private val infoRepository: InfoRepository,
+    private val theColorApiRepository: TheColorApiRepository,
+    private val saveDevApiRepository: SaveDevApiRepository,
     private val settingsRepository: SettingsRepository
 ) : UseCase<Unit, String>() {
 
     override suspend fun run(param: Unit): String {
-        return infoRepository.getApiHomeUrl(settingsRepository.getDeviceLanguage())
-    }
+        val deviceLanguage = settingsRepository.getDeviceLanguage()
 
+        return getApiByLanguage(
+            deviceLanguage,
+            theColorApiRepository,
+            saveDevApiRepository
+        ).getHomeUrl(deviceLanguage)
+    }
 }

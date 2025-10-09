@@ -8,8 +8,8 @@ val domainModule = module {
     factory { DecodeColorHexUseCase(get(), get(), get()) }
 
     factory { GetAboutAppUrlUseCase(get()) }
-    factory { GetApiHomeUrlUseCase(get(), get()) }
-    factory { GetApiHelpUrlUseCase(get(), get()) }
+    factory { GetApiHomeUrlUseCase(get(), get(), get()) }
+    factory { GetApiHelpUrlUseCase(get(), get(), get()) }
     factory { GetAboutMeUrlUseCase(get()) }
     factory { GetStoreUrlUseCase(get()) }
 

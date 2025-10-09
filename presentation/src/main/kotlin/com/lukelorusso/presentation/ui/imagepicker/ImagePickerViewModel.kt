@@ -63,7 +63,7 @@ class ImagePickerViewModel(
         viewModelScope.launch {
             try {
                 val param = DecodeColorHexUseCase.Param(
-                    hex = pixelColorToHash,
+                    colorHex = pixelColorToHash,
                     deviceUdid = router.activity.getDeviceUdid()
                 )
                 val color = decodeColorHex.invoke(param)

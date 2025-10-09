@@ -3,15 +3,15 @@ package com.lukelorusso.data.repository.impl
 import com.lukelorusso.data.mapper.SaveDevMapper
 import com.lukelorusso.data.net.dto.SaveDevResponseDTO
 import com.lukelorusso.domain.model.Color
-import com.lukelorusso.domain.repository.SaveDevRepository
+import com.lukelorusso.domain.repository.SaveDevApiRepository
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 import java.io.InputStream
 
-class SaveDevRepositoryMockImpl(
+class SaveDevApiRepositoryMockImpl(
     private val colorMapper: SaveDevMapper
-) : SaveDevRepository {
+) : SaveDevApiRepository {
     private val json = Json { ignoreUnknownKeys = true }
 
     override suspend fun decodeColorHex(colorHex: String, deviceUdid: String): Color {

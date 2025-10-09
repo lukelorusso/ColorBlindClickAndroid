@@ -22,7 +22,7 @@ class CaptureTest : AppTest() {
 
     @Test
     fun decodeColorHex(): Unit = runBlocking {
-        val color = viewModel.decodeColorHex(DecodeColorHexUseCase.Param(hex = "#52851E", deviceUdid = "JUnit"))
+        val color = viewModel.decodeColorHex(DecodeColorHexUseCase.Param(colorHex = "#52851E", deviceUdid = "JUnit"))
         assert(color.originalColorHex() == "#52851E")
     }
 

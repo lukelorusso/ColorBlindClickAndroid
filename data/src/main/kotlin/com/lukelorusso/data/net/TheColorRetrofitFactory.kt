@@ -14,7 +14,7 @@ object TheColorRetrofitFactory {
         "https://www.thecolorapi.com/"
     const val WEBSITE =
         "https://www.thecolorapi.com/"
-    const val WEBSITE_HELP =
+    const val WEBSITE_DOCS =
         WEBSITE + "docs"
 
     /**

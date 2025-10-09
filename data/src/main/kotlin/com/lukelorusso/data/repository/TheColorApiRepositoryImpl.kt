@@ -3,18 +3,19 @@ package com.lukelorusso.data.repository
 import com.lukelorusso.data.datasource.DatabaseDataSource
 import com.lukelorusso.data.datasource.HttpManager
 import com.lukelorusso.data.mapper.TheColorMapper
+import com.lukelorusso.data.net.TheColorRetrofitFactory
 import com.lukelorusso.data.net.api.TheColorApi
 import com.lukelorusso.domain.model.Color
-import com.lukelorusso.domain.repository.TheColorRepository
+import com.lukelorusso.domain.repository.TheColorApiRepository
 
-class TheColorRepositoryImpl(
+class TheColorApiRepositoryImpl(
     private val api: TheColorApi,
     private val httpManager: HttpManager,
     private val mapper: TheColorMapper,
     private val databaseDataSource: DatabaseDataSource
-) : TheColorRepository {
+) : TheColorApiRepository {
 
-    override suspend fun decodeColorHex(colorHex: String): Color {
+    override suspend fun decodeColorHex(colorHex: String, deviceLanguage: String, deviceUdid: String): Color {
         val newColor: Color = httpManager.restCall(
             call = {
                 api.getColor(
@@ -35,4 +36,9 @@ class TheColorRepositoryImpl(
         return newColor
     }
 
+    override fun getHomeUrl(deviceLanguage: String): String =
+        TheColorRetrofitFactory.WEBSITE
+
+    override fun getHelpUrl(deviceLanguage: String): String =
+        TheColorRetrofitFactory.WEBSITE_DOCS
 }

@@ -1,7 +1,7 @@
 package com.lukelorusso.data.mapper
 
-import com.lukelorusso.data.repository.impl.SaveDevRepositoryMockImpl
-import com.lukelorusso.domain.repository.SaveDevRepository
+import com.lukelorusso.data.repository.impl.SaveDevApiRepositoryMockImpl
+import com.lukelorusso.domain.repository.SaveDevApiRepository
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -10,12 +10,12 @@ import org.koin.core.component.KoinApiExtension
 
 class SaveDevColorMapperTest {
     private val colorMapper = SaveDevMapper()
-    private lateinit var repository: SaveDevRepository
+    private lateinit var repository: SaveDevApiRepository
 
     @KoinApiExtension
     @Before
     fun setup() {
-        repository = SaveDevRepositoryMockImpl(colorMapper)
+        repository = SaveDevApiRepositoryMockImpl(colorMapper)
     }
 
     @Test

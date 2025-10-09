@@ -2,30 +2,31 @@ package com.lukelorusso.domain.usecase
 
 import com.lukelorusso.domain.model.Color
 import com.lukelorusso.domain.repository.*
+import com.lukelorusso.domain.repository.ApiRepository.Companion.getApiByLanguage
 import com.lukelorusso.domain.usecase.base.UseCase
 
 class DecodeColorHexUseCase(
-    private val saveDevRepository: SaveDevRepository,
-    private val theColorRepository: TheColorRepository,
+    private val theColorApiRepository: TheColorApiRepository,
+    private val saveDevApiRepository: SaveDevApiRepository,
     private val settingsRepository: SettingsRepository
 ) : UseCase<DecodeColorHexUseCase.Param, Color>() {
 
     override suspend fun run(param: Param): Color {
         val deviceLanguage = settingsRepository.getDeviceLanguage()
 
-        return if (deviceLanguage == "en")
-            theColorRepository.decodeColorHex(param.hex)
-        else
-            saveDevRepository.decodeColorHex(
-                param.hex,
-                deviceLanguage,
-                param.deviceUdid
-            )
+        return getApiByLanguage(
+            deviceLanguage,
+            theColorApiRepository,
+            saveDevApiRepository
+        ).decodeColorHex(
+            param.colorHex,
+            deviceLanguage,
+            param.deviceUdid
+        )
     }
 
     data class Param(
-        val hex: String,
+        val colorHex: String,
         val deviceUdid: String
     )
-
 }

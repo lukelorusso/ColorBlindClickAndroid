@@ -35,16 +35,16 @@ val dataModule = module {
     //endregion
 
     //region Repository
-    factory<SaveDevRepository> {
-        SaveDevRepositoryImpl(
+    factory<SaveDevApiRepository> {
+        SaveDevApiRepositoryImpl(
             (get() as Retrofit).api(),
             get(),
             get(),
             get()
         )
     }
-    factory<TheColorRepository> {
-        TheColorRepositoryImpl(
+    factory<TheColorApiRepository> {
+        TheColorApiRepositoryImpl(
             (get() as Retrofit).api(),
             get(),
             get(),
