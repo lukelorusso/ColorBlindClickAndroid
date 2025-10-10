@@ -31,11 +31,15 @@ In this project you can find
 
 - - -
 
-The app consumes APIs from a web service to retrieve colors' info.
+This app DOES NOT provide any sort of color database. In fact, it simply takes the target pixel's color, gets its hash representation, and then consumes APIs from web services to retrieve the corresponding color definition.  
+If you find any discrepancy between the real color and its definition, you should refer to the color API provider:
+ - for English speakers: https://www.thecolorapi.com/
+ - for Italian/French speakers: https://savedev.altervista.org/SD-Frontend/colorblindclick/index.php
+
+If you find, instead, any issue about the app itself, like bugs, crashes or incompatibilities, feel free to contact me!
 
 - - -
 
 ## Copyright ##
 
-The App: Copyright 2022 LUCA LORUSSO - https://lukelorusso.com/  
-The Backend: Copyright 2016 SAVERIO CIOTOLI  
+The App: Copyright 2025 LUCA LORUSSO - https://lukelorusso.com/  
