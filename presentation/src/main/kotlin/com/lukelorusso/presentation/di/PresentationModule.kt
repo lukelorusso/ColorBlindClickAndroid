@@ -3,6 +3,7 @@ package com.lukelorusso.presentation.di
 import com.lukelorusso.domain.usecase.base.Logger
 import com.lukelorusso.presentation.error.ErrorMessageFactory
 import com.lukelorusso.presentation.helper.TrackerHelper
+import com.lukelorusso.presentation.helper.impl.TrackerHelperImpl
 import com.lukelorusso.presentation.logger.TimberLogger
 import com.lukelorusso.presentation.ui.capture.CaptureViewModel
 import com.lukelorusso.presentation.ui.error.ErrorMessageFactoryImpl
@@ -32,7 +33,7 @@ val presentationModule = module {
             }
         }
     }
-    factory { TrackerHelper(get()) }
+    factory<TrackerHelper> { TrackerHelperImpl(get()) }
     //endregion
 
     //region ViewModel

@@ -3,9 +3,11 @@ package com.lukelorusso.presentation.ui.base
 import com.lukelorusso.data.di.dataTestModule
 import com.lukelorusso.domain.di.domainModule
 import com.lukelorusso.presentation.di.presentationTestModule
+import org.junit.Before
 import org.junit.Rule
+import org.koin.core.context.GlobalContext.startKoin
 import org.koin.test.KoinTest
-import org.koin.test.KoinTestRule
+import java.util.*
 
 /**
  * Copyright (C) 2024 Luke Lorusso
@@ -13,15 +15,21 @@ import org.koin.test.KoinTestRule
  */
 abstract class AppTest : KoinTest {
 
+    @get:Rule
+    val mainDispatcherRule = MainDispatcherRule()
+
+    @Before
+    fun setupAppTest() {
+        startKoin {
+            modules(modules)
+        }
+        Locale.setDefault(Locale("it_IT"))
+    }
+
     companion object {
         private val modules = dataTestModule +
                 domainModule +
                 presentationTestModule
-    }
-
-    @get:Rule
-    val koinTestRule = KoinTestRule.create {
-        modules(modules)
     }
 
 }

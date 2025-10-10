@@ -6,13 +6,11 @@ import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import org.koin.core.component.KoinApiExtension
 
-class SaveDevColorMapperTest {
+class SaveDevMapperTest {
     private val colorMapper = SaveDevMapper()
     private lateinit var repository: SaveDevApiRepository
 
-    @KoinApiExtension
     @Before
     fun setup() {
         repository = SaveDevApiRepositoryMockImpl(colorMapper)
@@ -20,7 +18,7 @@ class SaveDevColorMapperTest {
 
     @Test
     fun transform(): Unit = runBlocking {
-        val color = repository.decodeColorHex("#52851E", "junit")
+        val color = repository.decodeColorHex("#52851E", "en", "junit")
         assertEquals(color.colorHex, "#6B8E23")
         assertEquals(color.colorName, "Olive Green")
         assertEquals(color.originalColorHex(), "#52851E")

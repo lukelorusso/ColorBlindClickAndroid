@@ -16,12 +16,12 @@ class TheColorMapper {
      * @return [Color] if valid [TheColorResponseDTO]
      */
     fun transform(dto: TheColorResponseDTO): Color = Color(
-        colorHex = dto.hex.value,
+        colorHex = dto.name.closest_named_hex,
         colorName = dto.name.value,
         returnMsg = "Similar color found",
         similarity = dto.name.distance.toString(),
         timestamp = System.currentTimeMillis(),
-        originalColor = dto.name.closest_named_hex
+        originalColor = dto.hex.value
     )
     //endregion
 

@@ -1,6 +1,8 @@
 package com.lukelorusso.presentation.di
 
 import com.lukelorusso.domain.usecase.base.Logger
+import com.lukelorusso.presentation.helper.TrackerHelper
+import com.lukelorusso.presentation.helper.impl.TrackerHelperImplTest
 import org.koin.dsl.module
 
 /**
@@ -20,5 +22,6 @@ val presentationTestModule = module {
             }
         }
     }
+    factory<TrackerHelper> { TrackerHelperImplTest() }
     //endregion
 }

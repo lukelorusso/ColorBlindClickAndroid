@@ -1,17 +1,17 @@
 package com.lukelorusso.data.repository.impl
 
-import com.lukelorusso.data.mapper.SaveDevMapper
-import com.lukelorusso.data.net.dto.SaveDevResponseDTO
+import com.lukelorusso.data.mapper.TheColorMapper
+import com.lukelorusso.data.net.dto.TheColorResponseDTO
 import com.lukelorusso.domain.model.Color
-import com.lukelorusso.domain.repository.SaveDevApiRepository
+import com.lukelorusso.domain.repository.TheColorApiRepository
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 import java.io.InputStream
 
-class SaveDevApiRepositoryMockImpl(
-    private val colorMapper: SaveDevMapper
-) : SaveDevApiRepository {
+class TheColorApiRepositoryMockImpl(
+    private val colorMapper: TheColorMapper
+) : TheColorApiRepository {
     private val json = Json { ignoreUnknownKeys = true }
 
     override suspend fun decodeColorHex(colorHex: String, deviceLanguage: String, deviceUdid: String): Color {
@@ -20,14 +20,14 @@ class SaveDevApiRepositoryMockImpl(
     }
 
     @OptIn(ExperimentalSerializationApi::class)
-    private fun parseDtoFromJson(): SaveDevResponseDTO {
+    private fun parseDtoFromJson(): TheColorResponseDTO {
         val inputStream: InputStream =
             this::class.java.classLoader?.getResourceAsStream(COLOR_FILENAME) ?: error("Failed to load $COLOR_FILENAME")
-        return json.decodeFromStream<SaveDevResponseDTO>(inputStream)
+        return json.decodeFromStream<TheColorResponseDTO>(inputStream)
     }
 
     companion object {
-        private const val COLOR_FILENAME = "savedev_api_response.json"
+        private const val COLOR_FILENAME = "thecolor_api_response.json"
     }
 
     override fun getHomeUrl(deviceLanguage: String): String =

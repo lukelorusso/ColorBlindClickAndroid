@@ -1,16 +1,10 @@
 package com.lukelorusso.presentation.helper
 
-import android.content.Context
-import android.os.Bundle
-import com.google.firebase.analytics.FirebaseAnalytics
-import com.lukelorusso.presentation.BuildConfig
-import timber.log.Timber
-
 /**
  * Copyright (C) 2024 Luke Lorusso
  * Licensed under the Apache License Version 2.0
  */
-class TrackerHelper internal constructor(context: Context) {
+abstract class TrackerHelper {
 
     object Action {
         const val DELETED_ITEM = "DELETED_ITEM"
@@ -26,15 +20,5 @@ class TrackerHelper internal constructor(context: Context) {
         const val PERSISTENCE_EXCEPTION = "PERSISTENCE_EXCEPTION"
     }
 
-    private val firebaseAnalytics = FirebaseAnalytics.getInstance(context)
-
-    fun track(action: String) {
-        if (BuildConfig.ENABLE_ANALYTICS) {
-            Timber.d("TrackerHelper -> $action")
-            firebaseAnalytics.logEvent(
-                FirebaseAnalytics.Event.SCREEN_VIEW,
-                Bundle().apply { putString(FirebaseAnalytics.Param.SCREEN_NAME, action) }
-            )
-        }
-    }
+    abstract fun track(action: String)
 }
