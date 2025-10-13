@@ -3,7 +3,7 @@ package com.lukelorusso.data.repository
 import com.lukelorusso.data.datasource.DatabaseDataSource
 import com.lukelorusso.data.datasource.HttpManager
 import com.lukelorusso.data.mapper.TheColorMapper
-import com.lukelorusso.data.net.TheColorRetrofitFactory
+import com.lukelorusso.data.net.RetrofitFactory
 import com.lukelorusso.data.net.api.TheColorApi
 import com.lukelorusso.domain.model.Color
 import com.lukelorusso.domain.repository.TheColorApiRepository
@@ -37,8 +37,8 @@ class TheColorApiRepositoryImpl(
     }
 
     override fun getHomeUrl(deviceLanguage: String): String =
-        TheColorRetrofitFactory.WEBSITE
+        RetrofitFactory.TheColorApi.WEBSITE
 
     override fun getHelpUrl(deviceLanguage: String): String =
-        TheColorRetrofitFactory.WEBSITE_DOCS
+        RetrofitFactory.TheColorApi.WEBSITE_DOCS
 }

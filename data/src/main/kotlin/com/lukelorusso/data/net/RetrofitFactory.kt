@@ -8,18 +8,29 @@ import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
 
-object SaveDevRetrofitFactory {
+object RetrofitFactory {
 
-    private const val API_BASE_URL =
-        "https://savedev.altervista.org/SD-Frontend/colorblindness/"
-    private const val WEBSITE =
-        "https://savedev.altervista.org/"
-    const val API_OS = "android"
-    const val API_VERSION = "1"
-    const val WEBSITE_HELP =
-        WEBSITE + "SD-Frontend/colorblindclick/help.php?lang=%s"
-    const val WEBSITE_HOME =
-        WEBSITE + "SD-Frontend/colorblindclick/index.php?setlang=%s"
+    object SaveDevApi {
+        const val API_BASE_URL =
+            "https://savedev.altervista.org/SD-Frontend/colorblindness/"
+        private const val WEBSITE =
+            "https://savedev.altervista.org/"
+        const val API_OS = "android"
+        const val API_VERSION = "1"
+        const val WEBSITE_HELP =
+            WEBSITE + "SD-Frontend/colorblindclick/help.php?lang=%s"
+        const val WEBSITE_HOME =
+            WEBSITE + "SD-Frontend/colorblindclick/index.php?setlang=%s"
+    }
+
+    object TheColorApi {
+        const val API_BASE_URL =
+            "https://www.thecolorapi.com/"
+        const val WEBSITE =
+            "https://www.thecolorapi.com/"
+        const val WEBSITE_DOCS =
+            WEBSITE + "docs"
+    }
 
     /**
      * Get [Retrofit] instance for main webservice.
@@ -32,7 +43,7 @@ object SaveDevRetrofitFactory {
         context: Context? = null
     ): Retrofit =
         Retrofit.Builder()
-            .baseUrl(API_BASE_URL)
+            .baseUrl("http://localhost/")
             .addConverterFactory(json.asConverterFactory("application/json; charset=UTF8".toMediaType()))
             .client(okHttpClientFactory.createOkHttpClient(context))
             .build()

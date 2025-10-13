@@ -7,8 +7,7 @@ import com.lukelorusso.data.extensions.api
 import com.lukelorusso.data.mapper.SaveDevMapper
 import com.lukelorusso.data.mapper.TheColorMapper
 import com.lukelorusso.data.net.OkHttpClientFactory
-import com.lukelorusso.data.net.SaveDevRetrofitFactory
-import com.lukelorusso.data.net.TheColorRetrofitFactory
+import com.lukelorusso.data.net.RetrofitFactory
 import com.lukelorusso.data.repository.*
 import com.lukelorusso.domain.repository.*
 import kotlinx.serialization.json.Json
@@ -24,8 +23,7 @@ val dataModule = module {
     factory { NetworkChecker(get()) }
     factory { HttpManager(get()) }
     factory { OkHttpClientFactory() }
-    factory { SaveDevRetrofitFactory.getRetrofitBuilder(get(), get(), get()) }
-    factory { TheColorRetrofitFactory.getRetrofitBuilder(get(), get(), get()) }
+    factory { RetrofitFactory.getRetrofitBuilder(get(), get(), get()) }
     //endregion
 
     //region Mapper
