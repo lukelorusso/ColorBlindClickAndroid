@@ -94,8 +94,12 @@ fun Preview(
 
                     ResultToolbar(
                         textLine1 = color.colorName,
-                        textLine2 = color.originalColorHex(),
-                        textLine3 = color.originalColorHex().toRGBPercentString(),
+                        textLine2 = color
+                            .originalColorHex()
+                            .hashColorToRGBDecimal()
+                            .closestHtmlColor()
+                            .let { "HTML: " + stringResource(it.resId()) },
+                        textLine3 = color.originalColorHex() + ", " + color.originalColorHex().toRGBPercentString(),
                         onTextClick = onTextClick
                     ) {
                         FAB(

@@ -14,8 +14,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.*
 import androidx.compose.ui.unit.dp
 import com.lukelorusso.presentation.R
-import com.lukelorusso.presentation.extensions.parseToColor
-import com.lukelorusso.presentation.extensions.toRGBPercentString
+import com.lukelorusso.presentation.extensions.*
 import com.lukelorusso.presentation.ui.capture.*
 import com.lukelorusso.domain.model.Color as ColorEntity
 
@@ -49,8 +48,14 @@ internal fun CaptureBottomToolbar(
             }
             ResultToolbar(
                 textLine1 = color?.colorName,
-                textLine2 = color?.originalColorHex() ?: errorMessage,
-                textLine3 = color?.originalColorHex()?.toRGBPercentString(),
+                textLine2 = color
+                    ?.originalColorHex()
+                    ?.hashColorToRGBDecimal()
+                    ?.closestHtmlColor()
+                    ?.let { "HTML: " + stringResource(it.resId()) },
+                textLine3 = color
+                    ?.run { originalColorHex() + ", " + originalColorHex().toRGBPercentString() }
+                    ?: errorMessage,
                 contentAlignment = Alignment.CenterEnd,
                 onTextClick = clickCallback
             ) {
