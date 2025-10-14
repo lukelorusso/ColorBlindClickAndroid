@@ -1,8 +1,8 @@
 package com.lukelorusso.presentation.extensions
 
 import android.graphics.*
-import java.io.FileOutputStream
 import androidx.core.graphics.get
+import java.io.FileOutputStream
 
 /**
  * @param averageNeighbourhood is the number of pixel next to the central one;
@@ -12,7 +12,7 @@ import androidx.core.graphics.get
  * - if 2 the color will be determined by the 5x5 pixel matrix = average of 25 pixel colors
  * ... and so on
  */
-fun Bitmap.getCentralColor(averageNeighbourhood: Int = 0): Int {
+fun Bitmap.getCentralPixelHash(averageNeighbourhood: Int = 0): String {
     var redBucket: Long = 0
     var greenBucket: Long = 0
     var blueBucket: Long = 0
@@ -30,11 +30,15 @@ fun Bitmap.getCentralColor(averageNeighbourhood: Int = 0): Int {
         }
     }
 
-    return Color.rgb(
-        (redBucket / pixelCount).toInt(),
-        (greenBucket / pixelCount).toInt(),
-        (blueBucket / pixelCount).toInt()
-    )
+    val twoDigits: (String) -> String = { if (it.length == 1) "0$it" else it }
+    val redHex = Integer.toHexString((redBucket / pixelCount).toInt())
+    val greenHex = Integer.toHexString((greenBucket / pixelCount).toInt())
+    val blueHex = Integer.toHexString((blueBucket / pixelCount).toInt())
+    return Triple(
+        twoDigits(redHex).uppercase(),
+        twoDigits(greenHex).uppercase(),
+        twoDigits(blueHex).uppercase()
+    ).let { hexTriple -> "#${hexTriple.first}${hexTriple.second}${hexTriple.third}" }
 }
 
 /**

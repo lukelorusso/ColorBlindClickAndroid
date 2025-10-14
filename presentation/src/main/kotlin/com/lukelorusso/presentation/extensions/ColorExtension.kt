@@ -1,60 +1,53 @@
 package com.lukelorusso.presentation.extensions
 
-import com.lukelorusso.domain.model.Color
 import java.math.BigDecimal
 import java.math.RoundingMode
+import com.lukelorusso.domain.model.Color as ColorEntity
 
-const val LINE_BREAK = "\n"
+private const val LINE_BREAK = "\n"
 
 /**
- * PIXEL: -10668497 -> RGB: 93, 54, 47 -> HASH: #5D362F
+ * HASH: #5D362F -> RGB: 93, 54, 47
  */
-fun Int.pixelColorToHash(): String {
-    val hashR = Integer.toHexString(android.graphics.Color.red(this)).let {
-        if (it.length == 1) "0$it" else it
-    }
-    val hashG = Integer.toHexString(android.graphics.Color.green(this)).let {
-        if (it.length == 1) "0$it" else it
-    }
-    val hashB = Integer.toHexString(android.graphics.Color.blue(this)).let {
-        if (it.length == 1) "0$it" else it
-    }
-    return "#$hashR$hashG$hashB"
+fun String.hashColorToRGBDecimal(): Triple<Int, Int, Int> {
+    val hash = this
+        .removePrefix("#")
+        .run { if (length == 8) takeLast(6) else this }
+        .run { if (length == 3) "0${get(0)}0${get(1)}0${get(1)}" else this }
+
+    if (hash.length != 6) return Triple(0, 0, 0)
+
+    val intR = hash.substring(0, 2).toInt(16)
+    val intG = hash.substring(2, 4).toInt(16)
+    val intB = hash.substring(4, 6).toInt(16)
+
+    return Triple(intR, intG, intB)
 }
 
 /**
- * HASH: #5D362F -> PIXEL: -10668497
+ * HASH: #5D362F -> rgb(36.47%, 21.18%, 18.43%)
  */
-fun String.hashColorToPixel(): Int =
-    android.graphics.Color.parseColor(this)
+fun String.toRGBPercentString(): String =
+    this.hashColorToRGBDecimal().toRGBPercentString()
 
 /**
- * HASH: #5D362F -> [36.470588235294116, 21.176470588235293, 18.431372549019606]
+ * RGB: 93, 54, 47 -> rgb(36.47%, 21.18%, 18.43%)
  */
-fun String.hashColorToPercent(): List<Double> {
-    val pixelColor = this.hashColorToPixel()
-    val percentR = android.graphics.Color.red(pixelColor).toDouble() / 255 * 100
-    val percentG = android.graphics.Color.green(pixelColor).toDouble() / 255 * 100
-    val percentB = android.graphics.Color.blue(pixelColor).toDouble() / 255 * 100
-    return listOf(percentR, percentG, percentB)
+fun Triple<Int, Int, Int>.toRGBPercentString(): String {
+    val places = 2
+    val red = BigDecimal(this.first.toDouble() / 255 * 100)
+        .setScale(places, RoundingMode.HALF_UP)
+    val green = BigDecimal(this.second.toDouble() / 255 * 100)
+        .setScale(places, RoundingMode.HALF_UP)
+    val blue = BigDecimal(this.third.toDouble() / 255 * 100)
+        .setScale(places, RoundingMode.HALF_UP)
+    return "rgb($red%, $green%, $blue%)"
 }
 
-fun Color.sharableDescription(credits: String): String {
+fun ColorEntity.sharableDescription(credits: String): String {
     return (this.colorName + LINE_BREAK
             + this.originalColorHex().uppercase() + LINE_BREAK
-            + this.toRGBPercentString() + LINE_BREAK
+            + this.originalColorHex().toRGBPercentString() + LINE_BREAK
             + LINE_BREAK
             + credits)
-}
-
-fun Color.toRGBPercentString(): String {
-    val colors = this.originalColorHex().hashColorToPercent()
-    val places = 2
-    var red = BigDecimal(colors[0])
-    red = red.setScale(places, RoundingMode.HALF_UP)
-    var green = BigDecimal(colors[1])
-    green = green.setScale(places, RoundingMode.HALF_UP)
-    var blue = BigDecimal(colors[2])
-    blue = blue.setScale(places, RoundingMode.HALF_UP)
-    return "rgb($red%, $green%, $blue%)"
 }

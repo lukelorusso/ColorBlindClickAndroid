@@ -48,7 +48,7 @@ class ImagePickerViewModel(
         }
     }
 
-    fun decodeColor(pixelColorToHash: String) {
+    fun decodeColor(pixelColorHex: String) {
         if (uiState.value.contentState.isLoading) {
             return
         } else {
@@ -63,7 +63,7 @@ class ImagePickerViewModel(
         viewModelScope.launch {
             try {
                 val param = DecodeColorHexUseCase.Param(
-                    colorHex = pixelColorToHash,
+                    colorHex = pixelColorHex,
                     deviceUdid = router.activity.getDeviceUdid()
                 )
                 val color = decodeColorHex.invoke(param)

@@ -16,7 +16,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.lukelorusso.presentation.R
 import com.lukelorusso.presentation.error.ErrorMessageFactory
 import com.lukelorusso.presentation.extensions.*
-import com.lukelorusso.presentation.ui.base.BottomSheetUpperLine
+import com.lukelorusso.presentation.ui.base.*
 import com.lukelorusso.presentation.ui.error.ErrorAlertDialog
 
 @Composable
@@ -74,27 +74,39 @@ fun Preview(
                     val size = with(LocalDensity.current) {
                         dimensionResource(id = R.dimen.color_picker_dimens_big).roundToPx()
                     }
+                    val onTextClick: () -> Unit = {
+                        viewModel.shareText(
+                            text = description,
+                            popupLabel = textPopupLabel
+                        )
+                    }
+                    val onColorClick: () -> Unit = {
+                        viewModel.shareBitmap(
+                            bitmap = createBitmap(
+                                size,
+                                size,
+                                color.originalColorHex().parseToColor().toArgb()
+                            ),
+                            description = description,
+                            popupLabel = bitmapPopupLabel
+                        )
+                    }
 
-                    BottomToolbar(
-                        color = color,
-                        onTextClick = {
-                            viewModel.shareText(
-                                text = description,
-                                popupLabel = textPopupLabel
-                            )
-                        },
-                        onColorClick = {
-                            viewModel.shareBitmap(
-                                bitmap = createBitmap(
-                                    size,
-                                    size,
-                                    color.originalColorHex().parseToColor().toArgb()
-                                ),
-                                description = description,
-                                popupLabel = bitmapPopupLabel
-                            )
-                        }
-                    )
+                    ResultToolbar(
+                        textLine1 = color.colorName,
+                        textLine2 = color.originalColorHex(),
+                        textLine3 = color.originalColorHex().toRGBPercentString(),
+                        onTextClick = onTextClick
+                    ) {
+                        FAB(
+                            modifier = Modifier
+                                .align(Alignment.BottomEnd)
+                                .padding(16.dp)
+                                .size(FAB_DEFAULT_SIZE.dp),
+                            painter = painterResource(id = R.drawable.share_white),
+                            onClick = onColorClick
+                        )
+                    }
                 }
             }
         }

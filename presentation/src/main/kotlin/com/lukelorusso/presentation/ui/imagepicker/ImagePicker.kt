@@ -19,8 +19,7 @@ import coil.compose.AsyncImagePainter.State.Loading
 import coil.compose.rememberAsyncImagePainter
 import com.lukelorusso.presentation.R
 import com.lukelorusso.presentation.error.ErrorMessageFactory
-import com.lukelorusso.presentation.extensions.getCentralColor
-import com.lukelorusso.presentation.extensions.pixelColorToHash
+import com.lukelorusso.presentation.extensions.getCentralPixelHash
 import com.lukelorusso.presentation.ui.base.CaptureBottomToolbar
 import com.lukelorusso.zoomableimagebox.ui.view.ZoomableImageBox
 import com.smarttoolfactory.screenshot.*
@@ -60,8 +59,9 @@ internal fun ImagePicker(
         when (imageResult) {
             is ImageResult.Success ->
                 screenshotState.bitmap?.let { bitmap ->
-                    val pixel = bitmap.getCentralColor(viewModel.uiState.value.pixelNeighbourhood)
-                    viewModel.decodeColor(pixel.pixelColorToHash())
+                    val hash = bitmap
+                        .getCentralPixelHash(viewModel.uiState.value.pixelNeighbourhood)
+                    viewModel.decodeColor(hash)
                 }
 
             is ImageResult.Error ->

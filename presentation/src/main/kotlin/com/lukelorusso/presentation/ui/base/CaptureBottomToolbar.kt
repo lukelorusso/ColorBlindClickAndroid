@@ -4,26 +4,19 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.*
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.lukelorusso.presentation.R
 import com.lukelorusso.presentation.extensions.parseToColor
 import com.lukelorusso.presentation.extensions.toRGBPercentString
-import com.lukelorusso.presentation.ui.capture.ICON_BUTTON_PADDING
-import com.lukelorusso.presentation.ui.capture.ICON_BUTTON_SIZE
-import com.lukelorusso.presentation.ui.capture.ICON_SIZE
+import com.lukelorusso.presentation.ui.capture.*
 import com.lukelorusso.domain.model.Color as ColorEntity
 
 
@@ -57,11 +50,28 @@ internal fun CaptureBottomToolbar(
             ResultToolbar(
                 textLine1 = color?.colorName,
                 textLine2 = color?.originalColorHex() ?: errorMessage,
-                textLine3 = color?.toRGBPercentString(),
-                color = color?.originalColorHex()?.parseToColor(),
-                onTextClick = clickCallback,
-                onColorClick = clickCallback
-            )
+                textLine3 = color?.originalColorHex()?.toRGBPercentString(),
+                contentAlignment = Alignment.CenterEnd,
+                onTextClick = clickCallback
+            ) {
+                color?.originalColorHex()?.parseToColor()?.let {
+                    Canvas(
+                        modifier = Modifier
+                            .padding(10.dp)
+                            .size(dimensionResource(id = R.dimen.color_picker_dimens))
+                            .border(
+                                2.dp,
+                                colorResource(id = R.color.text_color),
+                                CircleShape
+                            )
+                            .clip(CircleShape)
+                            .clickable(onClick = clickCallback),
+                        onDraw = {
+                            drawRect(color = it)
+                        }
+                    )
+                }
+            }
         }
 
         Row(
@@ -146,92 +156,6 @@ internal fun CaptureBottomToolbar(
                     }
                 }
             } ?: Spacer(modifier = sideIconButtonModifier)
-        }
-    }
-}
-
-@Composable
-private fun ResultToolbar(
-    textLine1: String?,
-    textLine2: String?,
-    textLine3: String?,
-    color: Color?,
-    onTextClick: () -> Unit,
-    onColorClick: () -> Unit
-) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth(),
-        contentAlignment = Alignment.CenterEnd
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(
-                    color = colorResource(id = R.color.black_50),
-                    shape = RoundedCornerShape(16.dp, 16.dp)
-                )
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            textLine1?.let {
-                Text(
-                    modifier = Modifier
-                        .clickable(onClick = onTextClick),
-                    color = Color.White,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.W500,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    text = it
-                )
-
-                Spacer(modifier = Modifier.height(2.dp))
-            }
-
-            textLine2?.let {
-                Text(
-                    modifier = Modifier
-                        .clickable(onClick = onTextClick),
-                    color = Color.White,
-                    fontSize = 14.sp,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    text = it
-                )
-
-                Spacer(modifier = Modifier.height(2.dp))
-            }
-
-            textLine3?.let {
-                Text(
-                    modifier = Modifier
-                        .clickable(onClick = onTextClick),
-                    color = Color.White,
-                    fontSize = 14.sp,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    text = it
-                )
-            }
-        }
-
-        color?.let {
-            Canvas(
-                modifier = Modifier
-                    .padding(10.dp)
-                    .size(dimensionResource(id = R.dimen.color_picker_dimens))
-                    .border(
-                        2.dp,
-                        colorResource(id = R.color.text_color),
-                        CircleShape
-                    )
-                    .clip(CircleShape)
-                    .clickable(onClick = onColorClick),
-                onDraw = {
-                    drawRect(color = it)
-                }
-            )
         }
     }
 }

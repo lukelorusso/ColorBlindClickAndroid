@@ -151,8 +151,9 @@ fun Capture(
                 onRightButtonSelected = viewModel::gotoHistory,
                 onShutterSelected = {
                     previewView?.bitmap?.let { bitmap ->
-                        val pixel = bitmap.getCentralColor(viewModel.uiState.value.pixelNeighbourhood)
-                        viewModel.decodeColor(pixel.pixelColorToHash())
+                        val hash = bitmap
+                            .getCentralPixelHash(viewModel.uiState.value.pixelNeighbourhood)
+                        viewModel.decodeColor(hash)
                     }
                 },
                 onPreviewSelected = viewModel::gotoPreview

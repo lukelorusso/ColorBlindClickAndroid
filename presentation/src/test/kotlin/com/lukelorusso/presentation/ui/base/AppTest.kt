@@ -7,7 +7,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.koin.core.context.GlobalContext.startKoin
 import org.koin.test.KoinTest
-import java.util.*
 
 /**
  * Copyright (C) 2024 Luke Lorusso
@@ -23,7 +22,6 @@ abstract class AppTest : KoinTest {
         startKoin {
             modules(modules)
         }
-        Locale.setDefault(Locale("it_IT"))
     }
 
     companion object {
