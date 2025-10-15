@@ -15,8 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.lukelorusso.presentation.R
 import com.lukelorusso.presentation.error.ErrorMessageFactory
-import com.lukelorusso.presentation.extensions.createBitmap
-import com.lukelorusso.presentation.extensions.parseToColor
+import com.lukelorusso.presentation.extensions.*
 import com.lukelorusso.presentation.ui.base.*
 import com.lukelorusso.presentation.ui.error.ErrorAlertDialog
 import com.lukelorusso.domain.model.Color as ColorEntity
@@ -72,7 +71,7 @@ fun Preview(
                     )
 
                     val description = (stringResource(id = R.string.credits) + " " + uiState.storeUrl).let { credits ->
-                        color.sharableDescription(credits)
+                        color.toSharableDescription(credits)
                     }
                     val textPopupLabel = stringResource(id = R.string.choose_an_app)
                     val bitmapPopupLabel = stringResource(id = R.string.share_color)
@@ -99,8 +98,12 @@ fun Preview(
 
                     ResultToolbar(
                         textLine1 = color.colorName,
-                        textLine2 = color.originalColorHex(),
-                        textLine3 = color.toRGBPercentString(),
+                        textLine2 = color
+                            .originalColorHex()
+                            .hashColorToRGBDecimal()
+                            .closestHtmlColor()
+                            .toHtmlColorString(),
+                        textLine3 = color.toDetailedString(),
                         onTextClick = onTextClick
                     ) {
                         FAB(
@@ -118,10 +121,9 @@ fun Preview(
     }
 }
 
-private fun ColorEntity.sharableDescription(credits: String): String {
-    return (this.colorName + LINE_BREAK
-            + this.originalColorHex().uppercase() + LINE_BREAK
-            + this.toRGBPercentString() + LINE_BREAK
-            + LINE_BREAK
-            + credits)
-}
+@Composable
+private fun ColorEntity.toSharableDescription(credits: String): String = (this.colorName + LINE_BREAK
+        + this.originalColorHex().hashColorToRGBDecimal().closestHtmlColor().toHtmlColorString() + LINE_BREAK
+        + this.toDetailedString() + LINE_BREAK
+        + LINE_BREAK
+        + credits)

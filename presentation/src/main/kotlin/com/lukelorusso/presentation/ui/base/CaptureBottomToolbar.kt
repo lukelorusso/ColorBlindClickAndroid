@@ -48,8 +48,14 @@ internal fun CaptureBottomToolbar(
             }
             ResultToolbar(
                 textLine1 = color?.colorName,
-                textLine2 = color?.originalColorHex() ?: errorMessage,
-                textLine3 = color?.toRGBPercentString(),
+                textLine2 = color
+                    ?.originalColorHex()
+                    ?.hashColorToRGBDecimal()
+                    ?.closestHtmlColor()
+                    ?.toHtmlColorString(),
+                textLine3 = color
+                    ?.toDetailedString()
+                    ?: errorMessage,
                 contentAlignment = Alignment.CenterEnd,
                 onTextClick = clickCallback
             ) {
@@ -160,10 +166,19 @@ internal fun CaptureBottomToolbar(
 }
 
 /**
- * rgb(36.47%, 21.18%, 18.43%)
+ * HTML: Maroon
  */
-fun ColorEntity.toRGBPercentString(): String =
-    this.originalColorHex()
+@Composable
+fun HtmlColor.toHtmlColorString(): String =
+    "HTML: " + stringResource(this.resId())
+
+/**
+ * #5D362F, rgb(36.47%, 21.18%, 18.43%)
+ */
+fun ColorEntity.toDetailedString(): String {
+    val originalColorHex = this.originalColorHex()
+    return "$originalColorHex, " + originalColorHex
         .hashColorToRGBDecimal()
         .toRGBPercent()
         .let { "rgb(${it.first}%, ${it.second}%, ${it.third}%)" }
+}

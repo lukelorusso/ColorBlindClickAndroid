@@ -30,4 +30,18 @@ class ColorExtensionTest {
             BigDecimal(18.43).setScale(2, RoundingMode.HALF_UP)
         ))
     }
+
+    @Test
+    fun toLabDoubleTest() {
+        val decimalTriple = Triple(93, 54, 47)
+        val labTriple = decimalTriple.toLabDouble()
+        assert(labTriple == Triple(27.215726266270266, 16.571885409527226, 11.822138971289665))
+    }
+
+    @Test
+    fun closestHtmlColorTest() {
+        val decimalTriple = Triple(93, 54, 47)
+        val closestBasicColor = decimalTriple.closestHtmlColor()
+        assert(closestBasicColor == HtmlColor.Maroon)
+    }
 }
