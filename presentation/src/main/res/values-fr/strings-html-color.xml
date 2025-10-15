@@ -33,7 +33,7 @@
     <string name="html_color_darkorchid">Orchidée foncée</string>
     <string name="html_color_darkred">Rouge foncé</string>
     <string name="html_color_darksalmon">Saumon foncé</string>
-    <string name="html_color_darkseagreen">Vert d \'eau foncé</string>
+    <string name="html_color_darkseagreen">Vert d\'eau foncé</string>
     <string name="html_color_darkslateblue">Bleu ardoise foncé</string>
     <string name="html_color_darkslategrey">Gris ardoise foncé</string>
     <string name="html_color_darkturquoise">Turquoise foncé</string>
@@ -71,7 +71,7 @@
     <string name="html_color_lightgreen">Vert clair</string>
     <string name="html_color_lightpink">Rose clair</string>
     <string name="html_color_lightsalmon">Saumon clair</string>
-    <string name="html_color_lightseagreen">Vert d \'eau clair</string>
+    <string name="html_color_lightseagreen">Vert d\'eau clair</string>
     <string name="html_color_lightskyblue">Bleu ciel clair</string>
     <string name="html_color_lightslategrey">Gris ardoise clair</string>
     <string name="html_color_lightsteelblue">Bleu acier clair</string>
@@ -120,7 +120,7 @@
     <string name="html_color_saddlebrown">Brun Selle</string>
     <string name="html_color_salmon">Saumon</string>
     <string name="html_color_sandybrown">Brun Sable</string>
-    <string name="html_color_seagreen">Vert d \'eau</string>
+    <string name="html_color_seagreen">Vert d\'eau</string>
     <string name="html_color_seashell">Coquillage</string>
     <string name="html_color_sienna">Sienne</string>
     <string name="html_color_silver">Argent</string>
