@@ -14,8 +14,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.*
 import androidx.compose.ui.unit.dp
 import com.lukelorusso.presentation.R
-import com.lukelorusso.presentation.extensions.parseToColor
-import com.lukelorusso.presentation.extensions.toRGBPercentString
+import com.lukelorusso.presentation.extensions.*
 import com.lukelorusso.presentation.ui.capture.*
 import com.lukelorusso.domain.model.Color as ColorEntity
 
@@ -50,7 +49,7 @@ internal fun CaptureBottomToolbar(
             ResultToolbar(
                 textLine1 = color?.colorName,
                 textLine2 = color?.originalColorHex() ?: errorMessage,
-                textLine3 = color?.originalColorHex()?.toRGBPercentString(),
+                textLine3 = color?.toRGBPercentString(),
                 contentAlignment = Alignment.CenterEnd,
                 onTextClick = clickCallback
             ) {
@@ -159,3 +158,12 @@ internal fun CaptureBottomToolbar(
         }
     }
 }
+
+/**
+ * rgb(36.47%, 21.18%, 18.43%)
+ */
+fun ColorEntity.toRGBPercentString(): String =
+    this.originalColorHex()
+        .hashColorToRGBDecimal()
+        .toRGBPercent()
+        .let { "rgb(${it.first}%, ${it.second}%, ${it.third}%)" }

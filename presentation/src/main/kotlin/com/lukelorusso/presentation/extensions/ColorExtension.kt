@@ -2,9 +2,6 @@ package com.lukelorusso.presentation.extensions
 
 import java.math.BigDecimal
 import java.math.RoundingMode
-import com.lukelorusso.domain.model.Color as ColorEntity
-
-private const val LINE_BREAK = "\n"
 
 /**
  * HASH: #5D362F -> RGB: 93, 54, 47
@@ -25,15 +22,9 @@ fun String.hashColorToRGBDecimal(): Triple<Int, Int, Int> {
 }
 
 /**
- * HASH: #5D362F -> rgb(36.47%, 21.18%, 18.43%)
+ * RGB: 93, 54, 47 -> %: 36.47, 21.18, 18.43
  */
-fun String.toRGBPercentString(): String =
-    this.hashColorToRGBDecimal().toRGBPercentString()
-
-/**
- * RGB: 93, 54, 47 -> rgb(36.47%, 21.18%, 18.43%)
- */
-fun Triple<Int, Int, Int>.toRGBPercentString(): String {
+fun Triple<Int, Int, Int>.toRGBPercent(): Triple<BigDecimal, BigDecimal, BigDecimal> {
     val places = 2
     val red = BigDecimal(this.first.toDouble() / 255 * 100)
         .setScale(places, RoundingMode.HALF_UP)
@@ -41,13 +32,5 @@ fun Triple<Int, Int, Int>.toRGBPercentString(): String {
         .setScale(places, RoundingMode.HALF_UP)
     val blue = BigDecimal(this.third.toDouble() / 255 * 100)
         .setScale(places, RoundingMode.HALF_UP)
-    return "rgb($red%, $green%, $blue%)"
-}
-
-fun ColorEntity.sharableDescription(credits: String): String {
-    return (this.colorName + LINE_BREAK
-            + this.originalColorHex().uppercase() + LINE_BREAK
-            + this.originalColorHex().toRGBPercentString() + LINE_BREAK
-            + LINE_BREAK
-            + credits)
+    return Triple(red, green, blue)
 }

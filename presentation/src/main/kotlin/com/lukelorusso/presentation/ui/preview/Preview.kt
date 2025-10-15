@@ -15,9 +15,14 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.lukelorusso.presentation.R
 import com.lukelorusso.presentation.error.ErrorMessageFactory
-import com.lukelorusso.presentation.extensions.*
+import com.lukelorusso.presentation.extensions.createBitmap
+import com.lukelorusso.presentation.extensions.parseToColor
 import com.lukelorusso.presentation.ui.base.*
 import com.lukelorusso.presentation.ui.error.ErrorAlertDialog
+import com.lukelorusso.domain.model.Color as ColorEntity
+
+
+private const val LINE_BREAK = "\n"
 
 @Composable
 fun Preview(
@@ -95,7 +100,7 @@ fun Preview(
                     ResultToolbar(
                         textLine1 = color.colorName,
                         textLine2 = color.originalColorHex(),
-                        textLine3 = color.originalColorHex().toRGBPercentString(),
+                        textLine3 = color.toRGBPercentString(),
                         onTextClick = onTextClick
                     ) {
                         FAB(
@@ -111,4 +116,12 @@ fun Preview(
             }
         }
     }
+}
+
+private fun ColorEntity.sharableDescription(credits: String): String {
+    return (this.colorName + LINE_BREAK
+            + this.originalColorHex().uppercase() + LINE_BREAK
+            + this.toRGBPercentString() + LINE_BREAK
+            + LINE_BREAK
+            + credits)
 }
