@@ -109,7 +109,8 @@ fun Preview(
                         FAB(
                             modifier = Modifier
                                 .align(Alignment.BottomEnd)
-                                .padding(16.dp)
+                                .padding(horizontal = 16.dp)
+                                .padding(bottom = 32.dp)
                                 .size(FAB_DEFAULT_SIZE.dp),
                             painter = painterResource(id = R.drawable.share_white),
                             onClick = onColorClick
