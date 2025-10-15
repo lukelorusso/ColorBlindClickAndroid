@@ -9,7 +9,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.compose.LifecycleStartEffect
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -19,13 +22,13 @@ internal fun CameraPreview(
     onCameraPreviewReady: (Camera?, PreviewView?) -> Unit
 ) {
     val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
     val previewUseCase = remember { Preview.Builder().build() }
     var cameraControl by remember { mutableStateOf<CameraControl?>(null) }
     var cameraProvider by remember { mutableStateOf<ProcessCameraProvider?>(null) }
 
     fun rebindCameraProvider() {
         cameraProvider?.let { cameraProvider ->
-            cameraProvider.unbindAll()
             val cameraSelector = CameraSelector.Builder()
                 .requireLensFacing(lensFacing)
                 .build()
@@ -35,17 +38,24 @@ internal fun CameraPreview(
                 previewUseCase
             )
             cameraControl = camera.cameraControl
-            onCameraPreviewReady(camera, null)
             zoomLevel?.let { level -> cameraControl?.setLinearZoom(level) }
+            onCameraPreviewReady(camera, null)
         }
     }
 
-    LaunchedEffect(Unit) {
-        cameraProvider = ProcessCameraProvider.awaitInstance(context)
-        rebindCameraProvider()
+    LifecycleStartEffect(Lifecycle.Event.ON_RESUME) {
+        coroutineScope.launch {
+            if (cameraProvider == null) cameraProvider = ProcessCameraProvider.awaitInstance(context)
+            rebindCameraProvider()
+        }
+
+        onStopOrDispose {
+            cameraProvider?.unbindAll()
+        }
     }
 
     LaunchedEffect(lensFacing) {
+        cameraProvider?.unbindAll()
         rebindCameraProvider()
     }
 

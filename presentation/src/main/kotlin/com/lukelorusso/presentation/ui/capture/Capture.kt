@@ -43,7 +43,6 @@ fun Capture(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
     var camera by remember { mutableStateOf<Camera?>(null) }
-    var isCameraReady by remember { mutableStateOf(false) }
     var previewView by remember { mutableStateOf<PreviewView?>(null) }
     var screenIntSize by remember { mutableStateOf(IntSize.Zero) }
     var showPhotoPickerFAB by remember { mutableStateOf(true) }
@@ -91,13 +90,6 @@ fun Capture(
                     cameraReady?.let { camera = it }
                     previewViewReady?.let {
                         previewView = it
-                        it.previewStreamState.observe(lifecycleOwner) { streamState ->
-                            if (streamState == PreviewView.StreamState.STREAMING) {
-                                isCameraReady = true
-                            } else if (streamState == PreviewView.StreamState.IDLE) {
-                                isCameraReady = false
-                            }
-                        }
                         LifecycleCameraController(context).run {
                             bindToLifecycle(lifecycleOwner)
                             it.controller = this
@@ -119,7 +111,7 @@ fun Capture(
                 )
             }
 
-            if (isCameraReady) {
+            if (previewView?.controller?.initializationFuture?.isDone == true) {
                 val torchState = camera?.cameraInfo?.torchState?.observeAsState()
                 val isFlashOn = torchState?.value == TorchState.ON
                 val isNextCameraFront = lensFacing == CameraSelector.LENS_FACING_BACK
