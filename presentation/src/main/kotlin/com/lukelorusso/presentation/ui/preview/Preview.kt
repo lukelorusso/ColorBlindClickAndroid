@@ -53,13 +53,14 @@ fun Preview(
             uiState.color?.let { color ->
                 Column(
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Canvas(
                         modifier = Modifier
                             .padding(64.dp)
-                            .fillMaxWidth()
                             .aspectRatio(1f)
+                            .weight(1f, fill = false)
                             .border(
                                 2.dp,
                                 colorResource(id = R.color.text_color),
@@ -75,7 +76,7 @@ fun Preview(
                     }
                     val textPopupLabel = stringResource(id = R.string.choose_an_app)
                     val bitmapPopupLabel = stringResource(id = R.string.share_color)
-                    val size = with(LocalDensity.current) {
+                    val bitmapSize = with(LocalDensity.current) {
                         dimensionResource(id = R.dimen.color_picker_dimens_big).roundToPx()
                     }
                     val onTextClick: () -> Unit = {
@@ -87,8 +88,8 @@ fun Preview(
                     val onColorClick: () -> Unit = {
                         viewModel.shareBitmap(
                             bitmap = createBitmap(
-                                size,
-                                size,
+                                bitmapSize,
+                                bitmapSize,
                                 color.originalColorHex().parseToColor().toArgb()
                             ),
                             description = description,
