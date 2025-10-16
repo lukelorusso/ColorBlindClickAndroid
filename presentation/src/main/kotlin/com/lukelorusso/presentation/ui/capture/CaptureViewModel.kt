@@ -4,8 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.lukelorusso.domain.usecase.*
 import com.lukelorusso.presentation.extensions.getDeviceUdid
 import com.lukelorusso.presentation.helper.TrackerHelper
-import com.lukelorusso.presentation.ui.base.AppViewModel
-import com.lukelorusso.presentation.ui.base.ContentState
+import com.lukelorusso.presentation.ui.base.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
@@ -23,6 +22,7 @@ class CaptureViewModel(
     override val _uiState = MutableStateFlow(CaptureUiState())
     override val router = CaptureRouter()
     private val json = Json { ignoreUnknownKeys = true }
+    private val zoomValueBouncer = Bouncer(BOUNCE_DELAY_IN_MILLIS)
 
     init {
         loadData()
@@ -125,12 +125,14 @@ class CaptureViewModel(
     }
 
     fun setLastZoomValue(param: Int) {
-        viewModelScope.launch {
-            try {
-                setLastZoomValue.invoke(param)
-                updateUiState { it.copy(lastZoomValue = param) }
-            } catch (t: Throwable) {
-                updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
+        zoomValueBouncer.bounce {
+            viewModelScope.launch {
+                try {
+                    setLastZoomValue.invoke(param)
+                    updateUiState { it.copy(lastZoomValue = param) }
+                } catch (t: Throwable) {
+                    updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
+                }
             }
         }
     }
@@ -153,4 +155,8 @@ class CaptureViewModel(
 
     fun gotoPreview(color: ColorEntity) =
         router.routeToPreview(json.encodeToString<ColorEntity>(color))
+
+    companion object {
+        private const val BOUNCE_DELAY_IN_MILLIS = 150L
+    }
 }

@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.Slider
 import androidx.compose.material.SliderDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableFloatState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.TransformOrigin
@@ -16,8 +17,10 @@ import com.lukelorusso.presentation.R
 
 @Composable
 internal fun CaptureZoomHandler(
-    zoomLevel: Float,
-    onLevelChange: (Float) -> Unit
+    state: MutableFloatState,
+    minState: Float = 0f,
+    maxState: Float = 100f,
+    onValueChanged: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -52,8 +55,10 @@ internal fun CaptureZoomHandler(
                 }
                 .fillMaxWidth() // the actual height!
                 .height(50.dp), // the actual width!
-            value = zoomLevel,
-            onValueChange = onLevelChange,
+            value = state.floatValue,
+            valueRange = minState..maxState,
+            onValueChange = { state.floatValue = it },
+            onValueChangeFinished = onValueChanged,
             colors = SliderDefaults.colors(
                 thumbColor = colorResource(id = R.color.color_primary),
                 activeTrackColor = colorResource(id = R.color.color_accent),

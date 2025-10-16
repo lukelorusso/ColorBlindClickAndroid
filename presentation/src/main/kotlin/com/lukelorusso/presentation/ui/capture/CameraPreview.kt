@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 @Composable
 internal fun CameraPreview(
     lensFacing: Int,
-    zoomLevel: Float?,
+    zoomLevel: Float, // @FloatRange(from = 0f, to = 1f)
     onCameraPreviewReady: (Camera?, PreviewView?) -> Unit
 ) {
     val context = LocalContext.current
@@ -38,7 +38,7 @@ internal fun CameraPreview(
                 previewUseCase
             )
             cameraControl = camera.cameraControl
-            zoomLevel?.let { level -> cameraControl?.setLinearZoom(level) }
+            cameraControl?.setLinearZoom(zoomLevel)
             onCameraPreviewReady(camera, null)
         }
     }
@@ -60,7 +60,7 @@ internal fun CameraPreview(
     }
 
     LaunchedEffect(zoomLevel) {
-        zoomLevel?.let { level -> cameraControl?.setLinearZoom(level) }
+        cameraControl?.setLinearZoom(zoomLevel)
     }
 
     AndroidView(

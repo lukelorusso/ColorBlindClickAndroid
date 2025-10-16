@@ -59,6 +59,13 @@ fun Capture(
             }
         }
     )
+    val zoomState = remember { mutableFloatStateOf(0f) }
+
+    LaunchedEffect(uiState.lastZoomValue) {
+        uiState.lastZoomValue?.also { lastZoomValue ->
+            zoomState.floatValue = lastZoomValue.toFloat().coerceIn(0f, 100f)
+        }
+    }
 
     Surface {
         Box(
@@ -76,17 +83,10 @@ fun Capture(
                 1 -> CameraSelector.LENS_FACING_FRONT
                 else -> CameraSelector.LENS_FACING_UNKNOWN
             }
-            val zoomLevel: Float? = uiState.lastZoomValue?.let { zoomValue ->
-                when {
-                    zoomValue < 0 -> 0.1f
-                    zoomValue >= 100 -> 1f
-                    else -> zoomValue / 100f
-                }
-            }
 
             CameraPreview(
                 lensFacing = lensFacing,
-                zoomLevel = zoomLevel,
+                zoomLevel = zoomState.floatValue / 100,
                 onCameraPreviewReady = { cameraReady, previewViewReady ->
                     cameraReady?.let { camera = it }
                     previewViewReady?.let {
@@ -105,12 +105,10 @@ fun Capture(
                 tint = Color.White
             )
 
-            if (zoomLevel != null) {
-                CaptureZoomHandler(
-                    zoomLevel = zoomLevel,
-                    onLevelChange = { viewModel.setLastZoomValue((it * 100).roundToInt()) }
-                )
-            }
+            CaptureZoomHandler(
+                state = zoomState,
+                onValueChanged = { viewModel.setLastZoomValue(zoomState.floatValue.roundToInt()) }
+            )
 
             if (previewView?.controller?.initializationFuture?.isDone == true) {
                 val torchState = camera?.cameraInfo?.torchState?.observeAsState()
