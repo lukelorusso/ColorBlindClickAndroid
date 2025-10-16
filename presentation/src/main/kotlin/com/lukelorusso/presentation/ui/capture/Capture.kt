@@ -15,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
@@ -100,7 +101,8 @@ fun Capture(
 
             Icon(
                 painter = painterResource(id = R.drawable.viewfinder),
-                contentDescription = null
+                contentDescription = null,
+                tint = Color.White
             )
 
             if (screenIntSize != IntSize.Zero && zoomLevel != null) {

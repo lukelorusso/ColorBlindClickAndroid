@@ -7,6 +7,7 @@ import androidx.compose.material.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import com.lukelorusso.presentation.R
@@ -46,7 +47,8 @@ internal fun CaptureTopToolbar(
                             id = if (isNextCameraFront) R.drawable.camera_front_white
                             else R.drawable.camera_rear_white
                         ),
-                        contentDescription = null
+                        contentDescription = null,
+                        tint = Color.White
                     )
                 }
             }
@@ -63,7 +65,8 @@ internal fun CaptureTopToolbar(
                             id = if (isFlashOn) R.drawable.flash_off_white
                             else R.drawable.flash_on_white
                         ),
-                        contentDescription = null
+                        contentDescription = null,
+                        tint = Color.White
                     )
                 }
             }

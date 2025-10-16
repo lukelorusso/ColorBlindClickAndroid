@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.*
@@ -103,13 +104,15 @@ internal fun CaptureBottomToolbar(
                         Icon(
                             modifier = sideIconModifier,
                             painter = painter,
-                            contentDescription = null
+                            contentDescription = null,
+                            tint = Color.White
                         )
                     } ?: leftButtonImageVector?.let { imageVector ->
                         Icon(
                             modifier = sideIconModifier,
                             imageVector = imageVector,
-                            contentDescription = null
+                            contentDescription = null,
+                            tint = Color.White
                         )
                     }
                 }
@@ -135,7 +138,8 @@ internal fun CaptureBottomToolbar(
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.camera_big_white),
-                            contentDescription = null
+                            contentDescription = null,
+                            tint = Color.White
                         )
                     }
                 }
@@ -150,13 +154,15 @@ internal fun CaptureBottomToolbar(
                         Icon(
                             modifier = sideIconModifier,
                             painter = painter,
-                            contentDescription = null
+                            contentDescription = null,
+                            tint = Color.White
                         )
                     } ?: rightButtonImageVector?.let { imageVector ->
                         Icon(
                             modifier = sideIconModifier,
                             imageVector = imageVector,
-                            contentDescription = null
+                            contentDescription = null,
+                            tint = Color.White
                         )
                     }
                 }
