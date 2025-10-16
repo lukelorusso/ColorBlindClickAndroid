@@ -22,7 +22,7 @@ class CaptureViewModel(
     override val _uiState = MutableStateFlow(CaptureUiState())
     override val router = CaptureRouter()
     private val json = Json { ignoreUnknownKeys = true }
-    private val zoomValueBouncer = Bouncer(BOUNCE_DELAY_IN_MILLIS)
+    private val zoomValueBouncer = Bouncer()
 
     init {
         loadData()
@@ -155,8 +155,4 @@ class CaptureViewModel(
 
     fun gotoPreview(color: ColorEntity) =
         router.routeToPreview(json.encodeToString<ColorEntity>(color))
-
-    companion object {
-        private const val BOUNCE_DELAY_IN_MILLIS = 150L
-    }
 }

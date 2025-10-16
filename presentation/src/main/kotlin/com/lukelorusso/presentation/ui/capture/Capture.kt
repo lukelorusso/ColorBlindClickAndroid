@@ -59,6 +59,7 @@ fun Capture(
             }
         }
     )
+    var zoomRatio by remember { mutableStateOf<Float?>(null) }
     val zoomState = remember { mutableFloatStateOf(0F) }
 
     LaunchedEffect(uiState.lastZoomValue) {
@@ -86,7 +87,8 @@ fun Capture(
 
             CameraPreview(
                 lensFacing = lensFacing,
-                zoomLevel = zoomState.floatValue / 100,
+                zoomRatio = zoomRatio,
+                linearZoom = zoomState.floatValue / 100,
                 onCameraPreviewReady = { cameraReady, previewViewReady ->
                     cameraReady?.let { camera = it }
                     previewViewReady?.let {
@@ -96,6 +98,10 @@ fun Capture(
                             it.controller = this
                         }
                     }
+                },
+                onLinearZoomChanged = {
+                    val newState = it * 100
+                    viewModel.setLastZoomValue(newState.roundToInt())
                 }
             )
 
@@ -107,7 +113,8 @@ fun Capture(
 
             CaptureZoomHandler(
                 state = zoomState,
-                onValueChanged = { viewModel.setLastZoomValue(zoomState.floatValue.roundToInt()) }
+                onRatioChanged = { newRatio -> zoomRatio = newRatio },
+                onStateChanged = { viewModel.setLastZoomValue(zoomState.floatValue.roundToInt()) }
             )
 
             if (previewView?.controller?.initializationFuture?.isDone == true) {

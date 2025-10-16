@@ -18,27 +18,34 @@ import kotlinx.coroutines.launch
 @Composable
 internal fun CameraPreview(
     lensFacing: Int,
-    zoomLevel: Float, // @FloatRange(from = 0F, to = 1F)
-    onCameraPreviewReady: (Camera?, PreviewView?) -> Unit
+    zoomRatio: Float?, // the resulting gesture of pinch to zoom
+    linearZoom: Float, // @FloatRange(from = 0F, to = 1F)
+    onCameraPreviewReady: (Camera?, PreviewView?) -> Unit,
+    onLinearZoomChanged: (Float) -> Unit // between 0 and 1
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val previewUseCase = remember { Preview.Builder().build() }
-    var cameraControl by remember { mutableStateOf<CameraControl?>(null) }
+    var camera by remember { mutableStateOf<Camera?>(null) }
     var cameraProvider by remember { mutableStateOf<ProcessCameraProvider?>(null) }
+
+    fun currentZoomRatio() =
+        camera?.cameraInfo?.zoomState?.value?.zoomRatio ?: camera?.cameraInfo?.zoomState?.value?.maxZoomRatio ?: 1F
+
+    fun currentLinearZoom() =
+        camera?.cameraInfo?.zoomState?.value?.linearZoom
 
     fun rebindCameraProvider() {
         cameraProvider?.let { cameraProvider ->
             val cameraSelector = CameraSelector.Builder()
                 .requireLensFacing(lensFacing)
                 .build()
-            val camera = cameraProvider.bindToLifecycle(
+            camera = cameraProvider.bindToLifecycle(
                 context as LifecycleOwner,
                 cameraSelector,
                 previewUseCase
             )
-            cameraControl = camera.cameraControl
-            cameraControl?.setLinearZoom(zoomLevel)
+            camera?.cameraControl?.setLinearZoom(linearZoom)
             onCameraPreviewReady(camera, null)
         }
     }
@@ -59,8 +66,16 @@ internal fun CameraPreview(
         rebindCameraProvider()
     }
 
-    LaunchedEffect(zoomLevel) {
-        cameraControl?.setLinearZoom(zoomLevel)
+    LaunchedEffect(zoomRatio) {
+        if (zoomRatio != null) {
+            val newZoomRatio = currentZoomRatio() * zoomRatio
+            camera?.cameraControl?.setZoomRatio(newZoomRatio)
+            currentLinearZoom()?.let { onLinearZoomChanged(it) }
+        }
+    }
+
+    LaunchedEffect(linearZoom) {
+        camera?.cameraControl?.setLinearZoom(linearZoom)
     }
 
     AndroidView(

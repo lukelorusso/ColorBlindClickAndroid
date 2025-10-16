@@ -32,7 +32,7 @@ fun ScreenshotBox(
     DisposableEffect(Unit) {
         screenshotState.callback = {
             composableBounds?.let { bounds ->
-                if (bounds.width == 0f || bounds.height == 0f) return@let
+                if (bounds.width == 0F || bounds.height == 0F) return@let
 
                 view.screenshot(bounds) { imageResult: ImageResult ->
                     screenshotState.imageState.value = imageResult

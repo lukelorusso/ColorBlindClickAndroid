@@ -53,7 +53,7 @@ fun createBitmap(width: Int, height: Int, color: Int): Bitmap {
     val canvas = Canvas(bitmap)
     val paint = Paint()
     paint.color = color
-    canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
+    canvas.drawRect(0F, 0F, width.toFloat(), height.toFloat(), paint)
     return bitmap
 }
 
