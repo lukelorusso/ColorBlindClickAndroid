@@ -105,9 +105,8 @@ fun Capture(
                 tint = Color.White
             )
 
-            if (screenIntSize != IntSize.Zero && zoomLevel != null) {
+            if (zoomLevel != null) {
                 CaptureZoomHandler(
-                    screenIntSize = screenIntSize,
                     zoomLevel = zoomLevel,
                     onLevelChange = { viewModel.setLastZoomValue((it * 100).roundToInt()) }
                 )
