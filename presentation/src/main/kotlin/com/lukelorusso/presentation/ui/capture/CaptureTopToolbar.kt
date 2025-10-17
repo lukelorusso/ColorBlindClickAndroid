@@ -72,6 +72,6 @@ internal fun CaptureTopToolbar(
             }
         }
 
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.weight(1F))
     }
 }

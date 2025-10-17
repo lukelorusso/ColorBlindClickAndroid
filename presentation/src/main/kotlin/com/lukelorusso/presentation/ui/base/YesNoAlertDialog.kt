@@ -30,8 +30,8 @@ fun YesNoAlertDialog(
                         modifier = Modifier
                             .size(34.dp),
                         painter = painter,
-                        tint = tint ?: colorResource(id = R.color.red_delete),
-                        contentDescription = null
+                        contentDescription = null,
+                        tint = tint ?: colorResource(id = R.color.red_delete)
                     )
 
                     Spacer(modifier = Modifier.width(8.dp))
@@ -42,8 +42,8 @@ fun YesNoAlertDialog(
                         modifier = Modifier
                             .size(34.dp),
                         imageVector = imageVector,
-                        tint = tint ?: colorResource(id = R.color.red_delete),
-                        contentDescription = null
+                        contentDescription = null,
+                        tint = tint ?: colorResource(id = R.color.red_delete)
                     )
 
                     Spacer(modifier = Modifier.width(8.dp))

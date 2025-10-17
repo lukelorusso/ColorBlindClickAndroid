@@ -39,7 +39,7 @@ internal fun CaptureBottomToolbar(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.weight(1F))
 
         AnimatedVisibility(
             visible = color != null || errorMessage != null

@@ -60,8 +60,8 @@ internal fun Header(
                     .size(34.dp)
                     .clickable(onClick = toggleSearchingMode),
                 painter = painterResource(id = R.drawable.search_white),
-                tint = Color.White,
-                contentDescription = null
+                contentDescription = null,
+                tint = Color.White
             )
 
             Row(
@@ -87,8 +87,8 @@ internal fun Header(
                             .padding(end = 5.dp)
                             .size(34.dp),
                         painter = painterResource(id = R.drawable.history_white),
-                        tint = Color.White,
-                        contentDescription = null
+                        contentDescription = null,
+                        tint = Color.White
                     )
 
                     Text(
@@ -108,8 +108,8 @@ internal fun Header(
                     .size(34.dp)
                     .clickable(onClick = onDeleteAllClick),
                 painter = painterResource(id = R.drawable.delete_sweep_white),
-                tint = Color.White,
-                contentDescription = null
+                contentDescription = null,
+                tint = Color.White
             )
         }
 
@@ -158,8 +158,8 @@ private fun SearchTextField(
                     Icon(
                         modifier = Modifier.clickable { updateSearchText("") },
                         imageVector = Icons.Default.Clear,
-                        tint = Color.White,
-                        contentDescription = null
+                        contentDescription = null,
+                        tint = Color.White
                     )
                 }
             },

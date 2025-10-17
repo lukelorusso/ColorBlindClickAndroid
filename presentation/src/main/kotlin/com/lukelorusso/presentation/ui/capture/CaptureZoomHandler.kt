@@ -18,8 +18,8 @@ import com.lukelorusso.presentation.R
 @Composable
 internal fun CaptureZoomHandler(
     state: MutableFloatState,
-    minState: Float = 0f,
-    maxState: Float = 100f,
+    minState: Float = 0F,
+    maxState: Float = 100F,
     onValueChanged: () -> Unit
 ) {
     Row(
@@ -27,7 +27,7 @@ internal fun CaptureZoomHandler(
             .fillMaxSize(),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.weight(1F))
 
         /**
          * This is a VerticalSlider, meaning a 270° rotated Slider
@@ -37,8 +37,8 @@ internal fun CaptureZoomHandler(
                 .padding(horizontal = 10.dp)
                 .padding(top = 136.dp, bottom = 224.dp)
                 .graphicsLayer {
-                    rotationZ = 270f
-                    transformOrigin = TransformOrigin(0f, 0f)
+                    rotationZ = 270F
+                    transformOrigin = TransformOrigin(0F, 0F)
                 }
                 .layout { measurable, constraints ->
                     val placeable = measurable.measure(

@@ -42,8 +42,8 @@ internal fun InfoItem(
                 .padding(16.dp)
                 .size(34.dp),
             painter = iconPainter,
-            tint = colorResource(id = R.color.text_color),
-            contentDescription = null
+            contentDescription = null,
+            tint = colorResource(id = R.color.text_color)
         )
 
         Text(
@@ -62,8 +62,8 @@ internal fun InfoItem(
                 .padding(horizontal = 8.dp, vertical = 16.dp)
                 .size(34.dp),
             painter = painterResource(id = R.drawable.keyboard_arrow_right),
-            tint = colorResource(id = R.color.text_color),
-            contentDescription = null
+            contentDescription = null,
+            tint = colorResource(id = R.color.text_color)
         )
     }
 }

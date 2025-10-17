@@ -59,8 +59,8 @@ fun Preview(
                     Canvas(
                         modifier = Modifier
                             .padding(64.dp)
-                            .aspectRatio(1f)
-                            .weight(1f, fill = false)
+                            .aspectRatio(1F)
+                            .weight(1F, fill = false)
                             .border(
                                 2.dp,
                                 colorResource(id = R.color.text_color),

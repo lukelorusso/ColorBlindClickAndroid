@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -91,7 +92,8 @@ internal fun ImagePicker(
 
             if (!isCapturing) Icon(
                 painter = painterResource(id = R.drawable.viewfinder),
-                contentDescription = null
+                contentDescription = null,
+                tint = Color.White
             )
 
             val onRightButtonSelected: (() -> Unit)? = if (isGestureDetected) ({
@@ -129,7 +131,7 @@ private fun ImageManipulator(
                 .fillMaxSize()
                 .background(MaterialTheme.colors.background),
             painter = painter,
-            shouldRotate = true,
+            shouldRotate = false,
             showResetIconButton = false,
             onGestureDataChanged = { if (it.isGestureDetected) onGestureDetected() }
         )

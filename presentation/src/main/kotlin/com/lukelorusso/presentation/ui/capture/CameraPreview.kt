@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 @Composable
 internal fun CameraPreview(
     lensFacing: Int,
-    zoomLevel: Float, // @FloatRange(from = 0f, to = 1f)
+    zoomLevel: Float, // @FloatRange(from = 0F, to = 1F)
     onCameraPreviewReady: (Camera?, PreviewView?) -> Unit
 ) {
     val context = LocalContext.current

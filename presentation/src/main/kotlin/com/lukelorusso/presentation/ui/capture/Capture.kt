@@ -59,11 +59,11 @@ fun Capture(
             }
         }
     )
-    val zoomState = remember { mutableFloatStateOf(0f) }
+    val zoomState = remember { mutableFloatStateOf(0F) }
 
     LaunchedEffect(uiState.lastZoomValue) {
         uiState.lastZoomValue?.also { lastZoomValue ->
-            zoomState.floatValue = lastZoomValue.toFloat().coerceIn(0f, 100f)
+            zoomState.floatValue = lastZoomValue.toFloat().coerceIn(0F, 100F)
         }
     }
 

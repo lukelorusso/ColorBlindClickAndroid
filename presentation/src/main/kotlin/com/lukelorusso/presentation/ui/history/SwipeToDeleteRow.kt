@@ -47,8 +47,8 @@ fun SwipeToDeleteRow(
                 Icon(
                     modifier = Modifier.padding(horizontal = 16.dp),
                     painter = painterResource(id = R.drawable.delete_item_white),
-                    tint = Color.White,
-                    contentDescription = null
+                    contentDescription = null,
+                    tint = Color.White
                 )
             }
         },

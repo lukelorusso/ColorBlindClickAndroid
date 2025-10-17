@@ -25,8 +25,8 @@ fun FAB(
             modifier = Modifier
                 .size(40.dp),
             painter = painter,
-            tint = Color.White,
-            contentDescription = null
+            contentDescription = null,
+            tint = Color.White
         )
     }
 }
