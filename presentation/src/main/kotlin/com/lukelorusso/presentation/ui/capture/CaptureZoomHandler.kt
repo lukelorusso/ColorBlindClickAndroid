@@ -17,29 +17,35 @@ import androidx.compose.ui.unit.dp
 import com.lukelorusso.presentation.R
 import com.lukelorusso.presentation.ui.base.Bouncer
 
-private const val BOUNCE_DELAY_IN_MILLIS = 250L
+private const val BOUNCE_DELAY_IN_MILLIS = 220L
 
 
 @Composable
 internal fun CaptureZoomHandler(
-    state: MutableFloatState,
+    zoomValue: Float = 0F,
     minState: Float = 0F,
     maxState: Float = 100F,
-    onRatioChanged: (Float) -> Unit = {},
-    onStateChanged: () -> Unit = {}
+    onValueChanged: (Float) -> Unit = {},
+    onRatioChanged: (Float) -> Unit = {}
 ) {
+    var lastGestureZoom by remember { mutableFloatStateOf(1F) }
     var showSlider by remember { mutableStateOf(true) }
-    var bouncer by remember { mutableStateOf(Bouncer(BOUNCE_DELAY_IN_MILLIS)) }
+    var showSliderBouncer by remember { mutableStateOf(Bouncer(BOUNCE_DELAY_IN_MILLIS)) }
+
+    fun Float.newGestureProcessor() {
+        if (this != lastGestureZoom) {
+            showSlider = false
+            lastGestureZoom = this
+            onRatioChanged(lastGestureZoom)
+        }
+        showSliderBouncer.bounce { showSlider = true }
+    }
 
     Row(
         modifier = Modifier
             .fillMaxSize()
             .pointerInput(Unit) {
-                detectTransformGestures { _, _, gestureZoom, _ ->
-                    showSlider = false
-                    onRatioChanged(gestureZoom)
-                    bouncer.bounce { showSlider = true }
-                }
+                detectTransformGestures { _, _, gestureZoom, _ -> gestureZoom.newGestureProcessor() }
             },
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -71,10 +77,9 @@ internal fun CaptureZoomHandler(
                 }
                 .fillMaxWidth() // the actual height!
                 .height(50.dp), // the actual width!
-            value = state.floatValue,
+            value = zoomValue,
             valueRange = minState..maxState,
-            onValueChange = { state.floatValue = it },
-            onValueChangeFinished = onStateChanged,
+            onValueChange = onValueChanged,
             colors = SliderDefaults.colors(
                 thumbColor = colorResource(id = R.color.color_primary),
                 activeTrackColor = colorResource(id = R.color.color_accent),

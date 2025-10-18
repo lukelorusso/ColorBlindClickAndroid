@@ -22,19 +22,20 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.lukelorusso.presentation.R
 import com.lukelorusso.presentation.error.ErrorMessageFactory
 import com.lukelorusso.presentation.extensions.*
+import com.lukelorusso.presentation.logger.TimberLogger
 import com.lukelorusso.presentation.ui.base.*
 import com.lukelorusso.presentation.ui.imagepicker.ImagePickerActivity
-import timber.log.Timber
 import kotlin.math.roundToInt
 
 val ICON_BUTTON_PADDING = 5.dp
 val ICON_BUTTON_SIZE = 62.dp
 val ICON_SIZE = 40.dp
+private const val INIT_ZOOM_VALUE = 10F // when no previous value has been saved (fresh installation)
 
 @Composable
 fun Capture(
@@ -50,7 +51,7 @@ fun Capture(
     val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = { uri ->
-            Timber.d("Image selected -> $uri")
+            TimberLogger.d { "Image selected -> $uri" }
             showPhotoPickerFAB = true
             uri?.let {
                 val intent = Intent(context, ImagePickerActivity::class.java)
@@ -59,12 +60,20 @@ fun Capture(
             }
         }
     )
-    var zoomRatio by remember { mutableStateOf<Float?>(null) }
-    val zoomState = remember { mutableFloatStateOf(0F) }
+    var zoomRatio by remember { mutableFloatStateOf(1F) }
+    var zoomValue by remember { mutableFloatStateOf(-1F) } // @FloatRange(from = 0F, to = 100F)
 
     LaunchedEffect(uiState.lastZoomValue) {
-        uiState.lastZoomValue?.also { lastZoomValue ->
-            zoomState.floatValue = lastZoomValue.toFloat().coerceIn(0F, 100F)
+        uiState.lastZoomValue?.also { value ->
+            val lastZoomValue = value.toFloat()
+
+            when {
+                lastZoomValue < 0 ->
+                    zoomValue = INIT_ZOOM_VALUE
+
+                zoomValue != lastZoomValue ->
+                    zoomValue = lastZoomValue
+            }
         }
     }
 
@@ -78,30 +87,29 @@ fun Capture(
                 .background(colorResource(id = R.color.fragment_background)),
             contentAlignment = Alignment.Center
         ) {
-            val lifecycleOwner = LocalLifecycleOwner.current
             val lensFacing: Int = when (uiState.lastLensPosition) {
                 0 -> CameraSelector.LENS_FACING_BACK
                 1 -> CameraSelector.LENS_FACING_FRONT
                 else -> CameraSelector.LENS_FACING_UNKNOWN
             }
 
-            CameraPreview(
+            CaptureCameraPreview(
                 lensFacing = lensFacing,
                 zoomRatio = zoomRatio,
-                linearZoom = zoomState.floatValue / 100,
+                linearZoom = zoomValue / 100,
                 onCameraPreviewReady = { cameraReady, previewViewReady ->
                     cameraReady?.let { camera = it }
                     previewViewReady?.let {
                         previewView = it
                         LifecycleCameraController(context).run {
-                            bindToLifecycle(lifecycleOwner)
+                            bindToLifecycle(context as LifecycleOwner)
                             it.controller = this
                         }
                     }
                 },
                 onLinearZoomChanged = {
-                    val newState = it * 100
-                    viewModel.setLastZoomValue(newState.roundToInt())
+                    val newZoomValue = (it * 100).roundToInt()
+                    viewModel.setLastZoomValue(newZoomValue)
                 }
             )
 
@@ -112,9 +120,13 @@ fun Capture(
             )
 
             CaptureZoomHandler(
-                state = zoomState,
-                onRatioChanged = { newRatio -> zoomRatio = newRatio },
-                onStateChanged = { viewModel.setLastZoomValue(zoomState.floatValue.roundToInt()) }
+                zoomValue = zoomValue,
+                onValueChanged = {
+                    zoomValue = it
+                    val newZoomValue = it.roundToInt()
+                    viewModel.setLastZoomValue(newZoomValue)
+                },
+                onRatioChanged = { newRatio -> zoomRatio = newRatio }
             )
 
             if (previewView?.controller?.initializationFuture?.isDone == true) {

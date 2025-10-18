@@ -5,7 +5,7 @@ import android.os.Bundle
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.lukelorusso.presentation.BuildConfig
 import com.lukelorusso.presentation.helper.TrackerHelper
-import timber.log.Timber
+import com.lukelorusso.presentation.logger.TimberLogger
 
 /**
  * Copyright (C) 2024 Luke Lorusso
@@ -17,7 +17,7 @@ class TrackerHelperImpl internal constructor(context: Context) : TrackerHelper()
 
     override fun track(action: String) {
         if (BuildConfig.ENABLE_ANALYTICS) {
-            Timber.d("TrackerHelper -> $action")
+            TimberLogger.d { "TrackerHelper -> $action" }
             firebaseAnalytics.logEvent(
                 FirebaseAnalytics.Event.SCREEN_VIEW,
                 Bundle().apply { putString(FirebaseAnalytics.Param.SCREEN_NAME, action) }

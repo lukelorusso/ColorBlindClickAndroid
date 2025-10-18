@@ -128,8 +128,10 @@ class CaptureViewModel(
         zoomValueBouncer.bounce {
             viewModelScope.launch {
                 try {
-                    setLastZoomValue.invoke(param)
-                    updateUiState { it.copy(lastZoomValue = param) }
+                    if (uiState.value.lastZoomValue != param) {
+                        setLastZoomValue.invoke(param)
+                        updateUiState { it.copy(lastZoomValue = param) }
+                    }
                 } catch (t: Throwable) {
                     updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
                 }
