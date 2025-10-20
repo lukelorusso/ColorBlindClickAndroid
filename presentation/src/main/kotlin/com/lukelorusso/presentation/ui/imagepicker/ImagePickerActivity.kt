@@ -1,5 +1,7 @@
 package com.lukelorusso.presentation.ui.imagepicker
 
+import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -49,5 +51,10 @@ class ImagePickerActivity : AppCompatActivity() {
 
     companion object {
         const val EXTRA_URI = "EXTRA_URI"
+
+        fun newIntent(context: Context, imageUri: Uri): Intent =
+            Intent(context, ImagePickerActivity::class.java).apply {
+                putExtra(EXTRA_URI, imageUri)
+            }
     }
 }

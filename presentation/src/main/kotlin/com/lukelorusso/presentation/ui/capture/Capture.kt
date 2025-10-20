@@ -1,6 +1,5 @@
 package com.lukelorusso.presentation.ui.capture
 
-import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -50,12 +49,11 @@ fun Capture(
     var showPhotoPickerFAB by remember { mutableStateOf(true) }
     val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
-        onResult = { uri ->
-            TimberLogger.d { "Image selected -> $uri" }
+        onResult = { imageUri ->
+            TimberLogger.d { "Image selected -> $imageUri" }
             showPhotoPickerFAB = true
-            uri?.let {
-                val intent = Intent(context, ImagePickerActivity::class.java)
-                intent.putExtra(ImagePickerActivity.EXTRA_URI, it)
+            imageUri?.let { uri ->
+                val intent = ImagePickerActivity.newIntent(context, uri)
                 context.startActivity(intent)
             }
         }
