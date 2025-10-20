@@ -11,10 +11,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import com.lukelorusso.presentation.R
+import com.lukelorusso.presentation.extensions.clickableWithoutRipple
 
 
 @Composable
 internal fun CaptureTopToolbar(
+    modifier: Modifier = Modifier,
     isNextCameraAvailable: Boolean,
     isNextCameraFront: Boolean,
     isFlashAvailable: Boolean,
@@ -23,11 +25,12 @@ internal fun CaptureTopToolbar(
     onFlashSelected: () -> Unit
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
     ) {
         Row(
             modifier = Modifier
+                .clickableWithoutRipple {}
                 .statusBarsPadding()
                 .navigationBarsPadding()
                 .fillMaxWidth()

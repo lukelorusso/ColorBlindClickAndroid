@@ -22,6 +22,7 @@ import com.lukelorusso.domain.model.Color as ColorEntity
 
 @Composable
 internal fun CaptureBottomToolbar(
+    modifier: Modifier = Modifier,
     showShutterButton: Boolean = true,
     color: ColorEntity?,
     errorMessage: String?,
@@ -36,7 +37,7 @@ internal fun CaptureBottomToolbar(
     onPreviewSelected: (ColorEntity) -> Unit
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
     ) {
         Spacer(modifier = Modifier.weight(1F))
@@ -48,6 +49,8 @@ internal fun CaptureBottomToolbar(
                 if (color != null) onPreviewSelected(color)
             }
             ResultToolbar(
+                modifier = Modifier
+                    .clickableWithoutRipple {},
                 textLine1 = color?.colorName,
                 textLine2 = color
                     ?.originalColorHex()
@@ -82,6 +85,7 @@ internal fun CaptureBottomToolbar(
 
         Row(
             modifier = Modifier
+                .clickableWithoutRipple {}
                 .fillMaxWidth()
                 .defaultMinSize(minHeight = 85.dp)
                 .background(colorResource(id = R.color.black_50)),

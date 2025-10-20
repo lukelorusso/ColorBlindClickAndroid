@@ -18,6 +18,7 @@ import com.lukelorusso.presentation.R
 
 @Composable
 fun ResultToolbar(
+    modifier: Modifier = Modifier,
     textLine1: String?,
     textLine2: String?,
     textLine3: String?,
@@ -26,7 +27,7 @@ fun ResultToolbar(
     content: @Composable BoxScope.() -> Unit
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth(),
         contentAlignment = contentAlignment
     ) {
