@@ -28,7 +28,6 @@ import com.lukelorusso.presentation.error.ErrorMessageFactory
 import com.lukelorusso.presentation.extensions.*
 import com.lukelorusso.presentation.logger.TimberLogger
 import com.lukelorusso.presentation.ui.base.*
-import com.lukelorusso.presentation.ui.imagepicker.ImagePickerActivity
 import kotlin.math.roundToInt
 
 val ICON_BUTTON_PADDING = 5.dp
@@ -52,10 +51,7 @@ fun Capture(
         onResult = { imageUri ->
             TimberLogger.d { "Image selected -> $imageUri" }
             showPhotoPickerFAB = true
-            imageUri?.let { uri ->
-                val intent = ImagePickerActivity.newIntent(context, uri)
-                context.startActivity(intent)
-            }
+            imageUri?.let(viewModel::gotoImagePicker)
         }
     )
     var zoomRatio by remember { mutableFloatStateOf(1F) }

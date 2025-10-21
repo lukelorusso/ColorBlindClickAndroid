@@ -1,5 +1,6 @@
 package com.lukelorusso.presentation.ui.capture
 
+import android.net.Uri
 import androidx.lifecycle.viewModelScope
 import com.lukelorusso.domain.usecase.*
 import com.lukelorusso.presentation.extensions.getDeviceUdid
@@ -157,4 +158,9 @@ class CaptureViewModel(
 
     fun gotoPreview(color: ColorEntity) =
         router.routeToPreview(json.encodeToString<ColorEntity>(color))
+
+    fun gotoImagePicker(uri: Uri) {
+        dismissErrorAndColor()
+        router.routeToImagePicker(uri)
+    }
 }
