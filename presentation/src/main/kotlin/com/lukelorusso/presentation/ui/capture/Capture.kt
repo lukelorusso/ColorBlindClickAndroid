@@ -43,6 +43,7 @@ fun Capture(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
     var camera by remember { mutableStateOf<Camera?>(null) }
+    var isCameraReady by remember { mutableStateOf(false) }
     var previewView by remember { mutableStateOf<PreviewView?>(null) }
     var screenIntSize by remember { mutableStateOf(IntSize.Zero) }
     var showPhotoPickerFAB by remember { mutableStateOf(true) }
@@ -71,6 +72,11 @@ fun Capture(
         }
     }
 
+    LaunchedEffect(previewView?.controller?.initializationFuture?.isDone) {
+        if (previewView?.controller?.initializationFuture?.isDone == true)
+            isCameraReady = true // could be ready just before streaming starts
+    }
+
     Surface {
         Box(
             modifier = Modifier
@@ -95,8 +101,15 @@ fun Capture(
                     cameraReady?.let { camera = it }
                     previewViewReady?.let {
                         previewView = it
+                        val lifecycleOwner = context as LifecycleOwner
+                        it.previewStreamState.observe(lifecycleOwner) { streamState ->
+                            if (streamState == PreviewView.StreamState.STREAMING)
+                                isCameraReady = true
+                            /*else if (streamState == PreviewView.StreamState.IDLE)
+                                isCameraReady = false*/
+                        }
                         LifecycleCameraController(context).run {
-                            bindToLifecycle(context as LifecycleOwner)
+                            bindToLifecycle(lifecycleOwner)
                             it.controller = this
                         }
                     }
@@ -123,7 +136,7 @@ fun Capture(
                 onRatioChanged = { newRatio -> zoomRatio = newRatio }
             )
 
-            if (previewView?.controller?.initializationFuture?.isDone == true) {
+            if (isCameraReady) {
                 val torchState = camera?.cameraInfo?.torchState?.observeAsState()
                 val isFlashOn = torchState?.value == TorchState.ON
                 val isNextCameraFront = lensFacing == CameraSelector.LENS_FACING_BACK
