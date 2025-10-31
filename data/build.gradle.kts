@@ -44,6 +44,10 @@ android {
     }
 }
 
+kotlin {
+    jvmToolchain(22)
+}
+
 dependencies {
     implementation(project(":domain"))
     implementation(libs.bundles.data)
