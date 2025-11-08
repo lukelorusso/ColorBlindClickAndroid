@@ -9,6 +9,8 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.viewpager.widget.ViewPager
 import com.lukelorusso.presentation.R
 import com.lukelorusso.presentation.databinding.ActivityMainBinding
@@ -19,8 +21,6 @@ import com.lukelorusso.presentation.ui.history.HistoryFragment
 import com.lukelorusso.presentation.ui.info.InfoFragment
 import com.lukelorusso.presentation.ui.preview.PreviewDialogFragment
 import com.lukelorusso.presentation.ui.settings.SettingsDialogFragment
-import androidx.core.view.isVisible
-import androidx.core.view.isGone
 
 
 class MainActivity : AppCompatActivity() {

@@ -27,12 +27,11 @@ internal fun CaptureTopToolbar(
     Column(
         modifier = modifier
             .fillMaxSize()
+            .statusBarsPadding()
     ) {
         Row(
             modifier = Modifier
                 .clickableWithoutRipple {}
-                .statusBarsPadding()
-                .navigationBarsPadding()
                 .fillMaxWidth()
                 .background(colorResource(id = R.color.black_50)),
             horizontalArrangement = Arrangement.SpaceBetween,

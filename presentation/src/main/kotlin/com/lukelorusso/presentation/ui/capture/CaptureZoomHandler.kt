@@ -57,7 +57,9 @@ internal fun CaptureZoomHandler(
         if (showSlider) Slider(
             modifier = Modifier
                 .padding(horizontal = 10.dp)
-                .padding(top = 136.dp, bottom = 224.dp)
+                .padding(top = 96.dp, bottom = 224.dp)
+                .statusBarsPadding()
+                .navigationBarsPadding()
                 .graphicsLayer {
                     rotationZ = 270F
                     transformOrigin = TransformOrigin(0F, 0F)

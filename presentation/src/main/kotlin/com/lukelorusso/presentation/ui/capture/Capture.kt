@@ -37,6 +37,7 @@ private const val INIT_ZOOM_VALUE = 10F // when no previous value has been saved
 
 @Composable
 fun Capture(
+    modifier: Modifier = Modifier,
     viewModel: CaptureViewModel,
     errorMessageFactory: ErrorMessageFactory
 ) {
@@ -77,7 +78,7 @@ fun Capture(
             isCameraReady = true // could be ready just before streaming starts
     }
 
-    Surface {
+    Surface(modifier = modifier) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -180,7 +181,8 @@ fun Capture(
                 modifier = Modifier
                     .align(Alignment.TopStart)
                     .padding(horizontal = 16.dp)
-                    .padding(top = 136.dp)
+                    .padding(top = 104.dp)
+                    .statusBarsPadding()
                     .size(FAB_DEFAULT_SIZE.dp),
                 painter = painterResource(id = R.drawable.gallery_white),
                 onClick = {

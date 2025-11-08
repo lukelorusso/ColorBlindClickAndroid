@@ -21,6 +21,7 @@ import com.lukelorusso.presentation.ui.error.ErrorAlertDialog
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Info(
+    modifier: Modifier = Modifier,
     viewModel: InfoViewModel,
     errorMessageFactory: ErrorMessageFactory
 ) {
@@ -34,10 +35,11 @@ fun Info(
         )
     }
 
-    Surface {
+    Surface(modifier = modifier) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
+                .navigationBarsPadding()
                 .background(colorResource(id = R.color.fragment_background))
         ) {
             LazyColumn(

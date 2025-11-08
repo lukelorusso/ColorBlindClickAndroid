@@ -26,6 +26,7 @@ import com.lukelorusso.domain.model.Color as ColorEntity
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun History(
+    modifier: Modifier = Modifier,
     viewModel: HistoryViewModel,
     errorMessageFactory: ErrorMessageFactory
 ) {
@@ -107,10 +108,11 @@ fun History(
         )
     }
 
-    Surface {
+    Surface(modifier = modifier) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
+                .navigationBarsPadding()
                 .background(colorResource(id = R.color.fragment_background))
         ) {
             LazyColumn(

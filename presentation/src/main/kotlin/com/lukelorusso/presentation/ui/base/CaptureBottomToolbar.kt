@@ -39,6 +39,7 @@ internal fun CaptureBottomToolbar(
     Column(
         modifier = modifier
             .fillMaxSize()
+            .navigationBarsPadding()
     ) {
         Spacer(modifier = Modifier.weight(1F))
 

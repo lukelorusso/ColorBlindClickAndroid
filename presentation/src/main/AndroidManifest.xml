@@ -16,14 +16,13 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Base.Theme"
+        android:theme="@style/Base.ThemeNoActionBar"
         tools:ignore="GoogleAppIndexingWarning">
 
         <activity
             android:name=".ui.main.MainActivity"
             android:alwaysRetainTaskState="true"
             android:screenOrientation="portrait"
-            android:theme="@style/Base.ThemeNoActionBar"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -37,7 +36,6 @@
             android:name=".ui.imagepicker.ImagePickerActivity"
             android:alwaysRetainTaskState="true"
             android:screenOrientation="portrait"
-            android:theme="@style/Base.ThemeNoActionBar"
             android:exported="true">
         </activity>
 

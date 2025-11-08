@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="Base.Theme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/color_primary</item>
-        <item name="colorPrimaryDark">@color/color_primary_dark</item>
-        <item name="colorAccent">@color/color_accent</item>
-        <item name="android:textColor">@color/text_color</item>
-        <item name="android:windowBackground">@color/color_primary_dark</item>
-    </style>
-
     <style name="Base.ThemeNoActionBar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorPrimaryDark">@color/color_primary_dark</item>
@@ -17,7 +9,6 @@
         <item name="android:textColor">@color/text_color</item>
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:windowOptOutEdgeToEdgeEnforcement" tools:ignore="NewApi">true</item>
     </style>
 
     <style name="BottomSheetDialog" parent="@style/Theme.MaterialComponents.DayNight.BottomSheetDialog">
