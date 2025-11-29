@@ -163,4 +163,9 @@ class CaptureViewModel(
         dismissErrorAndColor()
         router.routeToImagePicker(uri)
     }
+
+    companion object {
+        const val LENS_POSITION_BACK = 0
+        const val LENS_POSITION_FRONT = 1
+    }
 }

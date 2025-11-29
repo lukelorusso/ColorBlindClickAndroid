@@ -89,9 +89,16 @@ fun Capture(
             contentAlignment = Alignment.Center
         ) {
             val lensFacing: Int = when (uiState.lastLensPosition) {
-                0 -> CameraSelector.LENS_FACING_BACK
-                1 -> CameraSelector.LENS_FACING_FRONT
+                CaptureViewModel.LENS_POSITION_BACK -> CameraSelector.LENS_FACING_BACK
+                CaptureViewModel.LENS_POSITION_FRONT -> CameraSelector.LENS_FACING_FRONT
                 else -> CameraSelector.LENS_FACING_UNKNOWN
+            }
+            val isLensFacingBack = lensFacing == CameraSelector.LENS_FACING_BACK
+
+            fun switchCameraLens() {
+                val newPosition = if (isLensFacingBack) CaptureViewModel.LENS_POSITION_FRONT
+                else CaptureViewModel.LENS_POSITION_BACK
+                viewModel.setLastLensPosition(newPosition)
             }
 
             CaptureCameraPreview(
@@ -140,20 +147,16 @@ fun Capture(
             if (isCameraReady) {
                 val torchState = camera?.cameraInfo?.torchState?.observeAsState()
                 val isFlashOn = torchState?.value == TorchState.ON
-                val isNextCameraFront = lensFacing == CameraSelector.LENS_FACING_BACK
 
                 CaptureTopToolbar(
                     isNextCameraAvailable = previewView
                         ?.controller
                         ?.run { canSwitchToFront() || canSwitchToBack() }
                         ?: false,
-                    isNextCameraFront = isNextCameraFront,
+                    isNextCameraFront = isLensFacingBack,
                     isFlashAvailable = camera?.cameraInfo?.hasFlashUnit() == true,
                     isFlashOn = isFlashOn,
-                    onNextCameraSelected = {
-                        val newPosition = if (isNextCameraFront) 1 else 0
-                        viewModel.setLastLensPosition(newPosition)
-                    },
+                    onNextCameraSelected = ::switchCameraLens,
                     onFlashSelected = { camera?.cameraControl?.enableTorch(isFlashOn.not()) }
                 )
             }

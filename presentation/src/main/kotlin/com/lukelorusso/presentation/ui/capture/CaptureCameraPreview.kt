@@ -1,6 +1,9 @@
 package com.lukelorusso.presentation.ui.capture
 
-import androidx.camera.core.*
+import androidx.camera.core.Camera
+import androidx.camera.core.CameraSelector.Builder
+import androidx.camera.core.CameraSelector.LENS_FACING_FRONT
+import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.lifecycle.awaitInstance
 import androidx.camera.view.PreviewView
@@ -29,18 +32,30 @@ internal fun CaptureCameraPreview(
     val previewUseCase = remember { Preview.Builder().build() }
     var camera by remember { mutableStateOf<Camera?>(null) }
     var cameraProvider by remember { mutableStateOf<ProcessCameraProvider?>(null) }
+    var lastLensFacing by remember { mutableIntStateOf(LENS_FACING_FRONT) }
 
-    fun currentZoomRatio() =
-        camera?.cameraInfo?.zoomState?.value?.zoomRatio ?: 1F
+    fun cameraSelectorBuilder() = Builder()
+        .requireLensFacing(lastLensFacing)
+        .build()
 
     fun currentLinearZoom() =
         camera?.cameraInfo?.zoomState?.value?.linearZoom
 
-    fun rebindCameraProvider() {
+    fun currentZoomRatio() =
+        camera?.cameraInfo?.zoomState?.value?.zoomRatio ?: 1F
+
+    fun unbindCameraProvider() {
+        cameraProvider?.unbindAll()
+        camera = null
+    }
+
+    fun bindCameraProvider() {
         cameraProvider?.let { cameraProvider ->
-            val cameraSelector = CameraSelector.Builder()
-                .requireLensFacing(lensFacing)
-                .build()
+            val cameraSelector = cameraSelectorBuilder()
+
+            if (cameraProvider.isBound(previewUseCase))
+                unbindCameraProvider() // this should prevent Fatal Exception: java.lang.IllegalArgumentException
+
             camera = cameraProvider.bindToLifecycle(
                 context as LifecycleOwner,
                 cameraSelector,
@@ -53,17 +68,18 @@ internal fun CaptureCameraPreview(
     LifecycleStartEffect(Lifecycle.Event.ON_RESUME) {
         coroutineScope.launch {
             if (cameraProvider == null) cameraProvider = ProcessCameraProvider.awaitInstance(context)
-            rebindCameraProvider()
+            bindCameraProvider()
         }
 
         onStopOrDispose {
-            cameraProvider?.unbindAll()
+            unbindCameraProvider()
         }
     }
 
     LaunchedEffect(lensFacing) {
-        cameraProvider?.unbindAll()
-        rebindCameraProvider()
+        lastLensFacing = lensFacing
+        unbindCameraProvider()
+        bindCameraProvider()
     }
 
     LaunchedEffect(zoomRatio) {
@@ -88,7 +104,7 @@ internal fun CaptureCameraPreview(
         factory = { context ->
             PreviewView(context).run {
                 previewUseCase.surfaceProvider = surfaceProvider
-                rebindCameraProvider()
+                bindCameraProvider()
                 onCameraPreviewReady(null, this)
                 this
             }
