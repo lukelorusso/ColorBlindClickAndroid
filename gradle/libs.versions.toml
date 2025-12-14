@@ -2,10 +2,10 @@
 android-gradle-plugin = "8.12.3"
 android-compileSdk = "36"
 android-minSdk = "23"
-androidx-activity-compose = "1.12.0"
-androidx-camerax = "1.5.1"
-androidx-compose = "1.9.5"
-androidx-compose-bom = '2025.11.01'
+androidx-activity-compose = "1.12.1"
+androidx-camerax = "1.5.2"
+androidx-compose = "1.10.0"
+androidx-compose-bom = '2025.12.00'
 androidx-compose-material-icons-extended = "1.7.8"
 androidx-preference = "1.2.1"
 androidx-lifecycle-runtime-compose = "2.10.0"
