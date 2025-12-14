@@ -112,6 +112,10 @@ class CaptureViewModel(
     fun setLastLensPosition(param: Int) {
         viewModelScope.launch {
             try {
+                if (uiState.value.contentState.isError) {
+                    updateUiState { it.copy(contentState = ContentState.CONTENT) }
+                }
+
                 setLastLensPosition.invoke(param)
                 updateUiState {
                     it.copy(
@@ -137,6 +141,15 @@ class CaptureViewModel(
                     updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
                 }
             }
+        }
+    }
+
+    fun showError(t: Exception) {
+        updateUiState {
+            it.copy(
+                contentState = ContentState.ERROR(t),
+                color = null
+            )
         }
     }
 

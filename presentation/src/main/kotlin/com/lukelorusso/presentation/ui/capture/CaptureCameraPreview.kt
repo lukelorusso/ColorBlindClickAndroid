@@ -24,6 +24,7 @@ internal fun CaptureCameraPreview(
     lensFacing: Int,
     zoomRatio: Float, // the resulting gesture of pinch to zoom
     linearZoom: Float, // @FloatRange(from = 0F, to = 1F)
+    switchCameraLens: (Exception) -> Unit,
     onCameraPreviewReady: (Camera?, PreviewView?) -> Unit,
     onLinearZoomChanged: (Float) -> Unit // @FloatRange(from = 0F, to = 1F)
 ) {
@@ -54,14 +55,18 @@ internal fun CaptureCameraPreview(
             val cameraSelector = cameraSelectorBuilder()
 
             if (cameraProvider.isBound(previewUseCase))
-                unbindCameraProvider() // this should prevent Fatal Exception: java.lang.IllegalArgumentException
+                unbindCameraProvider()
 
-            camera = cameraProvider.bindToLifecycle(
-                context as LifecycleOwner,
-                cameraSelector,
-                previewUseCase
-            )
-            onCameraPreviewReady(camera, null)
+            try {
+                camera = cameraProvider.bindToLifecycle(
+                    context as LifecycleOwner,
+                    cameraSelector,
+                    previewUseCase
+                )
+                onCameraPreviewReady(camera, null)
+            } catch (e: IllegalArgumentException) {
+                switchCameraLens(e)
+            }
         }
     }
 

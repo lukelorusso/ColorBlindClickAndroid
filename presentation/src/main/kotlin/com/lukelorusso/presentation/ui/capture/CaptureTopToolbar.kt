@@ -55,6 +55,8 @@ internal fun CaptureTopToolbar(
                 }
             }
 
+            Spacer(modifier = Modifier.weight(1F))
+
             if (isFlashAvailable) {
                 IconButton(
                     modifier = Modifier
@@ -73,7 +75,5 @@ internal fun CaptureTopToolbar(
                 }
             }
         }
-
-        Spacer(modifier = Modifier.weight(1F))
     }
 }

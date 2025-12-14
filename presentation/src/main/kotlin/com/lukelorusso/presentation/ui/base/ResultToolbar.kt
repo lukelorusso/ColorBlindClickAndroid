@@ -76,7 +76,7 @@ fun ResultToolbar(
                         .clickable(onClick = onTextClick),
                     color = Color.White,
                     fontSize = 14.sp,
-                    maxLines = 1,
+                    maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                     text = it
                 )

@@ -44,6 +44,7 @@ fun Capture(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
     var camera by remember { mutableStateOf<Camera?>(null) }
+    var cameraExceptionCount by remember { mutableIntStateOf(0) }
     var isCameraReady by remember { mutableStateOf(false) }
     var previewView by remember { mutableStateOf<PreviewView?>(null) }
     var screenIntSize by remember { mutableStateOf(IntSize.Zero) }
@@ -105,6 +106,14 @@ fun Capture(
                 lensFacing = lensFacing,
                 zoomRatio = zoomRatio,
                 linearZoom = zoomValue / 100,
+                switchCameraLens = { e ->
+                    if (cameraExceptionCount > 0) {
+                        viewModel.showError(e)
+                    } else {
+                        switchCameraLens()
+                    }
+                    cameraExceptionCount++
+                },
                 onCameraPreviewReady = { cameraReady, previewViewReady ->
                     cameraReady?.let { camera = it }
                     previewViewReady?.let {
