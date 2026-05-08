@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.lukelorusso.data"
+    namespace = "com.lukelorusso.colorblindclick.data"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     buildFeatures {

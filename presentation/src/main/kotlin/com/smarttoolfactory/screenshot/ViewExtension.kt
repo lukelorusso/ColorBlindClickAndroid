@@ -2,7 +2,9 @@ package com.smarttoolfactory.screenshot
 
 import android.app.Activity
 import android.graphics.Canvas
-import android.os.*
+import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.view.PixelCopy
 import android.view.View
 import androidx.compose.ui.geometry.Rect

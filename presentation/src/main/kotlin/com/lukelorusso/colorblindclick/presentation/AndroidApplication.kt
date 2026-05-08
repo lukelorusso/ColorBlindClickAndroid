@@ -2,9 +2,9 @@ package com.lukelorusso.colorblindclick.presentation
 
 import android.app.Application
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.lukelorusso.colorblindclick.data.di.dataModule
 import com.lukelorusso.colorblindclick.presentation.di.presentationModule
 import com.lukelorusso.colorblindclick.presentation.logger.CrashlyticsTree
-import com.lukelorusso.data.di.dataModule
 import com.lukelorusso.domain.di.domainModule
 import io.paperdb.Paper
 import org.koin.android.ext.koin.androidContext
