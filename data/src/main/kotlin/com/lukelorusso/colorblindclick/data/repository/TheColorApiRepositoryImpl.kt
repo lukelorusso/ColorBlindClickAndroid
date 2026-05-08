@@ -5,8 +5,8 @@ import com.lukelorusso.colorblindclick.data.datasource.HttpManager
 import com.lukelorusso.colorblindclick.data.mapper.TheColorMapper
 import com.lukelorusso.colorblindclick.data.net.RetrofitFactory
 import com.lukelorusso.colorblindclick.data.net.api.TheColorApi
+import com.lukelorusso.colorblindclick.domain.repository.TheColorApiRepository
 import com.lukelorusso.domain.model.Color
-import com.lukelorusso.domain.repository.TheColorApiRepository
 
 class TheColorApiRepositoryImpl(
     private val api: TheColorApi,

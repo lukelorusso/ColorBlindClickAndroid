@@ -2,13 +2,13 @@ package com.lukelorusso.colorblindclick.presentation.ui.preview
 
 import android.graphics.Bitmap
 import androidx.lifecycle.viewModelScope
+import com.lukelorusso.colorblindclick.domain.usecase.GetStoreUrlUseCase
 import com.lukelorusso.colorblindclick.presentation.extensions.shareBitmap
 import com.lukelorusso.colorblindclick.presentation.extensions.shareText
 import com.lukelorusso.colorblindclick.presentation.helper.TrackerHelper
 import com.lukelorusso.colorblindclick.presentation.ui.base.AppRouter
 import com.lukelorusso.colorblindclick.presentation.ui.base.AppViewModel
 import com.lukelorusso.colorblindclick.presentation.ui.base.ContentState
-import com.lukelorusso.domain.usecase.GetStoreUrlUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json

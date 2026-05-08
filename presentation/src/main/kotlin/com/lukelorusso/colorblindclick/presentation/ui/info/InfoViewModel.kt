@@ -1,14 +1,14 @@
 package com.lukelorusso.colorblindclick.presentation.ui.info
 
 import androidx.lifecycle.viewModelScope
+import com.lukelorusso.colorblindclick.domain.usecase.GetAboutAppUrlUseCase
+import com.lukelorusso.colorblindclick.domain.usecase.GetAboutMeUrlUseCase
+import com.lukelorusso.colorblindclick.domain.usecase.GetApiHelpUrlUseCase
+import com.lukelorusso.colorblindclick.domain.usecase.GetApiHomeUrlUseCase
 import com.lukelorusso.colorblindclick.presentation.BuildConfig
 import com.lukelorusso.colorblindclick.presentation.helper.TrackerHelper
 import com.lukelorusso.colorblindclick.presentation.ui.base.AppViewModel
 import com.lukelorusso.colorblindclick.presentation.ui.base.ContentState
-import com.lukelorusso.domain.usecase.GetAboutAppUrlUseCase
-import com.lukelorusso.domain.usecase.GetAboutMeUrlUseCase
-import com.lukelorusso.domain.usecase.GetApiHelpUrlUseCase
-import com.lukelorusso.domain.usecase.GetApiHomeUrlUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 

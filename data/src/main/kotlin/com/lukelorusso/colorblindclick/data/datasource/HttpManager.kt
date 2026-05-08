@@ -1,7 +1,7 @@
 package com.lukelorusso.colorblindclick.data.datasource
 
-import com.lukelorusso.domain.exception.NotConnectedException
-import com.lukelorusso.domain.exception.WebServiceException
+import com.lukelorusso.colorblindclick.domain.exception.NotConnectedException
+import com.lukelorusso.colorblindclick.domain.exception.WebServiceException
 import retrofit2.Response
 
 /**

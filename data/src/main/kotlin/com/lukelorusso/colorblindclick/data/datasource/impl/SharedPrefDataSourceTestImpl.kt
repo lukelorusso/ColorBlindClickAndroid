@@ -1,7 +1,7 @@
 package com.lukelorusso.colorblindclick.data.datasource.impl
 
 import com.lukelorusso.colorblindclick.data.datasource.SharedPrefDataSource.Companion.DEFAULT_STRING
-import com.lukelorusso.domain.usecase.base.Logger
+import com.lukelorusso.colorblindclick.domain.usecase.base.Logger
 
 class SharedPrefDataSourceTestImpl(private val logger: Logger) :
     com.lukelorusso.colorblindclick.data.datasource.SharedPrefDataSource {

@@ -1,14 +1,14 @@
 package com.lukelorusso.colorblindclick.presentation.ui.history
 
 import androidx.lifecycle.viewModelScope
+import com.lukelorusso.colorblindclick.domain.usecase.DeleteAllSavedColorsUseCase
+import com.lukelorusso.colorblindclick.domain.usecase.DeleteSavedColorUseCase
+import com.lukelorusso.colorblindclick.domain.usecase.GetSavedColorListUseCase
 import com.lukelorusso.colorblindclick.presentation.extensions.matchSearch
 import com.lukelorusso.colorblindclick.presentation.helper.TrackerHelper
 import com.lukelorusso.colorblindclick.presentation.ui.base.AppViewModel
 import com.lukelorusso.colorblindclick.presentation.ui.base.Bouncer
 import com.lukelorusso.colorblindclick.presentation.ui.base.ContentState
-import com.lukelorusso.domain.usecase.DeleteAllSavedColorsUseCase
-import com.lukelorusso.domain.usecase.DeleteSavedColorUseCase
-import com.lukelorusso.domain.usecase.GetSavedColorListUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map

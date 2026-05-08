@@ -1,8 +1,8 @@
 package com.lukelorusso.colorblindclick.presentation.di
 
+import com.lukelorusso.colorblindclick.domain.usecase.base.Logger
 import com.lukelorusso.colorblindclick.presentation.helper.TrackerHelper
 import com.lukelorusso.colorblindclick.presentation.helper.impl.TrackerHelperImplTest
-import com.lukelorusso.domain.usecase.base.Logger
 import org.koin.dsl.module
 
 /**

@@ -5,8 +5,8 @@ import com.lukelorusso.colorblindclick.data.datasource.HttpManager
 import com.lukelorusso.colorblindclick.data.mapper.SaveDevMapper
 import com.lukelorusso.colorblindclick.data.net.RetrofitFactory
 import com.lukelorusso.colorblindclick.data.net.api.SaveDevApi
+import com.lukelorusso.colorblindclick.domain.repository.SaveDevApiRepository
 import com.lukelorusso.domain.model.Color
-import com.lukelorusso.domain.repository.SaveDevApiRepository
 
 class SaveDevApiRepositoryImpl(
     private val api: SaveDevApi,

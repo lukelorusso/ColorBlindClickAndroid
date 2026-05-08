@@ -1,13 +1,13 @@
 package com.lukelorusso.colorblindclick.presentation.ui.settings
 
 import androidx.lifecycle.viewModelScope
+import com.lukelorusso.colorblindclick.domain.usecase.GetPixelNeighbourhoodUseCase
+import com.lukelorusso.colorblindclick.domain.usecase.GetSaveCameraOptionsUseCase
+import com.lukelorusso.colorblindclick.domain.usecase.SetPixelNeighbourhoodUseCase
+import com.lukelorusso.colorblindclick.domain.usecase.SetSaveCameraOptionsUseCase
 import com.lukelorusso.colorblindclick.presentation.ui.base.AppRouter
 import com.lukelorusso.colorblindclick.presentation.ui.base.AppViewModel
 import com.lukelorusso.colorblindclick.presentation.ui.base.ContentState
-import com.lukelorusso.domain.usecase.GetPixelNeighbourhoodUseCase
-import com.lukelorusso.domain.usecase.GetSaveCameraOptionsUseCase
-import com.lukelorusso.domain.usecase.SetPixelNeighbourhoodUseCase
-import com.lukelorusso.domain.usecase.SetSaveCameraOptionsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 

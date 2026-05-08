@@ -1,11 +1,11 @@
 package com.lukelorusso.colorblindclick.presentation.ui.error
 
 import android.content.Context
+import com.lukelorusso.colorblindclick.domain.exception.NotConnectedException
+import com.lukelorusso.colorblindclick.domain.exception.WebServiceException
+import com.lukelorusso.colorblindclick.domain.usecase.base.Logger
 import com.lukelorusso.colorblindclick.presentation.R
 import com.lukelorusso.colorblindclick.presentation.error.ErrorMessageFactory
-import com.lukelorusso.domain.exception.NotConnectedException
-import com.lukelorusso.domain.exception.WebServiceException
-import com.lukelorusso.domain.usecase.base.Logger
 
 class ErrorMessageFactoryImpl(
     private val context: Context,

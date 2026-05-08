@@ -1,8 +1,8 @@
 package com.lukelorusso.colorblindclick.data.datasource.impl
 
 import com.lukelorusso.colorblindclick.data.datasource.DatabaseDataSource.Companion.KEY_COLORS
+import com.lukelorusso.colorblindclick.domain.usecase.base.Logger
 import com.lukelorusso.domain.model.Color
-import com.lukelorusso.domain.usecase.base.Logger
 import io.paperdb.Paper
 
 class DatabaseDataSourceImpl(private val logger: Logger) :

@@ -4,7 +4,7 @@ import com.lukelorusso.colorblindclick.data.extensions.api
 import com.lukelorusso.colorblindclick.data.mapper.SaveDevMapper
 import com.lukelorusso.colorblindclick.data.mapper.TheColorMapper
 import com.lukelorusso.colorblindclick.data.repository.*
-import com.lukelorusso.domain.repository.*
+import com.lukelorusso.colorblindclick.domain.repository.*
 import kotlinx.serialization.json.Json
 import org.koin.dsl.module
 import retrofit2.Retrofit

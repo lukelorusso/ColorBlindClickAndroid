@@ -1,8 +1,8 @@
 package com.lukelorusso.colorblindclick.data.repository
 
 import com.lukelorusso.colorblindclick.data.datasource.DatabaseDataSource
+import com.lukelorusso.colorblindclick.domain.repository.HistoryRepository
 import com.lukelorusso.domain.model.Color
-import com.lukelorusso.domain.repository.HistoryRepository
 
 class HistoryRepositoryImpl(
     private val databaseDataSource: DatabaseDataSource

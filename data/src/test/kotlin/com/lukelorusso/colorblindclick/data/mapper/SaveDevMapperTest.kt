@@ -1,7 +1,7 @@
 package com.lukelorusso.colorblindclick.data.mapper
 
 import com.lukelorusso.colorblindclick.data.repository.impl.SaveDevApiRepositoryMockImpl
-import com.lukelorusso.domain.repository.SaveDevApiRepository
+import com.lukelorusso.colorblindclick.domain.repository.SaveDevApiRepository
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Before

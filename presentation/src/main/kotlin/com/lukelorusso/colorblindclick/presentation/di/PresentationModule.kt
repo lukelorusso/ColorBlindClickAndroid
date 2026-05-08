@@ -1,5 +1,6 @@
 package com.lukelorusso.colorblindclick.presentation.di
 
+import com.lukelorusso.colorblindclick.domain.usecase.base.Logger
 import com.lukelorusso.colorblindclick.presentation.error.ErrorMessageFactory
 import com.lukelorusso.colorblindclick.presentation.helper.TrackerHelper
 import com.lukelorusso.colorblindclick.presentation.helper.impl.TrackerHelperImpl
@@ -11,7 +12,6 @@ import com.lukelorusso.colorblindclick.presentation.ui.imagepicker.ImagePickerVi
 import com.lukelorusso.colorblindclick.presentation.ui.info.InfoViewModel
 import com.lukelorusso.colorblindclick.presentation.ui.preview.PreviewViewModel
 import com.lukelorusso.colorblindclick.presentation.ui.settings.SettingsViewModel
-import com.lukelorusso.domain.usecase.base.Logger
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 

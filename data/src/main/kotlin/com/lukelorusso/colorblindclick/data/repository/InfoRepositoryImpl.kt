@@ -1,6 +1,6 @@
 package com.lukelorusso.colorblindclick.data.repository
 
-import com.lukelorusso.domain.repository.InfoRepository
+import com.lukelorusso.colorblindclick.domain.repository.InfoRepository
 
 class InfoRepositoryImpl : InfoRepository {
     override fun getAboutAppUrl(): String =

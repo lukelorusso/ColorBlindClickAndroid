@@ -1,8 +1,8 @@
 package com.lukelorusso.colorblindclick.presentation.ui.base
 
 import com.lukelorusso.colorblindclick.data.di.dataTestModule
+import com.lukelorusso.colorblindclick.domain.di.domainModule
 import com.lukelorusso.colorblindclick.presentation.di.presentationTestModule
-import com.lukelorusso.domain.di.domainModule
 import org.junit.Before
 import org.junit.Rule
 import org.koin.core.context.GlobalContext.startKoin

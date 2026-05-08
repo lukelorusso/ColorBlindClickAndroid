@@ -2,12 +2,12 @@ package com.lukelorusso.colorblindclick.presentation.ui.capture
 
 import android.net.Uri
 import androidx.lifecycle.viewModelScope
+import com.lukelorusso.colorblindclick.domain.usecase.*
 import com.lukelorusso.colorblindclick.presentation.extensions.getDeviceUdid
 import com.lukelorusso.colorblindclick.presentation.helper.TrackerHelper
 import com.lukelorusso.colorblindclick.presentation.ui.base.AppViewModel
 import com.lukelorusso.colorblindclick.presentation.ui.base.Bouncer
 import com.lukelorusso.colorblindclick.presentation.ui.base.ContentState
-import com.lukelorusso.domain.usecase.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
