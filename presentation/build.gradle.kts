@@ -21,7 +21,7 @@ println("appId: $appId\n" +
 )
 
 android {
-    namespace = "com.lukelorusso.presentation"
+    namespace = "com.lukelorusso.colorblindclick.presentation"
     compileSdk = appCompileSdk
 
     buildFeatures {

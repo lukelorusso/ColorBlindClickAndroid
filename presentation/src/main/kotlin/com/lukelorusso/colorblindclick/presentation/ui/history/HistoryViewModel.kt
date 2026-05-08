@@ -1,0 +1,160 @@
+package com.lukelorusso.colorblindclick.presentation.ui.history
+
+import androidx.lifecycle.viewModelScope
+import com.lukelorusso.colorblindclick.presentation.extensions.matchSearch
+import com.lukelorusso.colorblindclick.presentation.helper.TrackerHelper
+import com.lukelorusso.colorblindclick.presentation.ui.base.AppViewModel
+import com.lukelorusso.colorblindclick.presentation.ui.base.Bouncer
+import com.lukelorusso.colorblindclick.presentation.ui.base.ContentState
+import com.lukelorusso.domain.usecase.DeleteAllSavedColorsUseCase
+import com.lukelorusso.domain.usecase.DeleteSavedColorUseCase
+import com.lukelorusso.domain.usecase.GetSavedColorListUseCase
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
+import com.lukelorusso.domain.model.Color as ColorEntity
+
+class HistoryViewModel(
+    private val trackerHelper: TrackerHelper,
+    private val getSavedColorList: GetSavedColorListUseCase,
+    private val deleteSavedColor: DeleteSavedColorUseCase,
+    private val deleteAllSavedColors: DeleteAllSavedColorsUseCase
+) : AppViewModel<HistoryUiState>() {
+    override val _uiState = MutableStateFlow(HistoryUiState())
+    override val router = HistoryRouter()
+    private val json = Json { ignoreUnknownKeys = true }
+    private val loadBouncer = Bouncer(BOUNCE_DELAY_IN_MILLIS)
+    val filteredColors: Flow<List<ColorEntity>>
+        get() = uiState.map { uiState ->
+            uiState.colorList.filter { item ->
+                item.toString().matchSearch(uiState.searchText)
+            }
+        }
+
+    init {
+        loadData()
+    }
+
+    fun loadData() {
+        if (uiState.value.contentState.isLoading) {
+            return
+        } else {
+            updateUiState { it.copy(contentState = ContentState.LOADING) }
+        }
+
+        viewModelScope.launch {
+            loadDataSuspend()
+        }
+    }
+
+    private suspend fun loadDataSuspend() {
+        try {
+            val colorList = getSavedColorList.invoke(Unit)
+            updateUiState {
+                it.copy(
+                    contentState = ContentState.CONTENT,
+                    colorList = colorList
+                )
+            }
+        } catch (t: Throwable) {
+            trackerHelper.track(TrackerHelper.Action.PERSISTENCE_EXCEPTION)
+            updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
+        }
+    }
+
+    fun deleteColorFromUiState(param: ColorEntity) {
+        updateUiState {
+            it.copy(
+                colorList = uiState.value.colorList
+                    .minus(param) // temporarily preview the result
+            )
+        }
+    }
+
+    fun restoreColorToUiState(param: ColorEntity) {
+        updateUiState {
+            it.copy(
+                colorList = uiState.value.colorList
+                    .plus(param)
+                    .sortedByDescending { color -> color.timestamp }
+            )
+        }
+    }
+
+    fun deleteColor(param: ColorEntity) {
+        if (uiState.value.contentState.isLoading) {
+            return
+        } else {
+            updateUiState { it.copy(contentState = ContentState.LOADING) }
+        }
+
+        viewModelScope.launch {
+            try {
+                deleteSavedColor.invoke(param)
+                trackerHelper.track(TrackerHelper.Action.DELETED_ITEM)
+                loadDataSuspend()
+            } catch (t: Throwable) {
+                trackerHelper.track(TrackerHelper.Action.PERSISTENCE_EXCEPTION)
+                updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
+            }
+        }
+    }
+
+    fun deleteAllColors() {
+        if (uiState.value.contentState.isLoading) {
+            return
+        } else {
+            updateUiState {
+                it.copy(
+                    contentState = ContentState.LOADING,
+                    colorList = emptyList() // temporarily preview the result
+                )
+            }
+        }
+
+        viewModelScope.launch {
+            try {
+                deleteAllSavedColors.invoke(Unit)
+                trackerHelper.track(TrackerHelper.Action.DELETED_ALL_ITEMS)
+                loadDataSuspend()
+            } catch (t: Throwable) {
+                trackerHelper.track(TrackerHelper.Action.PERSISTENCE_EXCEPTION)
+                updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
+            }
+        }
+    }
+
+    fun toggleSearchingMode(value: Boolean) {
+        updateUiState { it.copy(isSearchingMode = value) }
+        if (!value) updateUiState { it.copy(searchText = "") }
+    }
+
+    fun updateSearchText(newText: String) {
+        if (newText.isBlank()) {
+            loadBouncer.tick()
+            updateUiState { it.copy(searchText = newText) }
+        } else {
+            // load the job after the defined delay
+            loadBouncer.bounce {
+                updateUiState { it.copy(searchText = newText) }
+            }
+        }
+    }
+
+    fun gotoPreview(color: ColorEntity) =
+        router.routeToPreview(json.encodeToString<ColorEntity>(color))
+
+    fun gotoCamera() =
+        router.routeToCamera()
+
+    fun dismissError(onDismiss: (() -> Unit)? = null) {
+        updateUiState { it.copy(contentState = ContentState.CONTENT) }
+        onDismiss?.invoke()
+    }
+
+    companion object {
+        private const val BOUNCE_DELAY_IN_MILLIS = 250L
+    }
+}
