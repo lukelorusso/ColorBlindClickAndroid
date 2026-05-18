@@ -7,6 +7,7 @@ androidx-camerax = "1.5.2"
 androidx-compose = "1.10.0"
 androidx-compose-bom = '2025.12.00'
 androidx-compose-material-icons-extended = "1.7.8"
+androidx-datastore = "1.1.7"
 androidx-preference = "1.2.1"
 androidx-lifecycle-runtime-compose = "2.10.0"
 coil = "2.7.0"
@@ -40,6 +41,8 @@ androidx-compose-runtime-livedata = { group = "androidx.compose.runtime", name =
 androidx-compose-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "androidx-compose" }
 androidx-compose-ui-android = { group = "androidx.compose.ui", name = "ui-android", version.ref = "androidx-compose" }
 androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "androidx-compose" }
+androidx-datastore = { group = "androidx.datastore", name = "datastore", version.ref = "androidx-datastore" }
+androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "androidx-datastore" }
 androidx-preference = { group = "androidx.preference", name = "preference", version.ref = "androidx-preference" }
 androidx-lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-lifecycle-runtime-compose" }
 coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
@@ -72,6 +75,8 @@ google-firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.
 
 [bundles]
 data = [
+    "androidx-datastore",
+    "androidx-datastore-preferences",
     "androidx-preference",
     "koin-core",
     "kotlinx-serialization-json",

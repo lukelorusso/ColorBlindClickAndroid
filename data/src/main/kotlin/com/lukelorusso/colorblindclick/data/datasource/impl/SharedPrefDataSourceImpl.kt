@@ -1,41 +1,45 @@
 package com.lukelorusso.colorblindclick.data.datasource.impl
 
 import android.content.Context
+import androidx.core.content.edit
 import androidx.preference.PreferenceManager
-import com.lukelorusso.colorblindclick.data.datasource.SharedPrefDataSource.Companion.DEFAULT_STRING
+import com.lukelorusso.colorblindclick.data.datasource.PreferencesDataSource
+import org.koin.java.KoinJavaComponent.inject
 
-class SharedPrefDataSourceImpl(private val context: Context) :
-    com.lukelorusso.colorblindclick.data.datasource.SharedPrefDataSource {
+class SharedPrefDataSourceImpl : PreferencesDataSource {
+    val context by inject<Context>(Context::class.java)
+
     private val sharedPreferences
         get() = PreferenceManager.getDefaultSharedPreferences(context)
 
-    override fun get(key: String): String = get(key, DEFAULT_STRING)
+    override suspend fun get(key: String): String? =
+        if (exist(key)) get(key, "") else null
 
-    override fun get(key: String, defValue: String): String =
+    override suspend fun get(key: String, defValue: String): String =
         sharedPreferences.getString(key, defValue) ?: defValue
 
-    override fun get(key: String, defValue: Int): Int =
+    override suspend fun get(key: String, defValue: Int): Int =
         sharedPreferences.getInt(key, defValue)
 
-    override fun get(key: String, defValue: Long): Long =
+    override suspend fun get(key: String, defValue: Long): Long =
         sharedPreferences.getLong(key, defValue)
 
-    override fun get(key: String, defValue: Boolean): Boolean =
+    override suspend fun get(key: String, defValue: Boolean): Boolean =
         sharedPreferences.getBoolean(key, defValue)
 
-    override fun set(key: String, value: Boolean) =
-        sharedPreferences.edit().putBoolean(key, value).apply()
+    override suspend fun set(key: String, value: Boolean) =
+        sharedPreferences.edit { putBoolean(key, value) }
 
-    override fun set(key: String, value: Int) =
-        sharedPreferences.edit().putInt(key, value).apply()
+    override suspend fun set(key: String, value: Int) =
+        sharedPreferences.edit { putInt(key, value) }
 
-    override fun set(key: String, value: Long) =
-        sharedPreferences.edit().putLong(key, value).apply()
+    override suspend fun set(key: String, value: Long) =
+        sharedPreferences.edit { putLong(key, value) }
 
-    override fun set(key: String, value: String) =
-        sharedPreferences.edit().putString(key, value).apply()
+    override suspend fun set(key: String, value: String) =
+        sharedPreferences.edit { putString(key, value) }
 
-    override fun delete(key: String) = sharedPreferences.edit().remove(key).apply()
+    override suspend fun delete(key: String) = sharedPreferences.edit { remove(key) }
 
-    override fun exist(key: String): Boolean = sharedPreferences.contains(key)
+    override suspend fun exist(key: String): Boolean = sharedPreferences.contains(key)
 }

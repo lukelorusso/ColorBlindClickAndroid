@@ -1,35 +1,35 @@
 package com.lukelorusso.colorblindclick.domain.repository
 
 interface SettingsRepository {
+    suspend fun migratePreferences()
 
-    fun getPixelNeighbourhood(): Int
+    suspend fun getPixelNeighbourhood(): Int
 
-    fun setPixelNeighbourhood(param: Int)
+    suspend fun setPixelNeighbourhood(param: Int)
 
-    fun getSaveCameraOptions(): Boolean
+    suspend fun getSaveCameraOptions(): Boolean
 
-    fun setSaveCameraOptions(param: Boolean)
+    suspend fun setSaveCameraOptions(param: Boolean)
 
     /**
      * Back camera = 0; Front camera = 1
      */
-    fun getLastLensPosition(): Int
+    suspend fun getLastLensPosition(): Int
 
     /**
      * First, check if the user wants to save the camera options
      */
-    fun setLastLensPosition(position: Int)
+    suspend fun setLastLensPosition(position: Int)
 
     /**
      * Min zoom value = 0; Max zoom value = 100
      */
-    fun getLastZoomValue(): Int
+    suspend fun getLastZoomValue(): Int
 
     /**
      * First, check if the user wants to save the camera options
      */
-    fun setLastZoomValue(position: Int)
+    suspend fun setLastZoomValue(position: Int)
 
-    fun getDeviceLanguage(): String
-
+    suspend fun getDeviceLanguage(): String
 }

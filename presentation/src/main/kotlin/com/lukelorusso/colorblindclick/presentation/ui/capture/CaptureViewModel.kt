@@ -15,6 +15,7 @@ import com.lukelorusso.domain.model.Color as ColorEntity
 
 class CaptureViewModel(
     private val trackerHelper: TrackerHelper,
+    private val migrateUserData: MigrateUserDataUseCase,
     private val getLastLensPosition: GetLastLensPositionUseCase,
     private val setLastLensPosition: SetLastLensPositionUseCase,
     private val getLastZoomValue: GetLastZoomValueUseCase,
@@ -40,6 +41,8 @@ class CaptureViewModel(
 
         viewModelScope.launch {
             try {
+                migrateUserData.invoke(Unit) // perform user data migration
+
                 val lastLensPosition = getLastLensPosition.invoke(Unit)
                 val lastZoomValue = getLastZoomValue.invoke(Unit)
                 val pixelNeighbourhood = getPixelNeighbourhood.invoke(Unit)

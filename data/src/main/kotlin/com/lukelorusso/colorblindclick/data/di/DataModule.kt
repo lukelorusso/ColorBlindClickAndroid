@@ -1,8 +1,8 @@
 package com.lukelorusso.colorblindclick.data.di
 
 import com.lukelorusso.colorblindclick.data.datasource.*
+import com.lukelorusso.colorblindclick.data.datasource.impl.DataStoreDataSourceImpl
 import com.lukelorusso.colorblindclick.data.datasource.impl.DatabaseDataSourceImpl
-import com.lukelorusso.colorblindclick.data.datasource.impl.SharedPrefDataSourceImpl
 import com.lukelorusso.colorblindclick.data.net.OkHttpClientFactory
 import com.lukelorusso.colorblindclick.data.net.RetrofitFactory
 import org.koin.dsl.module
@@ -26,19 +26,11 @@ val dataModule = module {
     //endregion
 
     //region Settings
-    factory<SharedPrefDataSource> {
-        SharedPrefDataSourceImpl(
-            get()
-        )
-    }
-    factory { PersistenceManager(get()) }
+    factory<PreferencesDataSource> { DataStoreDataSourceImpl() }
+    factory { PreferencesManager(get()) }
     //endregion
 
     //region Persistence
-    factory<DatabaseDataSource> {
-        DatabaseDataSourceImpl(
-            get()
-        )
-    }
+    factory<DatabaseDataSource> { DatabaseDataSourceImpl(get()) }
     //endregion
 } + dataCommonModule

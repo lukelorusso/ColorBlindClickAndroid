@@ -23,6 +23,7 @@ class CaptureTest : AppTest() {
             get(),
             get(),
             get(),
+            get(),
             get()
         )
     }

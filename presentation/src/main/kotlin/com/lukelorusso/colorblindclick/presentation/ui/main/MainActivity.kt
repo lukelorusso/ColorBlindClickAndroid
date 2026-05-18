@@ -106,7 +106,7 @@ class MainActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, resultArray)
         when (requestCode) {
             PERMISSION_CAMERA_REQUEST_CODE -> {
-                if (resultArray.isNotEmpty() // if the request is cancelled, resultArray is empty
+                if (resultArray.isNotEmpty() // if the request is canceled, resultArray is empty
                     && resultArray[0] == PackageManager.PERMISSION_GRANTED
                 ) {
                     runOnUiThread { hideBrokenView() }
