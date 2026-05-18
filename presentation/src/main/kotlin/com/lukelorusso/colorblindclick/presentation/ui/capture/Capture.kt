@@ -97,8 +97,7 @@ fun Capture(
         ) {
             val lensFacing: Int = when (uiState.lastLensPosition) {
                 CaptureViewModel.LENS_POSITION_BACK -> CameraSelector.LENS_FACING_BACK
-                CaptureViewModel.LENS_POSITION_FRONT -> CameraSelector.LENS_FACING_FRONT
-                else -> CameraSelector.LENS_FACING_UNKNOWN
+                else -> CameraSelector.LENS_FACING_FRONT
             }
             val isLensFacingBack = lensFacing == CameraSelector.LENS_FACING_BACK
 
