@@ -5,8 +5,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,6 +30,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.milliseconds
 
+private const val HUMAN_INTERACTION_DURATION_IN_MILLIS = 100
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun History(
@@ -46,7 +48,8 @@ fun History(
     val coroutineScope = rememberCoroutineScope()
     var localSearchText by remember { mutableStateOf("") }
     var showDeleteAllAlertDialog by remember { mutableStateOf(false) }
-    var shouldDeleteColor by remember { mutableStateOf<ColorEntity?>(null) }
+    var shouldDeleteColor by remember { mutableStateOf(false) }
+    var tempColorToDelete by remember { mutableStateOf<ColorEntity?>(null) }
 
     // use this function instead of playing directly with the viewModel
     fun updateSearch(
@@ -68,7 +71,7 @@ fun History(
     if (uiState.run { uiState.isSearchingMode && !contentState.isLoading && searchText.isEmpty() }) {
         DisposableEffect(Unit) {
             coroutineScope.launch {
-                delay(100.milliseconds)
+                delay(HUMAN_INTERACTION_DURATION_IN_MILLIS.milliseconds)
                 focusRequester.requestFocus()
             }
             onDispose { }
@@ -90,29 +93,44 @@ fun History(
             painter = painterResource(id = R.drawable.delete_sweep_white),
             confirmCallback = {
                 viewModel.deleteAllColors()
-                showDeleteAllAlertDialog = false
+                coroutineScope.launch {
+                    showDeleteAllAlertDialog = false
+                }
             },
-            dismissCallback = { showDeleteAllAlertDialog = false }
+            dismissCallback = {
+                coroutineScope.launch {
+                    showDeleteAllAlertDialog = false
+                }
+            }
         )
     }
 
-    shouldDeleteColor?.let { colorToDelete ->
+    if (shouldDeleteColor) {
         if (uiState.colorList.isEmpty() && uiState.isSearchingMode) {
             updateSearch(isSearchingMode = false)
         }
 
-        YesNoAlertDialog(
-            text = stringResource(R.string.color_delete_one_confirmation_message, colorToDelete.colorName),
-            painter = painterResource(id = R.drawable.delete_item_white),
-            confirmCallback = {
-                viewModel.deleteColor(colorToDelete)
-                shouldDeleteColor = null
-            },
-            dismissCallback = {
-                viewModel.restoreColorToUiState(colorToDelete)
-                shouldDeleteColor = null
-            }
-        )
+        tempColorToDelete?.let { colorToDelete ->
+            YesNoAlertDialog(
+                text = stringResource(R.string.color_delete_one_confirmation_message, colorToDelete.colorName),
+                painter = painterResource(id = R.drawable.delete_item_white),
+                confirmCallback = {
+                    viewModel.deleteColor(colorToDelete)
+                    coroutineScope.launch {
+                        tempColorToDelete = null
+                        shouldDeleteColor = false
+                    }
+                },
+                dismissCallback = {
+                    coroutineScope.launch {
+                        tempColorToDelete = null
+                        shouldDeleteColor = false
+                        delay(HUMAN_INTERACTION_DURATION_IN_MILLIS.milliseconds)
+                        viewModel.restoreColorToUiState(colorToDelete)
+                    }
+                }
+            )
+        }
     }
 
     Surface(modifier = modifier) {
@@ -139,7 +157,7 @@ fun History(
                         },
                         onDeleteAllClick = {
                             updateSearch(isSearchingMode = false)
-                            showDeleteAllAlertDialog = true
+                            if (tempColorToDelete == null) showDeleteAllAlertDialog = true
                         }
                     )
                 }
@@ -164,10 +182,15 @@ fun History(
                         isLoading = uiState.contentState.isLoading,
                         isEven = index % 2 == 0,
                         item = color,
-                        onClick = viewModel::gotoPreview,
-                        onDeleteColor = {
-                            viewModel.deleteColorFromUiState(color)
-                            shouldDeleteColor = color
+                        onClick = { clickedColor ->
+                            if (tempColorToDelete == null) viewModel.gotoPreview(clickedColor)
+                        },
+                        onDeleteColor = { deletedColor ->
+                            coroutineScope.launch {
+                                tempColorToDelete = deletedColor
+                                viewModel.deleteColorFromUiState(deletedColor)
+                                shouldDeleteColor = true
+                            }
                         }
                     )
                 }

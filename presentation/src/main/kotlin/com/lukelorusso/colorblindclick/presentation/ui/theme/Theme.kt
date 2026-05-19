@@ -1,7 +1,7 @@
 package com.lukelorusso.colorblindclick.presentation.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
@@ -17,14 +17,14 @@ fun AppTheme(
     content: @Composable () -> Unit
 ) {
     val context = LocalContext.current
-    val colors = if (useDarkTheme) {
+    val colorScheme = if (useDarkTheme) {
         darkColors(context)
     } else {
         lightColors(context)
     }
 
     return MaterialTheme(
-        colors = colors,
+        colorScheme = colorScheme,
         content = content
     )
 }

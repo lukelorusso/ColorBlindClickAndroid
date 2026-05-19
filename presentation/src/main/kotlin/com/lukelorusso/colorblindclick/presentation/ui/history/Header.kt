@@ -6,9 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.TextSelectionColors
-import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
@@ -25,6 +23,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lukelorusso.colorblindclick.presentation.R
+import com.lukelorusso.colorblindclick.presentation.ui.icons.Clear
 
 
 @Composable
@@ -45,7 +44,7 @@ internal fun Header(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colors.primary),
+            .background(MaterialTheme.colorScheme.primary),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -121,7 +120,7 @@ internal fun Header(
 
         if (isLoading) LinearProgressIndicator(
             modifier = lineModifier,
-            backgroundColor = colorResource(id = R.color.progress_background),
+            trackColor = colorResource(id = R.color.progress_background),
             color = colorResource(id = R.color.red_delete)
         )
         else Spacer(
@@ -159,18 +158,24 @@ private fun SearchTextField(
                 if (searchText.isNotEmpty()) {
                     Icon(
                         modifier = Modifier.clickable { updateSearchText("") },
-                        imageVector = Icons.Default.Clear,
+                        imageVector = Clear,
                         contentDescription = null,
                         tint = Color.White
                     )
                 }
             },
-            colors = TextFieldDefaults.textFieldColors(
+            colors = TextFieldDefaults.colors(
                 cursorColor = colorResource(id = R.color.white_50),
-                focusedIndicatorColor = colorResource(id = R.color.white_50),
-                textColor = Color.White,
-                placeholderColor = colorResource(id = R.color.white_50),
-                leadingIconColor = Color.Red
+                focusedIndicatorColor = Color.White,
+                focusedTextColor = Color.White,
+                focusedPlaceholderColor = colorResource(id = R.color.white_50),
+                focusedLeadingIconColor = Color.Red,
+                focusedContainerColor = colorResource(id = R.color.color_primary_dark),
+                unfocusedIndicatorColor = colorResource(id = R.color.white_50),
+                unfocusedTextColor = Color.White,
+                unfocusedPlaceholderColor = colorResource(id = R.color.white_50),
+                unfocusedLeadingIconColor = Color.Red,
+                unfocusedContainerColor = colorResource(id = R.color.color_primary_dark)
             ),
             shape = RoundedCornerShape(8.dp)
         )

@@ -35,6 +35,7 @@ class MainActivity : AppCompatActivity() {
     companion object {
         private const val PERMISSION_CAMERA_REQUEST_CODE = 10107
         private const val OFFSCREEN_PAGE_LIMIT = 3
+        private const val SPLASH_SCREEN_DURATION_IN_MILLIS = 500
     }
 
     private val handleOnBackPressed = object : OnBackPressedCallback(true) {
@@ -62,8 +63,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         onBackPressedDispatcher.addCallback(this, handleOnBackPressed)
-        val duration = resources.getInteger(R.integer.splash_screen_duration)
-        binding.splash.logo.setAlphaWithAnimation(0F, 1F, duration.toLong()) {
+        binding.splash.logo.setAlphaWithAnimation(0F, 1F, SPLASH_SCREEN_DURATION_IN_MILLIS.toLong()) {
             initializeActivity(savedInstanceState)
         }
     }
