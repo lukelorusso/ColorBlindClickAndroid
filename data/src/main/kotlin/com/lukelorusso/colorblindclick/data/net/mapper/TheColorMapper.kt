@@ -1,4 +1,4 @@
-package com.lukelorusso.colorblindclick.data.mapper
+package com.lukelorusso.colorblindclick.data.net.mapper
 
 import com.lukelorusso.colorblindclick.data.net.dto.TheColorResponseDTO
 import com.lukelorusso.colorblindclick.domain.entity.ColorEntity
@@ -8,8 +8,6 @@ import com.lukelorusso.colorblindclick.domain.entity.ColorEntity
  * in the domain layer and vice versa.
  */
 class TheColorMapper {
-
-    //region DTO to MODEL
     /**
      * Transform a [TheColorResponseDTO] into an [ColorEntity].
      * @param dto  Object to be transformed.
@@ -25,6 +23,4 @@ class TheColorMapper {
             timestamp = System.currentTimeMillis()
         )
     }
-    //endregion
-
 }

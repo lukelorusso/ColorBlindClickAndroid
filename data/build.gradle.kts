@@ -1,7 +1,8 @@
 plugins {
-    id(libs.plugins.android.library.get().pluginId)
-    id(libs.plugins.kotlin.android.get().pluginId)
-    id(libs.plugins.kotlin.serialization.get().pluginId)
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -15,6 +16,7 @@ android {
     defaultConfig {
         minSdk = libs.versions.android.minSdk.get().toInt()
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("int", "ROOM_VERSION", properties["roomDbVersion"].toString())
     }
 
     buildTypes {
@@ -51,5 +53,6 @@ kotlin {
 dependencies {
     implementation(project(":domain"))
     implementation(libs.bundles.data)
+    ksp(libs.bundles.data.ksp)
     testImplementation(libs.bundles.data.test)
 }

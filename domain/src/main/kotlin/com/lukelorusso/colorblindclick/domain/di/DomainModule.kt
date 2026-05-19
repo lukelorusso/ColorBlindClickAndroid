@@ -13,6 +13,7 @@ val domainModule = module {
     factory { GetAboutMeUrlUseCase(get()) }
     factory { GetStoreUrlUseCase(get()) }
 
+    factory { MigrateDatabaseUseCase(get()) }
     factory { MigrateUserDataUseCase(get()) }
 
     factory { GetPixelNeighbourhoodUseCase(get()) }

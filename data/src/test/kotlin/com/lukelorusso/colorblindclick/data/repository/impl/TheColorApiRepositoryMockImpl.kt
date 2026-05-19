@@ -1,6 +1,6 @@
 package com.lukelorusso.colorblindclick.data.repository.impl
 
-import com.lukelorusso.colorblindclick.data.mapper.TheColorMapper
+import com.lukelorusso.colorblindclick.data.net.mapper.TheColorMapper
 import com.lukelorusso.colorblindclick.data.net.dto.TheColorResponseDTO
 import com.lukelorusso.colorblindclick.domain.entity.ColorEntity
 import com.lukelorusso.colorblindclick.domain.repository.TheColorApiRepository

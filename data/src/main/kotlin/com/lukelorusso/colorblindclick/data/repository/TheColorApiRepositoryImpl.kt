@@ -2,7 +2,7 @@ package com.lukelorusso.colorblindclick.data.repository
 
 import com.lukelorusso.colorblindclick.data.datasource.HttpManager
 import com.lukelorusso.colorblindclick.data.manager.DatabaseManager
-import com.lukelorusso.colorblindclick.data.mapper.TheColorMapper
+import com.lukelorusso.colorblindclick.data.net.mapper.TheColorMapper
 import com.lukelorusso.colorblindclick.data.net.RetrofitFactory
 import com.lukelorusso.colorblindclick.data.net.api.TheColorApi
 import com.lukelorusso.colorblindclick.domain.entity.ColorEntity

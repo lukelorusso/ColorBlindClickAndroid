@@ -8,10 +8,12 @@ import com.lukelorusso.colorblindclick.domain.entity.ColorEntity
  */
 interface DatabaseDataSource {
     //region Color
-    fun getColorList(): List<ColorEntity>
+    suspend fun getColorList(): List<ColorEntity>
 
-    fun saveColorList(list: List<ColorEntity>)
+    suspend fun saveColorList(list: List<ColorEntity>)
 
-    fun clearColorList()
+    suspend fun deleteColor(element: ColorEntity)
+
+    suspend fun clearColorList()
     //endregion
 }

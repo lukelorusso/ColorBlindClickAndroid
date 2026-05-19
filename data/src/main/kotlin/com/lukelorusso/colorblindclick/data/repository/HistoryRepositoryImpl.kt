@@ -7,14 +7,16 @@ import com.lukelorusso.colorblindclick.domain.repository.HistoryRepository
 class HistoryRepositoryImpl(
     private val databaseManager: DatabaseManager
 ) : HistoryRepository {
+    override suspend fun migrateDatabase() {
+        databaseManager.migrate()
+    }
+
     override suspend fun getColorList(): List<ColorEntity> {
         return databaseManager.getColorList()
     }
 
     override suspend fun deleteColor(color: ColorEntity) {
-        getColorList()
-            .filter { c -> c.originalColorHex != color.originalColorHex }
-            .let { filteredList -> databaseManager.saveColorList(filteredList) }
+        databaseManager.deleteColor(color)
     }
 
     override suspend fun deleteAllColors() {
