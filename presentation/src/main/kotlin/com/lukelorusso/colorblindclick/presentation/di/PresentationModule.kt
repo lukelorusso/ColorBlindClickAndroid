@@ -54,13 +54,11 @@ val presentationModule = module {
             get(),
             get(),
             get(),
-            get(),
             get()
         )
     }
     viewModel {
         HistoryViewModel(
-            get(),
             get(),
             get(),
             get(),

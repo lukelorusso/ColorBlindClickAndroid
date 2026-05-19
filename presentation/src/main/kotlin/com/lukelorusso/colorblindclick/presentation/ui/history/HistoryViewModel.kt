@@ -5,7 +5,6 @@ import com.lukelorusso.colorblindclick.domain.entity.ColorEntity
 import com.lukelorusso.colorblindclick.domain.usecase.DeleteAllSavedColorsUseCase
 import com.lukelorusso.colorblindclick.domain.usecase.DeleteSavedColorUseCase
 import com.lukelorusso.colorblindclick.domain.usecase.GetSavedColorListUseCase
-import com.lukelorusso.colorblindclick.domain.usecase.MigrateDatabaseUseCase
 import com.lukelorusso.colorblindclick.presentation.extensions.matchSearch
 import com.lukelorusso.colorblindclick.presentation.helper.TrackerHelper
 import com.lukelorusso.colorblindclick.presentation.ui.base.AppViewModel
@@ -19,7 +18,6 @@ import kotlinx.serialization.json.Json
 
 class HistoryViewModel(
     private val trackerHelper: TrackerHelper,
-    private val migrateDatabase: MigrateDatabaseUseCase,
     private val getSavedColorList: GetSavedColorListUseCase,
     private val deleteSavedColor: DeleteSavedColorUseCase,
     private val deleteAllSavedColors: DeleteAllSavedColorsUseCase
@@ -47,8 +45,6 @@ class HistoryViewModel(
         }
 
         viewModelScope.launch {
-            migrateDatabase.invoke(Unit) // perform database migration
-
             loadDataSuspend()
         }
     }
