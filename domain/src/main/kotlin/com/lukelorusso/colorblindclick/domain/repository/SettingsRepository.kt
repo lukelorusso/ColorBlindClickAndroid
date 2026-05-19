@@ -1,8 +1,6 @@
 package com.lukelorusso.colorblindclick.domain.repository
 
 interface SettingsRepository {
-    suspend fun migratePreferences()
-
     suspend fun getPixelNeighbourhood(): Int
 
     suspend fun setPixelNeighbourhood(param: Int)

@@ -7,10 +7,6 @@ import java.util.*
 class SettingsRepositoryImpl(
     private val preferencesManager: PreferencesManager
 ) : SettingsRepository {
-    override suspend fun migratePreferences() {
-        preferencesManager.migrate()
-    }
-
     override suspend fun getPixelNeighbourhood(): Int {
         return preferencesManager.loadPixelNeighbourhood()
     }

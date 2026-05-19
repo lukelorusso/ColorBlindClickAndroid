@@ -2,7 +2,6 @@ package com.lukelorusso.colorblindclick.presentation.ui.capture
 
 import com.lukelorusso.colorblindclick.presentation.ui.base.AppTest
 import com.lukelorusso.colorblindclick.presentation.ui.base.ContentState
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.runBlocking
@@ -23,7 +22,6 @@ class CaptureTest : AppTest() {
             get(),
             get(),
             get(),
-            get(),
             get()
         )
     }
@@ -33,7 +31,7 @@ class CaptureTest : AppTest() {
         viewModel.decodeColor("#52851E")
         val result = viewModel.uiState.take(2)
         assert(
-            result.filter { it.contentState == ContentState.CONTENT }.firstOrNull()?.color?.let { color ->
+            result.firstOrNull { it.contentState == ContentState.CONTENT }?.color?.let { color ->
                 color.matchingColorHex == "#549019"
                         && color.colorName == "Vida Loca"
                         && color.originalColorHex == "#52851E"

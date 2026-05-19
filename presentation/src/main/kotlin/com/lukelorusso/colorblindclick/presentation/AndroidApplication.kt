@@ -6,7 +6,6 @@ import com.lukelorusso.colorblindclick.data.di.dataModule
 import com.lukelorusso.colorblindclick.domain.di.domainModule
 import com.lukelorusso.colorblindclick.presentation.di.presentationModule
 import com.lukelorusso.colorblindclick.presentation.logger.CrashlyticsTree
-import io.paperdb.Paper
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -32,9 +31,6 @@ class AndroidApplication : Application() {
             Timber.plant(CrashlyticsTree())
             Timber.plant(Timber.DebugTree())
         }
-
-        // Init Paper
-        Paper.init(this)
 
         startKoin {
             if (BuildConfig.DEBUG) {

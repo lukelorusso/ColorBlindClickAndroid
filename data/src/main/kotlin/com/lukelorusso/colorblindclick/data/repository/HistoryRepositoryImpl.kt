@@ -7,10 +7,6 @@ import com.lukelorusso.colorblindclick.domain.repository.HistoryRepository
 class HistoryRepositoryImpl(
     private val databaseManager: DatabaseManager
 ) : HistoryRepository {
-    override suspend fun migrateDatabase() {
-        databaseManager.migrate()
-    }
-
     override suspend fun getColorList(): List<ColorEntity> {
         return databaseManager.getColorList()
     }
