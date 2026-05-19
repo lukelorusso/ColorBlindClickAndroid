@@ -2,8 +2,8 @@ package com.lukelorusso.colorblindclick.data.repository.impl
 
 import com.lukelorusso.colorblindclick.data.mapper.TheColorMapper
 import com.lukelorusso.colorblindclick.data.net.dto.TheColorResponseDTO
+import com.lukelorusso.colorblindclick.domain.entity.ColorEntity
 import com.lukelorusso.colorblindclick.domain.repository.TheColorApiRepository
-import com.lukelorusso.domain.model.Color
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
@@ -14,7 +14,7 @@ class TheColorApiRepositoryMockImpl(
 ) : TheColorApiRepository {
     private val json = Json { ignoreUnknownKeys = true }
 
-    override suspend fun decodeColorHex(colorHex: String, deviceLanguage: String, deviceUdid: String): Color {
+    override suspend fun decodeColorHex(colorHex: String, deviceLanguage: String, deviceUdid: String): ColorEntity {
         val colorResponseDTO = parseDtoFromJson()
         return colorMapper.transform(colorResponseDTO)
     }

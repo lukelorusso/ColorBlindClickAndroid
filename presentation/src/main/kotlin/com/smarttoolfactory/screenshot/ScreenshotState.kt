@@ -11,6 +11,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * Create a State of screenshot of composable that is used with that is kept on each recomposition.
@@ -45,7 +46,7 @@ class ScreenshotState internal constructor(
     val liveScreenshotFlow = flow {
         while (true) {
             callback?.invoke()
-            delay(timeInMillis)
+            delay(timeInMillis.milliseconds)
             bitmapState.value?.let {
                 emit(it)
             }

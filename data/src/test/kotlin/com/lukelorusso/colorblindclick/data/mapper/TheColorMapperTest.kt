@@ -19,8 +19,8 @@ class TheColorMapperTest {
     @Test
     fun transform(): Unit = runBlocking {
         val color = repository.decodeColorHex("#2AB564", "en", "junit")
-        assertEquals(color.colorHex, "#29AB87")
+        assertEquals(color.matchingColorHex, "#29AB87")
         assertEquals(color.colorName, "Jungle Green")
-        assertEquals(color.originalColorHex(), "#2AB564")
+        assertEquals(color.originalColorHex, "#2AB564")
     }
 }

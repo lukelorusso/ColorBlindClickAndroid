@@ -1,10 +1,10 @@
 package com.lukelorusso.colorblindclick.domain.repository
 
-import com.lukelorusso.domain.model.Color
+import com.lukelorusso.colorblindclick.domain.entity.ColorEntity
 
 interface ApiRepository {
 
-    suspend fun decodeColorHex(colorHex: String, deviceLanguage: String, deviceUdid: String): Color
+    suspend fun decodeColorHex(colorHex: String, deviceLanguage: String, deviceUdid: String): ColorEntity
 
     fun getHomeUrl(deviceLanguage: String): String
 

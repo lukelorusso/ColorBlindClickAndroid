@@ -2,6 +2,7 @@ package com.lukelorusso.colorblindclick.presentation.ui.base
 
 import kotlinx.coroutines.*
 import java.util.concurrent.atomic.AtomicInteger
+import kotlin.time.Duration.Companion.milliseconds
 
 class Bouncer(
     private val bounceDelayInMillis: Long = 150L,
@@ -18,7 +19,7 @@ class Bouncer(
         val currentInput = tick()
 
         job = CoroutineScope(dispatcher).launch {
-            delay(bounceDelayInMillis)
+            delay(bounceDelayInMillis.milliseconds)
 
             if (currentInput == lastInput.get()) {
                 callback()

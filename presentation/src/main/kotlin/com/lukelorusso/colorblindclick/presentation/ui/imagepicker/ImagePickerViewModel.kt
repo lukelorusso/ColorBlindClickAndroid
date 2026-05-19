@@ -1,6 +1,7 @@
 package com.lukelorusso.colorblindclick.presentation.ui.imagepicker
 
 import androidx.lifecycle.viewModelScope
+import com.lukelorusso.colorblindclick.domain.entity.ColorEntity
 import com.lukelorusso.colorblindclick.domain.usecase.DecodeColorHexUseCase
 import com.lukelorusso.colorblindclick.domain.usecase.GetPixelNeighbourhoodUseCase
 import com.lukelorusso.colorblindclick.presentation.extensions.getDeviceUdid
@@ -10,7 +11,6 @@ import com.lukelorusso.colorblindclick.presentation.ui.base.ContentState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
-import com.lukelorusso.domain.model.Color as ColorEntity
 
 class ImagePickerViewModel(
     private val trackerHelper: TrackerHelper,

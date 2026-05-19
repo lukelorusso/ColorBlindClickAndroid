@@ -18,6 +18,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.lukelorusso.colorblindclick.domain.entity.ColorEntity
 import com.lukelorusso.colorblindclick.presentation.R
 import com.lukelorusso.colorblindclick.presentation.error.ErrorMessageFactory
 import com.lukelorusso.colorblindclick.presentation.extensions.closestHtmlColor
@@ -26,7 +27,6 @@ import com.lukelorusso.colorblindclick.presentation.extensions.hashColorToRGBDec
 import com.lukelorusso.colorblindclick.presentation.extensions.parseToColor
 import com.lukelorusso.colorblindclick.presentation.ui.base.*
 import com.lukelorusso.colorblindclick.presentation.ui.error.ErrorAlertDialog
-import com.lukelorusso.domain.model.Color as ColorEntity
 
 
 private const val LINE_BREAK = "\n"
@@ -75,7 +75,7 @@ fun Preview(
                                 RectangleShape
                             ),
                         onDraw = {
-                            drawRect(color = color.originalColorHex().parseToColor())
+                            drawRect(color = color.originalColorHex.parseToColor())
                         }
                     )
 
@@ -98,7 +98,7 @@ fun Preview(
                             bitmap = createBitmap(
                                 bitmapSize,
                                 bitmapSize,
-                                color.originalColorHex().parseToColor().toArgb()
+                                color.originalColorHex.parseToColor().toArgb()
                             ),
                             description = description,
                             popupLabel = bitmapPopupLabel
@@ -108,7 +108,7 @@ fun Preview(
                     ResultToolbar(
                         textLine1 = color.colorName,
                         textLine2 = color
-                            .originalColorHex()
+                            .originalColorHex
                             .hashColorToRGBDecimal()
                             .closestHtmlColor()
                             .toHtmlColorString(),
@@ -133,7 +133,7 @@ fun Preview(
 
 @Composable
 private fun ColorEntity.toSharableDescription(credits: String): String = (this.colorName + LINE_BREAK
-        + this.originalColorHex().hashColorToRGBDecimal().closestHtmlColor().toHtmlColorString() + LINE_BREAK
+        + this.originalColorHex.hashColorToRGBDecimal().closestHtmlColor().toHtmlColorString() + LINE_BREAK
         + this.toDetailedString() + LINE_BREAK
         + LINE_BREAK
         + credits)

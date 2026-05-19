@@ -1,6 +1,6 @@
 package com.lukelorusso.colorblindclick.data.datasource
 
-import com.lukelorusso.domain.model.Color
+import com.lukelorusso.colorblindclick.domain.entity.ColorEntity
 
 /**
  * Copyright (C) 2021 Luke Lorusso
@@ -8,9 +8,9 @@ import com.lukelorusso.domain.model.Color
  */
 interface DatabaseDataSource {
     //region Color
-    fun getColorList(): List<Color>
+    fun getColorList(): List<ColorEntity>
 
-    fun saveColorList(list: List<Color>)
+    fun saveColorList(list: List<ColorEntity>)
 
     fun clearColorList()
     //endregion

@@ -22,12 +22,12 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.lukelorusso.colorblindclick.domain.entity.ColorEntity
 import com.lukelorusso.colorblindclick.presentation.R
 import com.lukelorusso.colorblindclick.presentation.extensions.*
 import com.lukelorusso.colorblindclick.presentation.ui.capture.ICON_BUTTON_PADDING
 import com.lukelorusso.colorblindclick.presentation.ui.capture.ICON_BUTTON_SIZE
 import com.lukelorusso.colorblindclick.presentation.ui.capture.ICON_SIZE
-import com.lukelorusso.domain.model.Color as ColorEntity
 
 
 @Composable
@@ -64,7 +64,7 @@ internal fun CaptureBottomToolbar(
                     .clickableWithoutRipple {},
                 textLine1 = color?.colorName,
                 textLine2 = color
-                    ?.originalColorHex()
+                    ?.originalColorHex
                     ?.hashColorToRGBDecimal()
                     ?.closestHtmlColor()
                     ?.toHtmlColorString(),
@@ -74,7 +74,7 @@ internal fun CaptureBottomToolbar(
                 contentAlignment = Alignment.CenterEnd,
                 onTextClick = clickCallback
             ) {
-                color?.originalColorHex()?.parseToColor()?.let {
+                color?.originalColorHex?.parseToColor()?.let {
                     Canvas(
                         modifier = Modifier
                             .padding(10.dp)
@@ -197,7 +197,7 @@ fun HtmlColor.toHtmlColorString(): String =
  * #5D362F, rgb(36.47%, 21.18%, 18.43%)
  */
 fun ColorEntity.toDetailedString(): String {
-    val originalColorHex = this.originalColorHex()
+    val originalColorHex = this.originalColorHex
     return "$originalColorHex, " + originalColorHex
         .hashColorToRGBDecimal()
         .toRGBPercent()

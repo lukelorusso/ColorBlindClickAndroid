@@ -1,12 +1,12 @@
 package com.lukelorusso.colorblindclick.data.repository
 
-import com.lukelorusso.colorblindclick.data.manager.DatabaseManager
 import com.lukelorusso.colorblindclick.data.datasource.HttpManager
+import com.lukelorusso.colorblindclick.data.manager.DatabaseManager
 import com.lukelorusso.colorblindclick.data.mapper.TheColorMapper
 import com.lukelorusso.colorblindclick.data.net.RetrofitFactory
 import com.lukelorusso.colorblindclick.data.net.api.TheColorApi
+import com.lukelorusso.colorblindclick.domain.entity.ColorEntity
 import com.lukelorusso.colorblindclick.domain.repository.TheColorApiRepository
-import com.lukelorusso.domain.model.Color
 
 class TheColorApiRepositoryImpl(
     private val api: TheColorApi,
@@ -15,8 +15,8 @@ class TheColorApiRepositoryImpl(
     private val databaseManager: DatabaseManager
 ) : TheColorApiRepository {
 
-    override suspend fun decodeColorHex(colorHex: String, deviceLanguage: String, deviceUdid: String): Color {
-        val newColor: Color = httpManager.restCall(
+    override suspend fun decodeColorHex(colorHex: String, deviceLanguage: String, deviceUdid: String): ColorEntity {
+        val newColor: ColorEntity = httpManager.restCall(
             call = {
                 api.getColor(
                     colorHex.removePrefix("#")
@@ -26,7 +26,7 @@ class TheColorApiRepositoryImpl(
         )
 
         databaseManager.getColorList().toMutableList().apply {
-            firstOrNull { it.originalColorHex() == newColor.originalColorHex() }?.let { existent ->
+            firstOrNull { it.originalColorHex == newColor.originalColorHex }?.let { existent ->
                 remove(existent)
             }
             add(0, newColor)

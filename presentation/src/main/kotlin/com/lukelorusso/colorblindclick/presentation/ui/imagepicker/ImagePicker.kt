@@ -30,6 +30,7 @@ import com.smarttoolfactory.screenshot.ScreenshotBox
 import com.smarttoolfactory.screenshot.ScreenshotState
 import com.smarttoolfactory.screenshot.rememberScreenshotState
 import kotlinx.coroutines.delay
+import kotlin.time.Duration.Companion.milliseconds
 
 private const val DELAY_IN_MILLIS = 100L
 
@@ -55,7 +56,7 @@ internal fun ImagePicker(
 
     LaunchedEffect(isCapturing) {
         if (isCapturing) {
-            delay(DELAY_IN_MILLIS)
+            delay(DELAY_IN_MILLIS.milliseconds)
             screenshotState.capture()
         }
     }

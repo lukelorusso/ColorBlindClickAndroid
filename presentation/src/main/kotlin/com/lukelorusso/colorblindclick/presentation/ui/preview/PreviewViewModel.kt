@@ -2,6 +2,7 @@ package com.lukelorusso.colorblindclick.presentation.ui.preview
 
 import android.graphics.Bitmap
 import androidx.lifecycle.viewModelScope
+import com.lukelorusso.colorblindclick.domain.entity.ColorEntity
 import com.lukelorusso.colorblindclick.domain.usecase.GetStoreUrlUseCase
 import com.lukelorusso.colorblindclick.presentation.extensions.shareBitmap
 import com.lukelorusso.colorblindclick.presentation.extensions.shareText
@@ -12,7 +13,6 @@ import com.lukelorusso.colorblindclick.presentation.ui.base.ContentState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
-import com.lukelorusso.domain.model.Color as ColorEntity
 
 class PreviewViewModel(
     private val trackerHelper: TrackerHelper,

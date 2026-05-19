@@ -18,6 +18,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.lukelorusso.colorblindclick.domain.entity.ColorEntity
 import com.lukelorusso.colorblindclick.presentation.R
 import com.lukelorusso.colorblindclick.presentation.error.ErrorMessageFactory
 import com.lukelorusso.colorblindclick.presentation.ui.base.FAB
@@ -27,7 +28,7 @@ import com.lukelorusso.colorblindclick.presentation.ui.error.ErrorAlertDialog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import com.lukelorusso.domain.model.Color as ColorEntity
+import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -67,7 +68,7 @@ fun History(
     if (uiState.run { uiState.isSearchingMode && !contentState.isLoading && searchText.isEmpty() }) {
         DisposableEffect(Unit) {
             coroutineScope.launch {
-                delay(100L)
+                delay(100.milliseconds)
                 focusRequester.requestFocus()
             }
             onDispose { }

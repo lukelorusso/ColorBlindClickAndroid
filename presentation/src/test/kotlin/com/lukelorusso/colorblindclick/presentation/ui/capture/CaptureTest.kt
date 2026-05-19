@@ -34,9 +34,9 @@ class CaptureTest : AppTest() {
         val result = viewModel.uiState.take(2)
         assert(
             result.filter { it.contentState == ContentState.CONTENT }.firstOrNull()?.color?.let { color ->
-                color.colorHex == "#549019"
+                color.matchingColorHex == "#549019"
                         && color.colorName == "Vida Loca"
-                        && color.originalColorHex() == "#52851E"
+                        && color.originalColorHex == "#52851E"
             } == true
         )
     }

@@ -1,6 +1,7 @@
 package com.lukelorusso.colorblindclick.presentation.ui.history
 
 import androidx.lifecycle.viewModelScope
+import com.lukelorusso.colorblindclick.domain.entity.ColorEntity
 import com.lukelorusso.colorblindclick.domain.usecase.DeleteAllSavedColorsUseCase
 import com.lukelorusso.colorblindclick.domain.usecase.DeleteSavedColorUseCase
 import com.lukelorusso.colorblindclick.domain.usecase.GetSavedColorListUseCase
@@ -14,7 +15,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
-import com.lukelorusso.domain.model.Color as ColorEntity
 
 class HistoryViewModel(
     private val trackerHelper: TrackerHelper,

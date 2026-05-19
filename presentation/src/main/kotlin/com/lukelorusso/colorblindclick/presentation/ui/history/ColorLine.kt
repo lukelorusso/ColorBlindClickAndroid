@@ -19,10 +19,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.lukelorusso.colorblindclick.domain.entity.ColorEntity
 import com.lukelorusso.colorblindclick.presentation.R
 import com.lukelorusso.colorblindclick.presentation.extensions.getLocalizedDateTime
 import com.lukelorusso.colorblindclick.presentation.extensions.parseToColor
-import com.lukelorusso.domain.model.Color as ColorEntity
 
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -77,7 +77,7 @@ internal fun ColorLine(
                     )
                     .clip(CircleShape),
                 onDraw = {
-                    drawCircle(color = item.originalColorHex().parseToColor())
+                    drawCircle(color = item.originalColorHex.parseToColor())
                 }
             )
 
@@ -112,7 +112,7 @@ internal fun ColorLine(
                 fontSize = 14.sp,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                text = item.originalColorHex()
+                text = item.originalColorHex
             )
         }
     }

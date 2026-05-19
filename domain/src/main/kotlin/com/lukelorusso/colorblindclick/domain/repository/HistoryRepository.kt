@@ -1,11 +1,11 @@
 package com.lukelorusso.colorblindclick.domain.repository
 
-import com.lukelorusso.domain.model.Color
+import com.lukelorusso.colorblindclick.domain.entity.ColorEntity
 
 interface HistoryRepository {
-    suspend fun getColorList(): List<Color>
+    suspend fun getColorList(): List<ColorEntity>
 
-    suspend fun deleteColor(color: Color)
+    suspend fun deleteColor(color: ColorEntity)
 
     suspend fun deleteAllColors()
 }
