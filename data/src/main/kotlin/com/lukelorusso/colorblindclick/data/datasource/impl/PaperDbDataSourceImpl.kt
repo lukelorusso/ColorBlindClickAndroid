@@ -1,15 +1,19 @@
 package com.lukelorusso.colorblindclick.data.datasource.impl
 
 import com.lukelorusso.colorblindclick.data.datasource.DatabaseDataSource
-import com.lukelorusso.colorblindclick.data.datasource.DatabaseDataSource.Companion.KEY_COLORS
 import com.lukelorusso.colorblindclick.domain.usecase.base.Logger
 import com.lukelorusso.domain.model.Color
 import io.paperdb.Paper
 
-class DatabaseDataSourceImpl(private val logger: Logger) : DatabaseDataSource {
+/**
+ * PaperDB is affected by a RuntimeException that sometimes pops up:
+ * https://github.com/pilgr/Paper/issues/108
+ */
+class PaperDbDataSourceImpl(private val logger: Logger) : DatabaseDataSource {
 
     companion object {
         private const val EXCEPTION_RETRY_TIMES = 3
+        private const val KEY_COLORS = "KEY_COLORS"
     }
 
     //region Color

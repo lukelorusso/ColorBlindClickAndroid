@@ -3,7 +3,7 @@ package com.lukelorusso.colorblindclick.data.datasource.impl
 import com.lukelorusso.colorblindclick.data.datasource.PreferencesDataSource
 import com.lukelorusso.colorblindclick.domain.usecase.base.Logger
 
-class MockedDataSourceImpl(private val logger: Logger) : PreferencesDataSource {
+class PreferencesMockDataSourceImpl(private val logger: Logger) : PreferencesDataSource {
     override suspend fun get(key: String): String = "".also {
         logger.log { "${this::class.java}: returning default String for key \"$key\"" }
     }

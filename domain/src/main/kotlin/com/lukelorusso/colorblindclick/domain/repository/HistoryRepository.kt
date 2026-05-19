@@ -3,9 +3,9 @@ package com.lukelorusso.colorblindclick.domain.repository
 import com.lukelorusso.domain.model.Color
 
 interface HistoryRepository {
-    fun getColorList(): List<Color>
+    suspend fun getColorList(): List<Color>
 
-    fun deleteColor(color: Color)
+    suspend fun deleteColor(color: Color)
 
-    fun deleteAllColors()
+    suspend fun deleteAllColors()
 }

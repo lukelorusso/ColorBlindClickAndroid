@@ -1,11 +1,12 @@
 package com.lukelorusso.colorblindclick.data.di
 
 import com.lukelorusso.colorblindclick.data.datasource.DatabaseDataSource
+import com.lukelorusso.colorblindclick.data.manager.DatabaseManager
 import com.lukelorusso.colorblindclick.data.datasource.HttpManager
 import com.lukelorusso.colorblindclick.data.datasource.PreferencesDataSource
-import com.lukelorusso.colorblindclick.data.datasource.PreferencesManager
-import com.lukelorusso.colorblindclick.data.datasource.impl.DatabaseDataSourceTestImpl
-import com.lukelorusso.colorblindclick.data.datasource.impl.MockedDataSourceImpl
+import com.lukelorusso.colorblindclick.data.manager.PreferencesManager
+import com.lukelorusso.colorblindclick.data.datasource.impl.DatabaseMockDataSourceImpl
+import com.lukelorusso.colorblindclick.data.datasource.impl.PreferencesMockDataSourceImpl
 import com.lukelorusso.colorblindclick.data.net.OkHttpClientFactory
 import com.lukelorusso.colorblindclick.data.net.RetrofitFactory
 import org.koin.dsl.module
@@ -29,11 +30,12 @@ val dataTestModule = module {
     //endregion
 
     //region Settings
-    factory<PreferencesDataSource> { MockedDataSourceImpl(get()) }
+    factory<PreferencesDataSource> { PreferencesMockDataSourceImpl(get()) }
     factory { PreferencesManager(get()) }
     //endregion
 
     //region Persistence
-    factory<DatabaseDataSource> { DatabaseDataSourceTestImpl(get()) }
+    factory<DatabaseDataSource> { DatabaseMockDataSourceImpl(get()) }
+    factory { DatabaseManager(get()) }
     //endregion
 } + dataCommonModule

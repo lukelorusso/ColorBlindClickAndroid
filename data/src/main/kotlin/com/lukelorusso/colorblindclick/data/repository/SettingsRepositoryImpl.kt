@@ -1,6 +1,6 @@
 package com.lukelorusso.colorblindclick.data.repository
 
-import com.lukelorusso.colorblindclick.data.datasource.PreferencesManager
+import com.lukelorusso.colorblindclick.data.manager.PreferencesManager
 import com.lukelorusso.colorblindclick.domain.repository.SettingsRepository
 import java.util.*
 

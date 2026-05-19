@@ -1,5 +1,6 @@
-package com.lukelorusso.colorblindclick.data.datasource
+package com.lukelorusso.colorblindclick.data.manager
 
+import com.lukelorusso.colorblindclick.data.datasource.PreferencesDataSource
 import com.lukelorusso.colorblindclick.data.datasource.impl.SharedPrefDataSourceImpl
 
 /**

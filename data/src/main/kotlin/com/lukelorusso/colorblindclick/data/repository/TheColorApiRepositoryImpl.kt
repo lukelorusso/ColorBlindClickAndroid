@@ -1,6 +1,6 @@
 package com.lukelorusso.colorblindclick.data.repository
 
-import com.lukelorusso.colorblindclick.data.datasource.DatabaseDataSource
+import com.lukelorusso.colorblindclick.data.manager.DatabaseManager
 import com.lukelorusso.colorblindclick.data.datasource.HttpManager
 import com.lukelorusso.colorblindclick.data.mapper.TheColorMapper
 import com.lukelorusso.colorblindclick.data.net.RetrofitFactory
@@ -12,7 +12,7 @@ class TheColorApiRepositoryImpl(
     private val api: TheColorApi,
     private val httpManager: HttpManager,
     private val mapper: TheColorMapper,
-    private val databaseDataSource: DatabaseDataSource
+    private val databaseManager: DatabaseManager
 ) : TheColorApiRepository {
 
     override suspend fun decodeColorHex(colorHex: String, deviceLanguage: String, deviceUdid: String): Color {
@@ -25,12 +25,12 @@ class TheColorApiRepositoryImpl(
             mapper = { mapper.transform(it) }
         )
 
-        databaseDataSource.getColorList().toMutableList().apply {
+        databaseManager.getColorList().toMutableList().apply {
             firstOrNull { it.originalColorHex() == newColor.originalColorHex() }?.let { existent ->
                 remove(existent)
             }
             add(0, newColor)
-            databaseDataSource.saveColorList(this)
+            databaseManager.saveColorList(this)
         }
 
         return newColor
