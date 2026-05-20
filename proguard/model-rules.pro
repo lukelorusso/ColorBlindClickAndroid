@@ -1,1 +1,2 @@
+-keep class com.lukelorusso.colorblindclick.domain.entity.** { *; }
 -keep class com.lukelorusso.domain.model.** { *; }

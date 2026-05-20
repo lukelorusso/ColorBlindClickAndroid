@@ -1,4 +1,6 @@
 -keepattributes Signature
 -keepattributes *Annotation*
+-keep class com.lukelorusso.colorblindclick.data.datasource.impl.roomdb.dao.** { *; }
+-keep class com.lukelorusso.colorblindclick.data.datasource.impl.roomdb.dto.** { *; }
 -keep class com.lukelorusso.colorblindclick.data.net.dto.** { *; }
 -dontwarn java.lang.invoke.StringConcatFactory
