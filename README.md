@@ -25,7 +25,9 @@ In this project you can find
 
 * [Koin](https://insert-koin.io/) for dependency injection
 
-* [Retrofit + Json](https://square.github.io/retrofit/) `kotlinx.serialization` to consume web services
+* [Retrofit + Json](https://square.github.io/retrofit) `kotlinx.serialization` to consume web services
+
+* [DataStore and RoomDB](https://developer.android.com/training/data-storage/room) to store user data
 
 * [Timber](https://github.com/JakeWharton/timber) for logging
 

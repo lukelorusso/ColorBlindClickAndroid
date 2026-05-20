@@ -1,0 +1,67 @@
+package com.lukelorusso.colorblindclick.presentation.ui.preview
+
+import android.graphics.Bitmap
+import androidx.lifecycle.viewModelScope
+import com.lukelorusso.colorblindclick.domain.entity.ColorEntity
+import com.lukelorusso.colorblindclick.domain.usecase.GetStoreUrlUseCase
+import com.lukelorusso.colorblindclick.presentation.extensions.shareBitmap
+import com.lukelorusso.colorblindclick.presentation.extensions.shareText
+import com.lukelorusso.colorblindclick.presentation.helper.TrackerHelper
+import com.lukelorusso.colorblindclick.presentation.ui.base.AppRouter
+import com.lukelorusso.colorblindclick.presentation.ui.base.AppViewModel
+import com.lukelorusso.colorblindclick.presentation.ui.base.ContentState
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
+
+class PreviewViewModel(
+    private val trackerHelper: TrackerHelper,
+    private val getStoreUrl: GetStoreUrlUseCase
+) : AppViewModel<PreviewUiState>() {
+    override val _uiState = MutableStateFlow(PreviewUiState())
+    override val router = object : AppRouter() {} // not needed
+    private val json = Json { ignoreUnknownKeys = true }
+
+    fun loadData(serializedColor: String?) {
+        if (uiState.value.contentState.isLoading) {
+            return
+        } else {
+            updateUiState { it.copy(contentState = ContentState.LOADING) }
+        }
+
+        viewModelScope.launch {
+            try {
+                val color = serializedColor?.let { json.decodeFromString<ColorEntity>(it) }
+                val url = getStoreUrl.invoke(Unit)
+                updateUiState {
+                    it.copy(
+                        contentState = ContentState.CONTENT,
+                        color = color,
+                        storeUrl = url
+                    )
+                }
+            } catch (t: Throwable) {
+                updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
+            }
+        }
+    }
+
+    fun shareText(text: String, popupLabel: String?) {
+        router.activity?.let { activity ->
+            activity.applicationContext.shareText(text, popupLabel)
+            trackerHelper.track(TrackerHelper.Action.SHARED_TEXT)
+        }
+    }
+
+    fun shareBitmap(bitmap: Bitmap, description: String, popupLabel: String?) {
+        router.activity?.let { activity ->
+            activity.applicationContext.shareBitmap(bitmap, description, popupLabel)
+            trackerHelper.track(TrackerHelper.Action.SHARED_PREVIEW)
+        }
+    }
+
+    fun dismissError(onDismiss: (() -> Unit)? = null) {
+        updateUiState { it.copy(contentState = ContentState.CONTENT) }
+        onDismiss?.invoke()
+    }
+}

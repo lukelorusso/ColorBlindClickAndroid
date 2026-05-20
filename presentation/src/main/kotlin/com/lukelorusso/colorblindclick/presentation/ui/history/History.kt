@@ -1,0 +1,213 @@
+package com.lukelorusso.colorblindclick.presentation.ui.history
+
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.lukelorusso.colorblindclick.domain.entity.ColorEntity
+import com.lukelorusso.colorblindclick.presentation.R
+import com.lukelorusso.colorblindclick.presentation.error.ErrorMessageFactory
+import com.lukelorusso.colorblindclick.presentation.ui.base.FAB
+import com.lukelorusso.colorblindclick.presentation.ui.base.FAB_DEFAULT_SIZE
+import com.lukelorusso.colorblindclick.presentation.ui.base.YesNoAlertDialog
+import com.lukelorusso.colorblindclick.presentation.ui.error.ErrorAlertDialog
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
+
+private const val HUMAN_INTERACTION_DURATION_IN_MILLIS = 100
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun History(
+    modifier: Modifier = Modifier,
+    viewModel: HistoryViewModel,
+    errorMessageFactory: ErrorMessageFactory
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val filteredColors by viewModel.filteredColors.collectAsState(
+        initial = emptyList(),
+        context = Dispatchers.IO
+    )
+    val focusRequester = remember { FocusRequester() }
+    val coroutineScope = rememberCoroutineScope()
+    var localSearchText by remember { mutableStateOf("") }
+    var showDeleteAllAlertDialog by remember { mutableStateOf(false) }
+    var shouldDeleteColor by remember { mutableStateOf(false) }
+    var tempColorToDelete by remember { mutableStateOf<ColorEntity?>(null) }
+
+    // use this function instead of playing directly with the viewModel
+    fun updateSearch(
+        isSearchingMode: Boolean = viewModel.uiState.value.isSearchingMode,
+        newText: String = viewModel.uiState.value.searchText
+    ) {
+        viewModel.toggleSearchingMode(isSearchingMode)
+
+        if (isSearchingMode) {
+            localSearchText = newText
+            viewModel.updateSearchText(newText)
+        } else {
+            localSearchText = ""
+            viewModel.updateSearchText("")
+        }
+    }
+
+    // request focus on SearchTextField
+    if (uiState.run { uiState.isSearchingMode && !contentState.isLoading && searchText.isEmpty() }) {
+        DisposableEffect(Unit) {
+            coroutineScope.launch {
+                delay(HUMAN_INTERACTION_DURATION_IN_MILLIS.milliseconds)
+                focusRequester.requestFocus()
+            }
+            onDispose { }
+
+        }
+    }
+
+    if (uiState.contentState.isError) {
+        ErrorAlertDialog(
+            message = uiState.contentState.error
+                ?.let { errorMessageFactory.getLocalizedMessage(it) },
+            dismissCallback = viewModel::dismissError
+        )
+    }
+
+    if (showDeleteAllAlertDialog) {
+        YesNoAlertDialog(
+            text = stringResource(R.string.color_delete_all_confirmation_message),
+            painter = painterResource(id = R.drawable.delete_sweep_white),
+            confirmCallback = {
+                viewModel.deleteAllColors()
+                coroutineScope.launch {
+                    showDeleteAllAlertDialog = false
+                }
+            },
+            dismissCallback = {
+                coroutineScope.launch {
+                    showDeleteAllAlertDialog = false
+                }
+            }
+        )
+    }
+
+    if (shouldDeleteColor) {
+        if (uiState.colorList.isEmpty() && uiState.isSearchingMode) {
+            updateSearch(isSearchingMode = false)
+        }
+
+        tempColorToDelete?.let { colorToDelete ->
+            YesNoAlertDialog(
+                text = stringResource(R.string.color_delete_one_confirmation_message, colorToDelete.colorName),
+                painter = painterResource(id = R.drawable.delete_item_white),
+                confirmCallback = {
+                    coroutineScope.launch {
+                        tempColorToDelete = null
+                        shouldDeleteColor = false
+                        delay(HUMAN_INTERACTION_DURATION_IN_MILLIS.milliseconds)
+                        viewModel.deleteColor(colorToDelete)
+                    }
+                },
+                dismissCallback = {
+                    coroutineScope.launch {
+                        tempColorToDelete = null
+                        shouldDeleteColor = false
+                        delay(HUMAN_INTERACTION_DURATION_IN_MILLIS.milliseconds)
+                        viewModel.restoreColorToUiState(colorToDelete)
+                    }
+                }
+            )
+        }
+    }
+
+    Surface(modifier = modifier) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .navigationBarsPadding()
+                .background(colorResource(id = R.color.fragment_background))
+        ) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                stickyHeader {
+                    Header(
+                        isLoading = uiState.contentState.isLoading,
+                        colorListNotEmpty = uiState.colorList.isNotEmpty(),
+                        isSearchingMode = uiState.isSearchingMode,
+                        searchText = localSearchText,
+                        focusRequester = focusRequester,
+                        updateSearchText = { updateSearch(newText = it) },
+                        toggleSearchingMode = {
+                            updateSearch(isSearchingMode = !uiState.isSearchingMode)
+                        },
+                        onDeleteAllClick = {
+                            updateSearch(isSearchingMode = false)
+                            if (tempColorToDelete == null) showDeleteAllAlertDialog = true
+                        }
+                    )
+                }
+
+                if (uiState.colorList.isEmpty()) item {
+                    Text(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(32.dp),
+                        color = colorResource(id = R.color.text_color),
+                        fontSize = 18.sp,
+                        text = stringResource(id = R.string.history_no_item),
+                        textAlign = TextAlign.Center
+                    )
+                }
+
+                itemsIndexed(
+                    items = filteredColors,
+                    key = { _, color -> color.timestamp } // setting a key will solve graphical glitches on SwipeToDismiss
+                ) { index, color ->
+                    ColorLine(
+                        isEven = index % 2 == 0,
+                        item = color,
+                        onClick = { clickedColor ->
+                            if (tempColorToDelete == null) viewModel.gotoPreview(clickedColor)
+                        },
+                        onDeleteColor = { deletedColor ->
+                            coroutineScope.launch {
+                                viewModel.deleteColorFromUiState(deletedColor)
+                                tempColorToDelete = deletedColor
+                                shouldDeleteColor = true
+                            }
+                        }
+                    )
+                }
+
+                item {
+                    Spacer(modifier = Modifier.height(FAB_DEFAULT_SIZE.dp))
+                }
+            }
+
+            FAB(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(16.dp)
+                    .size(FAB_DEFAULT_SIZE.dp),
+                painter = painterResource(id = R.drawable.camera_white),
+                onClick = viewModel::gotoCamera
+            )
+        }
+    }
+}

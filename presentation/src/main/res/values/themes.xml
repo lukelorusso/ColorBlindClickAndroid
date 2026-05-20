@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
-    <style name="Base.ThemeNoActionBar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Base.ThemeNoActionBar" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorPrimaryDark">@color/color_primary_dark</item>
         <item name="colorAccent">@color/color_accent</item>
@@ -17,10 +17,6 @@
 
     <style name="BottomSheetStyle" parent="@style/Widget.Design.BottomSheet.Modal">
         <item name="android:background">@drawable/shape_bottom_sheet</item>
-    </style>
-
-    <style name="FloatingActionButton" parent="@style/Widget.Design.FloatingActionButton">
-        <item name="backgroundTint">@color/color_accent</item>
     </style>
 
 </resources>

@@ -1,0 +1,27 @@
+package com.lukelorusso.colorblindclick.data.mapper
+
+import com.lukelorusso.colorblindclick.data.net.mapper.TheColorMapper
+import com.lukelorusso.colorblindclick.data.repository.impl.TheColorApiRepositoryMockImpl
+import com.lukelorusso.colorblindclick.domain.repository.TheColorApiRepository
+import kotlinx.coroutines.runBlocking
+import org.junit.Assert.assertEquals
+import org.junit.Before
+import org.junit.Test
+
+class TheColorMapperTest {
+    private val colorMapper = TheColorMapper()
+    private lateinit var repository: TheColorApiRepository
+
+    @Before
+    fun setup() {
+        repository = TheColorApiRepositoryMockImpl(colorMapper)
+    }
+
+    @Test
+    fun transform(): Unit = runBlocking {
+        val color = repository.decodeColorHex("#2AB564", "en", "junit")
+        assertEquals(color.matchingColorHex, "#29AB87")
+        assertEquals(color.colorName, "Jungle Green")
+        assertEquals(color.originalColorHex, "#2AB564")
+    }
+}

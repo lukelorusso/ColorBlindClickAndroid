@@ -1,0 +1,115 @@
+package com.lukelorusso.colorblindclick.presentation.ui.info
+
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.lukelorusso.colorblindclick.presentation.R
+import com.lukelorusso.colorblindclick.presentation.error.ErrorMessageFactory
+import com.lukelorusso.colorblindclick.presentation.ui.base.FAB
+import com.lukelorusso.colorblindclick.presentation.ui.base.FAB_DEFAULT_SIZE
+import com.lukelorusso.colorblindclick.presentation.ui.error.ErrorAlertDialog
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun Info(
+    modifier: Modifier = Modifier,
+    viewModel: InfoViewModel,
+    errorMessageFactory: ErrorMessageFactory
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    if (uiState.contentState.isError) {
+        ErrorAlertDialog(
+            message = uiState.contentState.error
+                ?.let { errorMessageFactory.getLocalizedMessage(it) },
+            dismissCallback = viewModel::dismissError
+        )
+    }
+
+    Surface(modifier = modifier) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .navigationBarsPadding()
+                .background(colorResource(id = R.color.fragment_background))
+        ) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                stickyHeader {
+                    Header(versionName = uiState.versionName)
+                }
+
+                item {
+                    InfoItem(
+                        isEven = true,
+                        iconPainter = painterResource(id = R.drawable.info_app),
+                        text = stringResource(id = R.string.info_app),
+                        onClick = viewModel::gotoAboutApp
+                    )
+                }
+
+                item {
+                    InfoItem(
+                        isEven = false,
+                        iconPainter = painterResource(id = R.drawable.info_home),
+                        text = stringResource(id = R.string.info_home),
+                        onClick = viewModel::gotoApiHome
+                    )
+                }
+
+                item {
+                    InfoItem(
+                        isEven = true,
+                        iconPainter = painterResource(id = R.drawable.info_help),
+                        text = stringResource(id = R.string.info_help),
+                        onClick = viewModel::gotoApiHelp
+                    )
+                }
+
+                item {
+                    InfoItem(
+                        isEven = false,
+                        iconPainter = painterResource(id = R.drawable.info_about_me),
+                        text = stringResource(id = R.string.info_about_me),
+                        onClick = viewModel::gotoAboutMe
+                    )
+                }
+
+                item {
+                    InfoItem(
+                        isEven = true,
+                        iconPainter = painterResource(id = R.drawable.info_settings),
+                        text = stringResource(id = R.string.info_settings),
+                        onClick = viewModel::gotoSettings
+                    )
+                }
+
+                item {
+                    Spacer(modifier = Modifier.height(FAB_DEFAULT_SIZE.dp))
+                }
+            }
+
+            FAB(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(16.dp)
+                    .size(FAB_DEFAULT_SIZE.dp),
+                painter = painterResource(id = R.drawable.camera_white),
+                onClick = viewModel::gotoCamera
+            )
+        }
+    }
+}

@@ -1,10 +1,10 @@
 plugins {
-    id(libs.plugins.android.application.get().pluginId)
-    id(libs.plugins.kotlin.android.get().pluginId)
-    id(libs.plugins.kotlin.compose.compiler.get().pluginId)
-    id(libs.plugins.kotlin.serialization.get().pluginId)
-    id(libs.plugins.google.services.get().pluginId)
-    id(libs.plugins.google.firebase.crashlytics.get().pluginId)
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose.compiler)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.google.firebase.crashlytics)
 }
 
 val appId = "com.lukelorusso.colorblindclick"
@@ -13,15 +13,16 @@ val appVersionCode = versionCodeFrom(appVersionName)
 val appMinSdk = libs.versions.android.minSdk.get().toInt()
 val appCompileSdk = libs.versions.android.compileSdk.get().toInt()
 
-println("appId: $appId\n" +
-        "appVersionName: $appVersionName\n" +
-        "appVersionCode: $appVersionCode\n" +
-        "appMinSdk: $appMinSdk\n" +
-        "appCompileSdk: $appCompileSdk\n"
+println(
+    "appId: $appId\n" +
+            "appVersionName: $appVersionName\n" +
+            "appVersionCode: $appVersionCode\n" +
+            "appMinSdk: $appMinSdk\n" +
+            "appCompileSdk: $appCompileSdk\n"
 )
 
 android {
-    namespace = "com.lukelorusso.presentation"
+    namespace = "com.lukelorusso.colorblindclick.presentation"
     compileSdk = appCompileSdk
 
     buildFeatures {
