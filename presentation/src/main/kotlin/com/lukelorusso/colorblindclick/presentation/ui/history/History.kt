@@ -115,10 +115,11 @@ fun History(
                 text = stringResource(R.string.color_delete_one_confirmation_message, colorToDelete.colorName),
                 painter = painterResource(id = R.drawable.delete_item_white),
                 confirmCallback = {
-                    viewModel.deleteColor(colorToDelete)
                     coroutineScope.launch {
                         tempColorToDelete = null
                         shouldDeleteColor = false
+                        delay(HUMAN_INTERACTION_DURATION_IN_MILLIS.milliseconds)
+                        viewModel.deleteColor(colorToDelete)
                     }
                 },
                 dismissCallback = {
@@ -179,7 +180,6 @@ fun History(
                     key = { _, color -> color.timestamp } // setting a key will solve graphical glitches on SwipeToDismiss
                 ) { index, color ->
                     ColorLine(
-                        isLoading = uiState.contentState.isLoading,
                         isEven = index % 2 == 0,
                         item = color,
                         onClick = { clickedColor ->
@@ -187,8 +187,8 @@ fun History(
                         },
                         onDeleteColor = { deletedColor ->
                             coroutineScope.launch {
-                                tempColorToDelete = deletedColor
                                 viewModel.deleteColorFromUiState(deletedColor)
+                                tempColorToDelete = deletedColor
                                 shouldDeleteColor = true
                             }
                         }
