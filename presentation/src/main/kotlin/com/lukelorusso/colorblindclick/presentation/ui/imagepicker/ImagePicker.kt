@@ -4,11 +4,9 @@ import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,6 +22,7 @@ import com.lukelorusso.colorblindclick.presentation.R
 import com.lukelorusso.colorblindclick.presentation.error.ErrorMessageFactory
 import com.lukelorusso.colorblindclick.presentation.extensions.getCentralPixelHash
 import com.lukelorusso.colorblindclick.presentation.ui.base.CaptureBottomToolbar
+import com.lukelorusso.colorblindclick.presentation.ui.icons.Refresh
 import com.lukelorusso.zoomableimagebox.ui.view.ZoomableImageBox
 import com.smarttoolfactory.screenshot.ImageResult
 import com.smarttoolfactory.screenshot.ScreenshotBox
@@ -112,7 +111,7 @@ internal fun ImagePicker(
                 color = uiState.color,
                 errorMessage = uiState.contentState.error?.let(errorMessageFactory::getLocalizedMessage),
                 isLoading = isCapturing || isPainterLoading || uiState.contentState.isLoading,
-                rightButtonImageVector = Icons.Default.Refresh,
+                rightButtonImageVector = Refresh,
                 onRightButtonSelected = onRightButtonSelected,
                 onShutterSelected = { isCapturing = true },
                 onPreviewSelected = viewModel::gotoPreview
@@ -135,7 +134,7 @@ private fun ImageManipulator(
         ZoomableImageBox(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colors.background),
+                .background(MaterialTheme.colorScheme.background),
             painter = painter,
             shouldRotate = false,
             showResetIconButton = false,

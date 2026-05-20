@@ -5,15 +5,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Surface
-import androidx.compose.material.Switch
-import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.WarningAmber
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
@@ -29,6 +27,7 @@ import com.lukelorusso.colorblindclick.presentation.ui.base.BottomSheetUpperLine
 import com.lukelorusso.colorblindclick.presentation.ui.base.MultiOptionDialog
 import com.lukelorusso.colorblindclick.presentation.ui.base.YesNoAlertDialog
 import com.lukelorusso.colorblindclick.presentation.ui.error.ErrorAlertDialog
+import com.lukelorusso.colorblindclick.presentation.ui.icons.Warning
 
 private val viewfinderPixelsValueStringResList = listOf(
     R.string.settings_viewfinder_pixels_value_0,
@@ -65,7 +64,7 @@ fun Settings(
     if (showCameraOptionWarningAlertDialog) {
         YesNoAlertDialog(
             text = stringResource(R.string.settings_save_camera_options_off_confirmation_message),
-            imageVector = Icons.Default.WarningAmber,
+            imageVector = Warning,
             tint = colorResource(id = R.color.yellow_warning),
             confirmCallback = {
                 viewModel.setSaveCameraOptions(false)
@@ -143,10 +142,13 @@ fun Settings(
                     ) {
                         Switch(
                             modifier = Modifier
-                                .scale(1.5F)
                                 .padding(24.dp),
                             checked = uiState.saveCameraOptions,
-                            onCheckedChange = ::setSaveCameraOption
+                            onCheckedChange = ::setSaveCameraOption,
+                            colors = SwitchDefaults.colors(
+                                checkedThumbColor = colorResource(id = R.color.color_accent),
+                                checkedTrackColor = colorResource(id = R.color.color_primary)
+                            )
                         )
                     }
                 }

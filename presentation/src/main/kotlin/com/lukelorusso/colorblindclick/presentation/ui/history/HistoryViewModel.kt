@@ -60,6 +60,7 @@ class HistoryViewModel(
                 it.copy(
                     contentState = ContentState.CONTENT,
                     colorList = colorList
+                        .sortedByDescending { color -> color.timestamp }
                 )
             }
         } catch (t: Throwable) {
