@@ -2,7 +2,7 @@ name: Android build
 
 on:
   push:
-    branches: [ "develop", "master" ]
+    branches: [ "main" ]
 
 jobs:
   build:
