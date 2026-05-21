@@ -8,7 +8,8 @@ import com.lukelorusso.colorblindclick.data.datasource.impl.roomdb.dto.ColorDto
 
 @Database(
     entities = [ColorDto::class],
-    version = BuildConfig.ROOM_VERSION
+    version = BuildConfig.ROOM_VERSION,
+    exportSchema = false
 )
 abstract class ColorBlindClickRoomDb : RoomDatabase() {
     companion object {
