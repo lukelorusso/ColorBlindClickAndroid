@@ -31,7 +31,7 @@ In this project you can find
 
 * [Timber](https://github.com/JakeWharton/timber) for logging
 
-- - -
+## APIs ##
 
 This app DOES NOT provide any sort of color database. In fact, it simply takes the target pixel's color, gets its hash representation, and then consumes APIs from web services to retrieve the corresponding color definition.  
 If you find any discrepancy between the real color and its definition, you should refer to the color API provider:
@@ -40,8 +40,12 @@ If you find any discrepancy between the real color and its definition, you shoul
 
 If you find, instead, any issue about the app itself, like bugs, crashes or incompatibilities, feel free to contact me!
 
-- - -
+## AI disclosure ##
+
+This app dates back to April 2016. It has been built from the ground up with human minds and hands.  
+Starting in 2026, 10 years later, we started using LLMs to help us with challenging tasks, like Gradle or other dependency migration.  
+AI will assist us with the most tedious parts of the app's maintenance, but rest assured that we will continue to passionately develop key features the good old-fashioned way!
 
 ## Copyright ##
 
-The App: Copyright 2025 LUCA LORUSSO - https://lukelorusso.com/  
+The App: Copyright 2026 LUCA LORUSSO - https://lukelorusso.com/  
