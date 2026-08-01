@@ -1,6 +1,5 @@
 plugins {
     alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
 }
@@ -16,7 +15,7 @@ android {
     defaultConfig {
         minSdk = libs.versions.android.minSdk.get().toInt()
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField("int", "ROOM_VERSION", properties["roomDbVersion"].toString())
+        buildConfigField("int", "ROOM_VERSION", providers.gradleProperty("roomDbVersion").get())
     }
 
     buildTypes {
