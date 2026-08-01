@@ -1,5 +1,5 @@
 [versions]
-android-gradle-plugin = "8.12.3"
+android-gradle-plugin = "9.1.0"
 android-compileSdk = "36"
 android-minSdk = "23"
 androidx-activity-compose = "1.13.0"
@@ -24,7 +24,7 @@ okhttp3 = "5.3.2"
 koin = "4.1.1"
 kotlin = "2.2.21"
 kotlinx-serialization-json = "1.9.0"
-ksp = "2.2.20-2.0.4"
+ksp = "2.3.10"
 paper-db = "2.7.2"
 retrofit = "3.0.0"
 timber = "5.0.1"
@@ -74,7 +74,6 @@ zoomable-image-box = { group = "com.github.lukelorusso", name = "ZoomableImageBo
 android-application = { id = "com.android.application", version.ref = "android-gradle-plugin" }
 android-library = { id = "com.android.library", version.ref = "android-gradle-plugin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services-plugin" }

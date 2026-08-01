@@ -1,6 +1,5 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose.compiler)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.google.services)
@@ -8,7 +7,7 @@ plugins {
 }
 
 val appId = "com.lukelorusso.colorblindclick"
-val appVersionName = properties["version"].toString()
+val appVersionName = providers.gradleProperty("version").get()
 val appVersionCode = versionCodeFrom(appVersionName)
 val appMinSdk = libs.versions.android.minSdk.get().toInt()
 val appCompileSdk = libs.versions.android.compileSdk.get().toInt()
