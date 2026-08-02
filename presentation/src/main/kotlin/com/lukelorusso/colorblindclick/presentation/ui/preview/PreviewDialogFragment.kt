@@ -51,6 +51,11 @@ class PreviewDialogFragment : AppCardDialogFragment(
         viewModel.loadData(extraSerializedColor)
     }
 
+    override fun onDestroy() {
+        viewModel.clearRouter()
+        super.onDestroy()
+    }
+
     companion object {
         val TAG: String = this::class.java.simpleName
         private const val EXTRA_SERIALIZED_COLOR = "EXTRA_SERIALIZED_COLOR"
