@@ -17,7 +17,7 @@ object TimberLogger {
     fun e(throwable: () -> Throwable) {
         if (Timber.treeCount > 0) {
             try {
-                Timber.d(throwable())
+                Timber.e(throwable())
             } catch (ex: Exception) {
                 Timber.e(ex)
             }
