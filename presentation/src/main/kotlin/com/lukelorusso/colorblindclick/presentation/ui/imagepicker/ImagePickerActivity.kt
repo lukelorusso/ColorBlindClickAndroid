@@ -49,6 +49,11 @@ class ImagePickerActivity : AppCompatActivity() {
         PreviewDialogFragment.newInstance(serializedColor)
             .show(supportFragmentManager, PreviewDialogFragment.TAG)
 
+    override fun onDestroy() {
+        viewModel.clearRouter()
+        super.onDestroy()
+    }
+
     companion object {
         const val EXTRA_URI = "EXTRA_URI"
 

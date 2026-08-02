@@ -50,6 +50,11 @@ class InfoFragment : Fragment() {
         }
     }
 
+    override fun onDestroy() {
+        viewModel.clearRouter()
+        super.onDestroy()
+    }
+
     companion object {
         val TAG: String = this::class.java.simpleName
 
