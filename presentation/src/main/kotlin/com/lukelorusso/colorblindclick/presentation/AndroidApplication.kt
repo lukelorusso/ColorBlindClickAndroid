@@ -26,9 +26,11 @@ class AndroidApplication : Application() {
         // Init Crashlytics
         FirebaseCrashlytics.getInstance().isCrashlyticsCollectionEnabled = BuildConfig.ENABLE_ANALYTICS
 
-        // Init Debug log
-        if (BuildConfig.DEBUG) {
+        // Init logging trees
+        if (BuildConfig.ENABLE_ANALYTICS) {
             Timber.plant(CrashlyticsTree())
+        }
+        if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }
 
