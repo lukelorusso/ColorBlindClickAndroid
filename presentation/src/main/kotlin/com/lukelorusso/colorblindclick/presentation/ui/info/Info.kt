@@ -20,7 +20,6 @@ import com.lukelorusso.colorblindclick.presentation.ui.base.FAB
 import com.lukelorusso.colorblindclick.presentation.ui.base.FAB_DEFAULT_SIZE
 import com.lukelorusso.colorblindclick.presentation.ui.error.ErrorAlertDialog
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Info(
     modifier: Modifier = Modifier,
