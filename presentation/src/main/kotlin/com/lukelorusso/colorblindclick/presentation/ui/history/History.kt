@@ -1,6 +1,5 @@
 package com.lukelorusso.colorblindclick.presentation.ui.history
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -18,7 +17,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.lukelorusso.colorblindclick.domain.entity.ColorEntity
 import com.lukelorusso.colorblindclick.presentation.R
 import com.lukelorusso.colorblindclick.presentation.error.ErrorMessageFactory
 import com.lukelorusso.colorblindclick.presentation.ui.base.FAB
@@ -32,7 +30,6 @@ import kotlin.time.Duration.Companion.milliseconds
 
 private const val HUMAN_INTERACTION_DURATION_IN_MILLIS = 100
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun History(
     modifier: Modifier = Modifier,
@@ -49,7 +46,6 @@ fun History(
     var localSearchText by remember { mutableStateOf("") }
     var showDeleteAllAlertDialog by remember { mutableStateOf(false) }
     var shouldDeleteColor by remember { mutableStateOf(false) }
-    var tempColorToDelete by remember { mutableStateOf<ColorEntity?>(null) }
 
     // use this function instead of playing directly with the viewModel
     fun updateSearch(
@@ -110,24 +106,21 @@ fun History(
             updateSearch(isSearchingMode = false)
         }
 
-        tempColorToDelete?.let { colorToDelete ->
+        uiState.tempColorToDelete?.let { colorToDelete ->
             YesNoAlertDialog(
                 text = stringResource(R.string.color_delete_one_confirmation_message, colorToDelete.colorName),
                 painter = painterResource(id = R.drawable.delete_item_white),
                 confirmCallback = {
                     coroutineScope.launch {
-                        tempColorToDelete = null
                         shouldDeleteColor = false
                         delay(HUMAN_INTERACTION_DURATION_IN_MILLIS.milliseconds)
-                        viewModel.deleteColor(colorToDelete)
+                        viewModel.deleteColor()
                     }
                 },
                 dismissCallback = {
                     coroutineScope.launch {
-                        tempColorToDelete = null
                         shouldDeleteColor = false
-                        delay(HUMAN_INTERACTION_DURATION_IN_MILLIS.milliseconds)
-                        viewModel.restoreColorToUiState(colorToDelete)
+                        viewModel.restoreColorToUiState()
                     }
                 }
             )
@@ -158,7 +151,7 @@ fun History(
                         },
                         onDeleteAllClick = {
                             updateSearch(isSearchingMode = false)
-                            if (tempColorToDelete == null) showDeleteAllAlertDialog = true
+                            if (uiState.tempColorToDelete == null) showDeleteAllAlertDialog = true
                         }
                     )
                 }
@@ -183,12 +176,11 @@ fun History(
                         isEven = index % 2 == 0,
                         item = color,
                         onClick = { clickedColor ->
-                            if (tempColorToDelete == null) viewModel.gotoPreview(clickedColor)
+                            if (uiState.tempColorToDelete == null) viewModel.gotoPreview(clickedColor)
                         },
                         onDeleteColor = { deletedColor ->
                             coroutineScope.launch {
                                 viewModel.deleteColorFromUiState(deletedColor)
-                                tempColorToDelete = deletedColor
                                 shouldDeleteColor = true
                             }
                         }

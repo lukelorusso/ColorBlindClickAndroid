@@ -65,26 +65,39 @@ class HistoryViewModel(
         }
     }
 
+    /**
+     * Temporarily preview the deletion result
+     */
     fun deleteColorFromUiState(param: ColorEntity) {
         updateUiState {
             it.copy(
                 colorList = uiState.value.colorList
-                    .minus(param) // temporarily preview the result
+                    .filterNot { entity -> entity.originalColorHex == param.originalColorHex }, // temporarily preview the result
+                tempColorToDelete = param
             )
         }
     }
 
-    fun restoreColorToUiState(param: ColorEntity) {
-        updateUiState {
-            it.copy(
-                colorList = uiState.value.colorList
-                    .plus(param)
-                    .sortedByDescending { color -> color.timestamp }
-            )
+    /**
+     * Restore state, no deletion will happen
+     */
+    fun restoreColorToUiState() {
+        uiState.value.tempColorToDelete?.also { param ->
+            updateUiState {
+                it.copy(
+                    colorList = uiState.value.colorList
+                        .plus(param)
+                        .sortedByDescending { color -> color.timestamp },
+                    tempColorToDelete = null
+                )
+            }
         }
     }
 
-    fun deleteColor(param: ColorEntity) {
+    /**
+     * Actually delete color
+     */
+    fun deleteColor() {
         if (uiState.value.contentState.isLoading) {
             return
         } else {
@@ -93,9 +106,12 @@ class HistoryViewModel(
 
         viewModelScope.launch {
             try {
-                deleteSavedColor.invoke(param)
-                trackerHelper.track(TrackerHelper.Action.DELETED_ITEM)
-                loadDataSuspend()
+                uiState.value.tempColorToDelete?.also { param ->
+                    updateUiState { it.copy(tempColorToDelete = null) }
+                    deleteSavedColor.invoke(param)
+                    trackerHelper.track(TrackerHelper.Action.DELETED_ITEM)
+                    loadDataSuspend()
+                }
             } catch (t: Throwable) {
                 trackerHelper.track(TrackerHelper.Action.PERSISTENCE_EXCEPTION)
                 updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
