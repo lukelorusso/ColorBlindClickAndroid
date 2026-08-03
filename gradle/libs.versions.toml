@@ -26,7 +26,7 @@ kotlinx-serialization-json = "1.11.0"
 ksp = "2.3.10"
 retrofit = "3.0.0"
 timber = "5.0.1"
-zoomable-image-box = "1.0.2"
+zoomable-image-box = "1.1.1"
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity-compose" }
