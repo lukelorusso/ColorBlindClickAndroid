@@ -1,0 +1,28 @@
+name: 'Tag new version'
+description: 'Git operation to create a tag for the new version; if it is a RELEASE, it will first CHECKOUT the version tag and then make a newer one as release.'
+inputs:
+  new-value:
+    description: 'The version set after this build'
+    required: true
+    default: 'X.X.XX'
+  is-release:
+    description: 'Will add a `-release` suffix if true'
+    required: false
+    default: 'false'
+runs:
+  using: 'composite'
+  steps:
+    - name: 'Tag new version'
+      shell: bash
+      run: |
+        newVersion=${{ inputs.new-value }}
+        appName=${{ env.APP_NAME }}
+        tagName="${appName}-${newVersion}"
+        if ${{ inputs.is-release }}; then
+          git checkout tags/"${tagName}"
+          tagName="${tagName}-release"
+          git tag -af "${tagName}" -m "[ci] create release tag"
+        else
+          git tag -a "${tagName}" -m "[ci] create tag for new version"
+        fi
+        git push origin --tags --force

@@ -1,0 +1,21 @@
+name: 'Read a version from libs.versions.toml'
+description: 'Access libs.versions.toml searching for the specified field version'
+inputs:
+  field-name:
+    description: 'The name of the field to read'
+    required: false
+    default: 'version'
+outputs:
+  field-value:
+    description: 'The version value'
+    value: ${{ steps.read-version.outputs.field-value }}
+runs:
+  using: 'composite'
+  steps:
+    - name: 'Read version'
+      id: read-version
+      shell: bash
+      run: |
+        fieldvalue=`perl -nlE 'say if s/${{ inputs.field-name }} \= \"(.*)\"/$1/g' gradle/libs.versions.toml`
+        echo "Reading version from ${{ inputs.field-name }}: $fieldvalue"
+        echo "field-value=$fieldvalue" >> $GITHUB_OUTPUT

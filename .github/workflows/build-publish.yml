@@ -1,0 +1,157 @@
+name: Build and publish
+
+on:
+  workflow_dispatch:
+    inputs:
+      CHECKOUT_BRANCH:
+        description: 'Git Branch to checkout'
+        required: true
+        default: 'main'
+      TARGET_BRANCH:
+        description: 'Git Branch to merge to at the end'
+        required: true
+        default: 'main'
+      INCREMENT_VERSION:
+        description: 'Should increment the version number'
+        required: true
+        default: true
+        type: boolean
+      MANUAL_VERSION:
+        description: 'Use specific version number instead of automatic versioning: WORKS ONLY IF INCREMENT_VERSION IS UNCHECKED'
+        required: false
+        default: 'X.X.XX'
+      PUBLISH_RELEASE:
+        description: 'Trigger release build'
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+  actions: read
+  checks: write
+
+env:
+  APP_GROUP: com.lukelorusso.colorblindclick
+  APP_NAME: lukelorusso-colorblindclick
+  APP_LABEL: ColorBlindClick # used to upload APK
+  PROJECT_MODULE: presentation # used to upload APK
+  TARGET_BRANCH: ${{ github.event.inputs.TARGET_BRANCH != '' && github.event.inputs.TARGET_BRANCH || 'main' }}
+  CHECKOUT_BRANCH: ${{ github.event.inputs.CHECKOUT_BRANCH != '' && github.event.inputs.CHECKOUT_BRANCH || 'main' }}
+  INCREMENT_VERSION: ${{ github.event.inputs.INCREMENT_VERSION != '' && github.event.inputs.INCREMENT_VERSION || true }}
+  MANUAL_VERSION: ${{ github.event.inputs.MANUAL_VERSION != '' && github.event.inputs.MANUAL_VERSION || 'X.X.XX' }}
+  PUBLISH_RELEASE: ${{ github.event.inputs.PUBLISH_RELEASE != '' && github.event.inputs.PUBLISH_RELEASE || false }}
+
+jobs:
+  build-publish:
+    runs-on: ubuntu-latest
+
+    outputs:
+      output_app_group: ${{ env.APP_GROUP }}
+      output_app_name: ${{ env.APP_NAME }}
+      output_version: ${{ steps.new-version.outputs.new-value }}
+
+    steps:
+      - name: Create GitHub App token
+        uses: actions/create-github-app-token@v2
+        id: generate-app-token
+        with:
+          app-id: ${{ secrets.GHA_APP_ID }}
+          private-key: ${{ secrets.GHA_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '22'
+
+      - name: Checkout Branch
+        uses: actions/checkout@v4
+        with:
+          token: ${{ steps.generate-app-token.outputs.token }}
+          ref: ${{ env.CHECKOUT_BRANCH }}
+          fetch-depth: 0
+          fetch-tags: true
+
+      # Android specific: getting SDK version
+      - name: Read Android SDK version
+        id: read-androidsdk-version
+        uses: ./.github/actions/read-version-libs-versions-toml
+        with:
+          field-name: 'android-compileSdk'
+
+      # Android specific: setting up SDK
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Read version
+        id: read-version
+        uses: ./.github/actions/read-version-gradle-properties
+
+      - name: Increment version or Use manual version
+        id: new-version
+        uses: ./.github/actions/new-version
+        with:
+          current-value: ${{ steps.read-version.outputs.field-value }}
+          increment-version: ${{ env.INCREMENT_VERSION }}
+          manual-version: ${{ env.MANUAL_VERSION }}
+
+      - name: Update version
+        uses: ./.github/actions/write-version-gradle-properties
+        with:
+          field-value: ${{ steps.new-version.outputs.new-value }}
+
+      - name: Grant execution permission for Gradle wrapper
+        run: chmod +x gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew clean build test
+
+      # Create APK Debug
+      - name: Build APK debug
+        if: success()
+        run: ./gradlew assembleDebug
+
+      # Create APK Release
+      - name: Build APK release
+        if: success() && env.PUBLISH_ARTIFACTS == 'true'
+        run: ./gradlew assembleRelease
+
+      # Upload APK Debug
+      - name: Upload APK debug
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.APP_LABEL }}-${{ steps.new-version.outputs.new-value }}-debug.apk
+          path: ${{ env.PROJECT_MODULE }}/build/outputs/apk/debug/
+
+      # Upload APK Release
+      - name: Upload APK release
+        if: success() && env.PUBLISH_ARTIFACTS == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.APP_LABEL }}-${{ steps.new-version.outputs.new-value }}-release.apk
+          path: ${{ env.PROJECT_MODULE }}/build/outputs/apk/release/
+
+      - name: Tag new version
+        if: success()
+        continue-on-error: true
+        uses: ./.github/actions/tag-version
+        with:
+          new-value: ${{ steps.new-version.outputs.new-value }}
+
+      - name: Tag new release version
+        if: success() && env.PUBLISH_RELEASE == 'true'
+        uses: ./.github/actions/tag-version
+        with:
+          new-value: ${{ steps.new-version.outputs.new-value }}
+          is-release: true
+
+      - name: Merge Checkout Branch into Target Branch if different
+        if: ${{ env.TARGET_BRANCH != env.CHECKOUT_BRANCH }}
+        uses: everlytic/branch-merge@1.1.5
+        with:
+          github_token: ${{ steps.generate-app-token.outputs.token }}
+          source_ref: ${{ env.CHECKOUT_BRANCH }}
+          target_branch: ${{ env.TARGET_BRANCH }}

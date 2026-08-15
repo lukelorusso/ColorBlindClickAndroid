@@ -1,0 +1,49 @@
+name: 'New version'
+description: 'Apply the strategy (manual or incremental) to get the newer version'
+inputs:
+  current-value:
+    description: 'The version before this build'
+    required: true
+  increment-version:
+    description: 'Boolean: true means the minor version should be increased, REGARDLESS of the manual version specified'
+    required: true
+    default: 'true'
+  manual-version:
+    description: 'Use specific version number instead of automatic versioning: REQUIRES increment-version to be false'
+    required: false
+    default: 'X.X.XX'
+outputs:
+  new-value:
+    description: 'The version set after this build'
+    value: ${{ steps.new-value.outputs.new-value }}
+runs:
+  using: 'composite'
+  steps:
+    - name: 'Increment Version or Use Manual Version'
+      id: new-value
+      shell: bash
+      run: |
+        git config user.email "info@lukelorusso.com"
+        git config user.name "[ci]"
+        currentversion=${{ inputs.current-value }}
+        echo "Current version: $currentversion"
+        
+        if ${{ inputs.increment-version }}; then
+          echo "Incrementing version..."
+          IFS='.' read -r major minor build <<< "$currentversion"
+          newbuild=$((10#$build + 1))
+          # ensure 1 digit newbuild starts with '0'
+          if [ ${#newbuild} -eq 1 ]; then
+            newbuild="0$newbuild"
+          fi
+          newversion="${major}.${minor}.${newbuild}"
+          echo "new-value=$newversion" >> $GITHUB_OUTPUT
+        else
+          if [[ "${{ inputs.manual-version }}" != "X.X.XX" && -n "${{ inputs.manual-version }}" ]]; then
+            newversion="${{ inputs.manual-version }}"
+          else
+            newversion=$currentversion
+          fi
+          echo "Using manual or existing version: $newversion"
+          echo "new-value=$newversion" >> $GITHUB_OUTPUT
+        fi
