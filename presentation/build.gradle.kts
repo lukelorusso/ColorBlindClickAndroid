@@ -42,6 +42,16 @@ android {
         }
     }
 
+    // populated from env vars in CI (see .github/workflows/build-publish.yml)
+    signingConfigs {
+        create("release") {
+            System.getenv("KEYSTORE_PATH")?.let { storeFile = file(it) }
+            storePassword = System.getenv("KEYSTORE_PASSWORD")
+            keyAlias = System.getenv("KEY_ALIAS")
+            keyPassword = System.getenv("KEY_PASSWORD")
+        }
+    }
+
     buildTypes {
         val enableAnalyticsTag = "ENABLE_ANALYTICS"
 
@@ -64,6 +74,7 @@ android {
                 proguardFolder + "retrofit-rules.pro"
             )
             buildConfigField("Boolean", enableAnalyticsTag, "true")
+            signingConfig = signingConfigs.getByName("release")
         }
 
         testBuildType = "debug"
