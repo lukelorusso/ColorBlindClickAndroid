@@ -1,0 +1,24 @@
+name: 'Write a version to libs.versions.toml'
+description: 'Git operation to commit the bump of a new version'
+inputs:
+  field-name:
+    description: 'The name of the field to read'
+    required: false
+    default: 'version'
+  field-value:
+    description: 'The version set after this build'
+    required: true
+    default: 'X.X.XX'
+runs:
+  using: 'composite'
+  steps:
+    - name: 'Write version'
+      id: write-version
+      shell: bash
+      run: |
+        fieldname=${{ inputs.field-name }}
+        newversion=${{ inputs.field-value }}
+        sed -i "s/^${fieldname}=.*/${fieldname}=${newversion}/" gradle/libs.versions.toml
+        git add gradle/libs.versions.toml
+        git commit -m "[ci] update ${fieldname} in gradle/libs.versions.toml" || echo "No changes to commit"
+        git push origin
