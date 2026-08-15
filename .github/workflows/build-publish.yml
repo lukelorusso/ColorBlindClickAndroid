@@ -45,6 +45,7 @@ env:
 jobs:
   build-publish:
     runs-on: ubuntu-latest
+    environment: release
 
     outputs:
       output_app_group: ${{ env.APP_GROUP }}
@@ -106,17 +107,42 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build with Gradle
-        run: ./gradlew clean build test
+        run: ./gradlew clean build test -x assembleRelease
 
       # Create APK Debug
       - name: Build APK debug
         if: success()
         run: ./gradlew assembleDebug
 
+      # Decode signing keystore (release environment secrets)
+      - name: Decode release keystore
+        if: success() && env.PUBLISH_RELEASE == 'true'
+        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > "${{ runner.temp }}/release.jks"
+
       # Create APK Release
       - name: Build APK release
-        if: success() && env.PUBLISH_ARTIFACTS == 'true'
+        if: success() && env.PUBLISH_RELEASE == 'true'
+        env:
+          KEYSTORE_PATH: ${{ runner.temp }}/release.jks
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: ./gradlew assembleRelease
+
+      # Create AAB Release
+      - name: Build AAB release
+        if: success() && env.PUBLISH_RELEASE == 'true'
+        env:
+          KEYSTORE_PATH: ${{ runner.temp }}/release.jks
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: ./gradlew bundleRelease
+
+      # Remove decoded keystore regardless of build outcome
+      - name: Remove decoded keystore
+        if: always()
+        run: rm -f "${{ runner.temp }}/release.jks"
 
       # Upload APK Debug
       - name: Upload APK debug
@@ -128,11 +154,19 @@ jobs:
 
       # Upload APK Release
       - name: Upload APK release
-        if: success() && env.PUBLISH_ARTIFACTS == 'true'
+        if: success() && env.PUBLISH_RELEASE == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.APP_LABEL }}-${{ steps.new-version.outputs.new-value }}-release.apk
           path: ${{ env.PROJECT_MODULE }}/build/outputs/apk/release/
+
+      # Upload AAB Release
+      - name: Upload AAB release
+        if: success() && env.PUBLISH_RELEASE == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.APP_LABEL }}-${{ steps.new-version.outputs.new-value }}-release.aab
+          path: ${{ env.PROJECT_MODULE }}/build/outputs/bundle/release/
 
       - name: Tag new version
         if: success()
