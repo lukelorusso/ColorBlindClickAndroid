@@ -54,10 +54,10 @@ jobs:
 
     steps:
       - name: Create GitHub App token
-        uses: actions/create-github-app-token@v2
+        uses: actions/create-github-app-token@v3
         id: generate-app-token
         with:
-          app-id: ${{ secrets.GHA_APP_ID }}
+          client-id: ${{ secrets.GHA_APP_CLIENT_ID }}
           private-key: ${{ secrets.GHA_APP_PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
 
@@ -68,7 +68,7 @@ jobs:
           java-version: '22'
 
       - name: Checkout Branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           token: ${{ steps.generate-app-token.outputs.token }}
           ref: ${{ env.CHECKOUT_BRANCH }}
@@ -84,7 +84,7 @@ jobs:
 
       # Android specific: setting up SDK
       - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
+        uses: android-actions/setup-android@v4
 
       - name: Read version
         id: read-version
@@ -144,29 +144,79 @@ jobs:
         if: always()
         run: rm -f "${{ runner.temp }}/release.jks"
 
-      # Upload APK Debug
+      # Upload APK Debug (uploaded as-is, single file, direct download link)
+      - name: Rename APK debug
+        id: rename-apk-debug
+        if: success()
+        run: |
+          SRC=$(find "${{ env.PROJECT_MODULE }}/build/outputs/apk/debug" -maxdepth 1 -name '*.apk' | head -n1)
+          DEST="${{ runner.temp }}/${{ env.APP_LABEL }}-${{ steps.new-version.outputs.new-value }}-debug.apk"
+          cp "$SRC" "$DEST"
+          echo "path=$DEST" >> "$GITHUB_OUTPUT"
+
       - name: Upload APK debug
         if: success()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
-          name: ${{ env.APP_LABEL }}-${{ steps.new-version.outputs.new-value }}-debug.apk
-          path: ${{ env.PROJECT_MODULE }}/build/outputs/apk/debug/
+          path: ${{ steps.rename-apk-debug.outputs.path }}
+          archive: false
 
-      # Upload APK Release
+      # Upload APK Release (uploaded as-is, single file, direct download link)
+      - name: Rename APK release
+        id: rename-apk-release
+        if: success() && env.PUBLISH_RELEASE == 'true'
+        run: |
+          SRC=$(find "${{ env.PROJECT_MODULE }}/build/outputs/apk/release" -maxdepth 1 -name '*.apk' | head -n1)
+          DEST="${{ runner.temp }}/${{ env.APP_LABEL }}-${{ steps.new-version.outputs.new-value }}-release.apk"
+          cp "$SRC" "$DEST"
+          echo "path=$DEST" >> "$GITHUB_OUTPUT"
+
       - name: Upload APK release
         if: success() && env.PUBLISH_RELEASE == 'true'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
-          name: ${{ env.APP_LABEL }}-${{ steps.new-version.outputs.new-value }}-release.apk
-          path: ${{ env.PROJECT_MODULE }}/build/outputs/apk/release/
+          path: ${{ steps.rename-apk-release.outputs.path }}
+          archive: false
 
-      # Upload AAB Release
+      # Upload AAB Release (uploaded as-is, single file, direct download link)
+      - name: Rename AAB release
+        id: rename-aab-release
+        if: success() && env.PUBLISH_RELEASE == 'true'
+        run: |
+          SRC=$(find "${{ env.PROJECT_MODULE }}/build/outputs/bundle/release" -maxdepth 1 -name '*.aab' | head -n1)
+          DEST="${{ runner.temp }}/${{ env.APP_LABEL }}-${{ steps.new-version.outputs.new-value }}-release.aab"
+          cp "$SRC" "$DEST"
+          echo "path=$DEST" >> "$GITHUB_OUTPUT"
+
       - name: Upload AAB release
         if: success() && env.PUBLISH_RELEASE == 'true'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
-          name: ${{ env.APP_LABEL }}-${{ steps.new-version.outputs.new-value }}-release.aab
-          path: ${{ env.PROJECT_MODULE }}/build/outputs/bundle/release/
+          path: ${{ steps.rename-aab-release.outputs.path }}
+          archive: false
+
+      # Check native libs directory exists and is not empty, so the next step can be skipped otherwise
+      - name: Check native libs
+        id: check-native-libs
+        if: success() && env.PUBLISH_RELEASE == 'true'
+        continue-on-error: true
+        run: |
+          DIR="${{ env.PROJECT_MODULE }}/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib"
+          if [ -d "$DIR" ] && [ -n "$(find "$DIR" -type f -print -quit)" ]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Upload native libs
+      - name: Upload native libs
+        if: success() && env.PUBLISH_RELEASE == 'true' && steps.check-native-libs.outputs.exists == 'true'
+        continue-on-error: true
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ env.APP_LABEL }}-${{ steps.new-version.outputs.new-value }}-native-libs.zip
+          path: ${{ env.PROJECT_MODULE }}/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib
+          if-no-files-found: ignore
 
       - name: Tag new version
         if: success()
@@ -176,6 +226,7 @@ jobs:
           new-value: ${{ steps.new-version.outputs.new-value }}
 
       - name: Tag new release version
+        id: tag-release-version
         if: success() && env.PUBLISH_RELEASE == 'true'
         uses: ./.github/actions/tag-version
         with:
@@ -184,8 +235,22 @@ jobs:
 
       - name: Merge Checkout Branch into Target Branch if different
         if: ${{ env.TARGET_BRANCH != env.CHECKOUT_BRANCH }}
-        uses: everlytic/branch-merge@1.1.5
+        uses: ./.github/actions/branch-merge
         with:
-          github_token: ${{ steps.generate-app-token.outputs.token }}
-          source_ref: ${{ env.CHECKOUT_BRANCH }}
-          target_branch: ${{ env.TARGET_BRANCH }}
+          github-token: ${{ steps.generate-app-token.outputs.token }}
+          source-ref: ${{ env.CHECKOUT_BRANCH }}
+          target-branch: ${{ env.TARGET_BRANCH }}
+
+      # Create a GitHub Release, named after the release tag, with the 2 APKs (no AAB) attached
+      - name: Create GitHub Release
+        if: success() && env.PUBLISH_RELEASE == 'true'
+        env:
+          GH_TOKEN: ${{ steps.generate-app-token.outputs.token }}
+        run: |
+          TAG="${{ steps.tag-release-version.outputs.tag-name }}"
+          gh release create "$TAG" \
+            --repo "${{ github.repository }}" \
+            --title "$TAG" \
+            --notes "Full commit history up to this release: https://github.com/${{ github.repository }}/commits/$TAG" \
+            "${{ steps.rename-apk-debug.outputs.path }}" \
+            "${{ steps.rename-apk-release.outputs.path }}"
