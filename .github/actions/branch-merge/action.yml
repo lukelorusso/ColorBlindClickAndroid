@@ -1,0 +1,38 @@
+name: 'Branch Merge'
+description: 'Merges a source branch, or ref, into a target branch via the GitHub API. Local, dependency-free reimplementation of everlytic/branch-merge@1.1.5, so it never needs a version bump.'
+inputs:
+  github-token:
+    description: 'Token used to authenticate with GitHub when performing the merge command.'
+    required: true
+    default: ${{ github.token }}
+  source-ref:
+    description: 'Branch name or Ref that you wish to merge into the target-branch.'
+    required: true
+    default: ${{ github.ref }}
+  target-branch:
+    description: 'Branch you are merging the source ref into.'
+    required: true
+  commit-message-template:
+    description: 'Template to generate the commit message. Supports the {source-ref} and {target-branch} placeholders, each replaced once, same as the original action.'
+    required: false
+    default: 'Merged {source-ref} into {target-branch}.'
+runs:
+  using: 'composite'
+  steps:
+    # Calls the same GitHub API endpoint (POST /repos/{owner}/{repo}/merges) the original
+    # action used internally via octokit.repos.merge(), so behavior stays identical.
+    - name: 'Merge branch via GitHub API'
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.github-token }}
+        source-ref: ${{ inputs.source-ref }}
+        target-branch: ${{ inputs.target-branch }}
+      run: |
+        commit_message="${{ inputs.commit-message-template }}"
+        commit_message="${commit_message/\{source-ref\}/$source-ref}"
+        commit_message="${commit_message/\{target-branch\}/$target-branch}"
+
+        gh api "repos/${{ github.repository }}/merges" \
+          -f base="$target-branch" \
+          -f head="$source-ref" \
+          -f commit_message="$commit_message"

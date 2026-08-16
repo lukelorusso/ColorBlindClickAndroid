@@ -9,10 +9,15 @@ inputs:
     description: 'Will add a `-release` suffix if true'
     required: false
     default: 'false'
+outputs:
+  tag-name:
+    description: 'The full name of the tag that was created (including the `-release` suffix, if any)'
+    value: ${{ steps.tag-new-version.outputs.tag-name }}
 runs:
   using: 'composite'
   steps:
     - name: 'Tag new version'
+      id: tag-new-version
       shell: bash
       run: |
         newVersion=${{ inputs.new-value }}
@@ -26,3 +31,4 @@ runs:
           git tag -a "${tagName}" -m "[ci] create tag for new version"
         fi
         git push origin --tags --force
+        echo "tag-name=${tagName}" >> "$GITHUB_OUTPUT"
