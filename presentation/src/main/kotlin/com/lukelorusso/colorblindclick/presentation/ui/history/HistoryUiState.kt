@@ -8,5 +8,6 @@ data class HistoryUiState(
     val colorList: List<ColorEntity> = emptyList(),
     val tempColorToDelete: ColorEntity? = null,
     val isSearchingMode: Boolean = false,
-    val searchText: String = ""
+    val searchText: String = "",
+    val editingTagColor: ColorEntity? = null
 )

@@ -12,6 +12,9 @@
     <string name="yes">Oui</string>
     <string name="no">Non</string>
     <string name="history_search_hint">Rechercher une couleur…</string>
+    <string name="color_tag_add_placeholder">+ Ajouter une étiquette</string>
+    <string name="color_tag_dialog_title">Étiqueter cette couleur</string>
+    <string name="color_tag_dialog_hint">ex. mon costume bleu marine</string>
     <string name="info_app">À propos de cette application</string>
     <string name="info_home">Page du service Web</string>
     <string name="info_help">Aide du service Web</string>

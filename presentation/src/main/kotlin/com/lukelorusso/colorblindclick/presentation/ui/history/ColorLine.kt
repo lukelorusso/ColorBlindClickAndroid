@@ -18,6 +18,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -33,7 +35,8 @@ internal fun ColorLine(
     isEven: Boolean,
     item: ColorEntity,
     onClick: (ColorEntity) -> Unit,
-    onDeleteColor: (ColorEntity) -> Unit
+    onDeleteColor: (ColorEntity) -> Unit,
+    onEditTag: (ColorEntity) -> Unit
 ) {
     val swipeToDismissState = rememberSwipeToDismissBoxState(
         positionalThreshold = { totalDistance -> totalDistance * 0.60f } // percentage of swipe before dismissing
@@ -56,7 +59,8 @@ internal fun ColorLine(
         ItemContent(
             isEven = isEven,
             item = item,
-            onClick = onClick
+            onClick = onClick,
+            onEditTag = onEditTag
         )
     }
 }
@@ -66,6 +70,7 @@ private fun ItemContent(
     isEven: Boolean,
     item: ColorEntity,
     onClick: (ColorEntity) -> Unit,
+    onEditTag: (ColorEntity) -> Unit,
 ) {
     @ColorRes val colorRes = if (isEven)
         R.color.item_background_evens
@@ -117,6 +122,19 @@ private fun ItemContent(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 text = context.getLocalizedDateTime(item.timestamp)
+            )
+
+            Spacer(modifier = Modifier.height(2.dp))
+
+            Text(
+                modifier = Modifier.clickable(onClick = { onEditTag(item) }),
+                color = colorResource(id = R.color.text_color),
+                fontSize = 13.sp,
+                fontStyle = if (item.tag.isNullOrBlank()) FontStyle.Italic else FontStyle.Normal,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                text = item.tag?.takeIf { it.isNotBlank() }
+                    ?: stringResource(id = R.string.color_tag_add_placeholder)
             )
         }
 

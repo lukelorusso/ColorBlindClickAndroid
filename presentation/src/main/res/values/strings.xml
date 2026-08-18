@@ -14,6 +14,9 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="history_search_hint">Search a color…</string>
+    <string name="color_tag_add_placeholder">+ Add tag</string>
+    <string name="color_tag_dialog_title">Tag this color</string>
+    <string name="color_tag_dialog_hint">e.g. my navy suit</string>
     <string name="info_app">About this app</string>
     <string name="info_home">API Web Page</string>
     <string name="info_help">API Help</string>

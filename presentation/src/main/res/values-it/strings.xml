@@ -12,6 +12,9 @@
     <string name="yes">Si</string>
     <string name="no">No</string>
     <string name="history_search_hint">Cerca un colore…</string>
+    <string name="color_tag_add_placeholder">+ Aggiungi etichetta</string>
+    <string name="color_tag_dialog_title">Etichetta questo colore</string>
+    <string name="color_tag_dialog_hint">es. il mio vestito blu</string>
     <string name="info_app">Informazioni su questa app</string>
     <string name="info_home">Pagina del servizio Web</string>
     <string name="info_help">Aiuto del servizio Web</string>

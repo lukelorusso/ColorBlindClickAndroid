@@ -5,6 +5,7 @@ import com.lukelorusso.colorblindclick.domain.entity.ColorEntity
 import com.lukelorusso.colorblindclick.domain.usecase.DeleteAllSavedColorsUseCase
 import com.lukelorusso.colorblindclick.domain.usecase.DeleteSavedColorUseCase
 import com.lukelorusso.colorblindclick.domain.usecase.GetSavedColorListUseCase
+import com.lukelorusso.colorblindclick.domain.usecase.SetColorTagUseCase
 import com.lukelorusso.colorblindclick.presentation.extensions.matchSearch
 import com.lukelorusso.colorblindclick.presentation.helper.TrackerHelper
 import com.lukelorusso.colorblindclick.presentation.ui.base.AppViewModel
@@ -20,7 +21,8 @@ class HistoryViewModel(
     private val trackerHelper: TrackerHelper,
     private val getSavedColorList: GetSavedColorListUseCase,
     private val deleteSavedColor: DeleteSavedColorUseCase,
-    private val deleteAllSavedColors: DeleteAllSavedColorsUseCase
+    private val deleteAllSavedColors: DeleteAllSavedColorsUseCase,
+    private val setColorTag: SetColorTagUseCase
 ) : AppViewModel<HistoryUiState>() {
     override val _uiState = MutableStateFlow(HistoryUiState())
     override val router = HistoryRouter()
@@ -139,6 +141,34 @@ class HistoryViewModel(
             } catch (t: Throwable) {
                 trackerHelper.track(TrackerHelper.Action.PERSISTENCE_EXCEPTION)
                 updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
+            }
+        }
+    }
+
+    fun editTag(color: ColorEntity) {
+        updateUiState { it.copy(editingTagColor = color) }
+    }
+
+    fun dismissTagEditor() {
+        updateUiState { it.copy(editingTagColor = null) }
+    }
+
+    fun setTag(color: ColorEntity, tag: String?) {
+        viewModelScope.launch {
+            try {
+                val updated = setColorTag.invoke(SetColorTagUseCase.Params(color, tag))
+                updateUiState {
+                    it.copy(
+                        colorList = it.colorList.map { entity ->
+                            if (entity.timestamp == updated.timestamp) updated else entity
+                        },
+                        editingTagColor = null
+                    )
+                }
+                trackerHelper.track(TrackerHelper.Action.TAGGED_ITEM)
+            } catch (t: Throwable) {
+                trackerHelper.track(TrackerHelper.Action.PERSISTENCE_EXCEPTION)
+                updateUiState { it.copy(editingTagColor = null, contentState = ContentState.ERROR(t)) }
             }
         }
     }

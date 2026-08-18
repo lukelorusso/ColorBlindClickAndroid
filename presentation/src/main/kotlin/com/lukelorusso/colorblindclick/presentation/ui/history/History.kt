@@ -21,6 +21,7 @@ import com.lukelorusso.colorblindclick.presentation.R
 import com.lukelorusso.colorblindclick.presentation.error.ErrorMessageFactory
 import com.lukelorusso.colorblindclick.presentation.ui.base.FAB
 import com.lukelorusso.colorblindclick.presentation.ui.base.FAB_DEFAULT_SIZE
+import com.lukelorusso.colorblindclick.presentation.ui.base.TagAlertDialog
 import com.lukelorusso.colorblindclick.presentation.ui.base.YesNoAlertDialog
 import com.lukelorusso.colorblindclick.presentation.ui.error.ErrorAlertDialog
 import kotlinx.coroutines.Dispatchers
@@ -98,6 +99,14 @@ fun History(
                     showDeleteAllAlertDialog = false
                 }
             }
+        )
+    }
+
+    uiState.editingTagColor?.let { colorToTag ->
+        TagAlertDialog(
+            initialTag = colorToTag.tag,
+            dismissCallback = viewModel::dismissTagEditor,
+            confirmCallback = { newTag -> viewModel.setTag(colorToTag, newTag) }
         )
     }
 
@@ -183,7 +192,8 @@ fun History(
                                 viewModel.deleteColorFromUiState(deletedColor)
                                 shouldDeleteColor = true
                             }
-                        }
+                        },
+                        onEditTag = viewModel::editTag
                     )
                 }
 
