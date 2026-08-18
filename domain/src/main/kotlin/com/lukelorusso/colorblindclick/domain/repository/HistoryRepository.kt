@@ -8,4 +8,6 @@ interface HistoryRepository {
     suspend fun deleteColor(color: ColorEntity)
 
     suspend fun deleteAllColors()
+
+    suspend fun updateColorTag(color: ColorEntity, tag: String?): ColorEntity
 }

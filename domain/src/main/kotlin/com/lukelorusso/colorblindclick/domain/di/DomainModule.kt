@@ -25,5 +25,6 @@ val domainModule = module {
     factory { GetSavedColorListUseCase(get()) }
     factory { DeleteSavedColorUseCase(get()) }
     factory { DeleteAllSavedColorsUseCase(get()) }
+    factory { SetColorTagUseCase(get()) }
     //endregion
 }

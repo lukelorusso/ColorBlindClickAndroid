@@ -18,4 +18,10 @@ class HistoryRepositoryImpl(
     override suspend fun deleteAllColors() {
         databaseManager.clearColorList()
     }
+
+    override suspend fun updateColorTag(color: ColorEntity, tag: String?): ColorEntity {
+        val updatedColor = color.copy(tag = tag)
+        databaseManager.saveColorList(listOf(updatedColor))
+        return updatedColor
+    }
 }

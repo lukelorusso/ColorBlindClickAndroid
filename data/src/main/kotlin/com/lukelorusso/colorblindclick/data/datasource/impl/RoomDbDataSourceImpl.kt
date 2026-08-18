@@ -15,6 +15,7 @@ class RoomDbDataSourceImpl : DatabaseDataSource {
                 originalColorHex = dto.originalColorHex,
                 returnMsg = dto.returnMsg,
                 similarity = dto.similarity,
+                tag = dto.tag,
                 timestamp = dto.timestamp
             )
         }
@@ -26,6 +27,7 @@ class RoomDbDataSourceImpl : DatabaseDataSource {
                 originalColorHex = entity.originalColorHex,
                 returnMsg = entity.returnMsg,
                 similarity = entity.similarity,
+                tag = entity.tag,
                 timestamp = entity.timestamp
             )
         }

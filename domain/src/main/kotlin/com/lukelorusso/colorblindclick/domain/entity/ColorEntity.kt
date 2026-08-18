@@ -9,12 +9,13 @@ data class ColorEntity(
     val originalColorHex: String,
     val returnMsg: String,
     val similarity: String,
+    val tag: String? = null,
     val timestamp: Long
 ) {
     /**
      * For searching purposes
      */
     override fun toString(): String {
-        return "$colorName #${originalColorHex}"
+        return "$colorName #${originalColorHex} ${tag.orEmpty()}"
     }
 }

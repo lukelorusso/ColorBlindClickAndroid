@@ -13,5 +13,6 @@ data class ColorDto(
     val originalColorHex: String,
     val returnMsg: String,
     val similarity: String,
+    val tag: String? = null,
     @PrimaryKey val timestamp: Long
 )

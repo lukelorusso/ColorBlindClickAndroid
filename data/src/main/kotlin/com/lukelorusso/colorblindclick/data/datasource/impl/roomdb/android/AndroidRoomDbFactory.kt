@@ -5,6 +5,7 @@ import androidx.room.Room
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import com.lukelorusso.colorblindclick.data.datasource.impl.roomdb.ColorBlindClickRoomDb
 import com.lukelorusso.colorblindclick.data.datasource.impl.roomdb.ColorBlindClickRoomDb.Companion.DATABASE_NAME
+import com.lukelorusso.colorblindclick.data.datasource.impl.roomdb.MIGRATION_1_2
 import kotlinx.coroutines.Dispatchers
 import org.koin.java.KoinJavaComponent.inject
 
@@ -21,6 +22,7 @@ class AndroidRoomDbFactory {
             )
             .setDriver(BundledSQLiteDriver())
             .setQueryCoroutineContext(Dispatchers.IO)
+            .addMigrations(MIGRATION_1_2)
             .fallbackToDestructiveMigration(false)
             .build()
     }
