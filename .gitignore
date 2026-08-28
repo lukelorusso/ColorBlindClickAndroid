@@ -1,15 +1,16 @@
-# GENERATED
+# Generated
+*.apk
+*.iml
 *build
-buildsystem
+.DS_Store
 .externalNativeBuild
 .gradle
-.DS_Store
 .kotlin
+buildsystem
 
-# LOCAL
+# Local
+.github/**/*.md
 local.properties
 
-# IDEA
-*.idea
-*.iml
-*.apk
+# Editor
+.idea/
