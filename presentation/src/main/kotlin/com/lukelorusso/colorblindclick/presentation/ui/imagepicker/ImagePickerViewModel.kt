@@ -5,11 +5,11 @@ import com.lukelorusso.colorblindclick.domain.entity.ColorEntity
 import com.lukelorusso.colorblindclick.domain.usecase.DecodeColorHexUseCase
 import com.lukelorusso.colorblindclick.domain.usecase.GetPixelNeighbourhoodUseCase
 import com.lukelorusso.colorblindclick.presentation.extensions.getDeviceUdid
+import com.lukelorusso.colorblindclick.presentation.extensions.launchCatching
 import com.lukelorusso.colorblindclick.presentation.helper.TrackerHelper
 import com.lukelorusso.colorblindclick.presentation.ui.base.AppViewModel
 import com.lukelorusso.colorblindclick.presentation.ui.base.ContentState
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
 class ImagePickerViewModel(
@@ -32,18 +32,18 @@ class ImagePickerViewModel(
             updateUiState { it.copy(contentState = ContentState.LOADING) }
         }
 
-        viewModelScope.launch {
-            try {
-                trackerHelper.track(TrackerHelper.Action.GOTO_IMAGE_PICKER)
-                val pixelNeighbourhood = getPixelNeighbourhood.invoke(Unit)
-                updateUiState {
-                    it.copy(
-                        contentState = ContentState.CONTENT,
-                        pixelNeighbourhood = pixelNeighbourhood
-                    )
-                }
-            } catch (t: Throwable) {
+        viewModelScope.launchCatching(
+            onError = { t ->
                 updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
+            }
+        ) {
+            trackerHelper.track(TrackerHelper.Action.GOTO_IMAGE_PICKER)
+            val pixelNeighbourhood = getPixelNeighbourhood.invoke(Unit)
+            updateUiState {
+                it.copy(
+                    contentState = ContentState.CONTENT,
+                    pixelNeighbourhood = pixelNeighbourhood
+                )
             }
         }
     }
@@ -60,22 +60,22 @@ class ImagePickerViewModel(
             }
         }
 
-        viewModelScope.launch {
-            try {
-                val param = DecodeColorHexUseCase.Param(
-                    colorHex = pixelColorHex,
-                    deviceUdid = router.activity.getDeviceUdid()
-                )
-                val color = decodeColorHex.invoke(param)
-                updateUiState {
-                    it.copy(
-                        contentState = ContentState.CONTENT,
-                        color = color
-                    )
-                }
-            } catch (t: Throwable) {
+        viewModelScope.launchCatching(
+            onError = { t ->
                 trackerHelper.track(TrackerHelper.Action.PERSISTENCE_EXCEPTION)
                 updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
+            }
+        ) {
+            val param = DecodeColorHexUseCase.Param(
+                colorHex = pixelColorHex,
+                deviceUdid = router.activity.getDeviceUdid()
+            )
+            val color = decodeColorHex.invoke(param)
+            updateUiState {
+                it.copy(
+                    contentState = ContentState.CONTENT,
+                    color = color
+                )
             }
         }
     }

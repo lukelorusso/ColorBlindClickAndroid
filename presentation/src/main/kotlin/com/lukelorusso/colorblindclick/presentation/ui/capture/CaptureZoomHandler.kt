@@ -31,6 +31,7 @@ internal fun CaptureZoomHandler(
     var lastGestureZoom by remember { mutableFloatStateOf(1F) }
     var showSlider by remember { mutableStateOf(true) }
     var showSliderBouncer by remember { mutableStateOf(Bouncer(BOUNCE_DELAY_IN_MILLIS)) }
+    val coroutineScope = rememberCoroutineScope()
 
     fun Float.newGestureProcessor() {
         if (this != lastGestureZoom) {
@@ -38,7 +39,7 @@ internal fun CaptureZoomHandler(
             lastGestureZoom = this
             onRatioChanged(lastGestureZoom)
         }
-        showSliderBouncer.bounce { showSlider = true }
+        showSliderBouncer.bounce(scope = coroutineScope) { showSlider = true }
     }
 
     Row(

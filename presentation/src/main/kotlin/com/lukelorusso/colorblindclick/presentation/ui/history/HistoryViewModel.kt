@@ -5,6 +5,7 @@ import com.lukelorusso.colorblindclick.domain.entity.ColorEntity
 import com.lukelorusso.colorblindclick.domain.usecase.DeleteAllSavedColorsUseCase
 import com.lukelorusso.colorblindclick.domain.usecase.DeleteSavedColorUseCase
 import com.lukelorusso.colorblindclick.domain.usecase.GetSavedColorListUseCase
+import com.lukelorusso.colorblindclick.presentation.extensions.launchCatching
 import com.lukelorusso.colorblindclick.presentation.extensions.matchSearch
 import com.lukelorusso.colorblindclick.presentation.helper.TrackerHelper
 import com.lukelorusso.colorblindclick.presentation.ui.base.AppViewModel
@@ -13,7 +14,6 @@ import com.lukelorusso.colorblindclick.presentation.ui.base.ContentState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
 class HistoryViewModel(
@@ -44,24 +44,24 @@ class HistoryViewModel(
             updateUiState { it.copy(contentState = ContentState.LOADING) }
         }
 
-        viewModelScope.launch {
+        viewModelScope.launchCatching(
+            onError = { t ->
+                trackerHelper.track(TrackerHelper.Action.PERSISTENCE_EXCEPTION)
+                updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
+            }
+        ) {
             loadDataSuspend()
         }
     }
 
     private suspend fun loadDataSuspend() {
-        try {
-            val colorList = getSavedColorList.invoke(Unit)
-            updateUiState {
-                it.copy(
-                    contentState = ContentState.CONTENT,
-                    colorList = colorList
-                        .sortedByDescending { color -> color.timestamp }
-                )
-            }
-        } catch (t: Throwable) {
-            trackerHelper.track(TrackerHelper.Action.PERSISTENCE_EXCEPTION)
-            updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
+        val colorList = getSavedColorList.invoke(Unit)
+        updateUiState {
+            it.copy(
+                contentState = ContentState.CONTENT,
+                colorList = colorList
+                    .sortedByDescending { color -> color.timestamp }
+            )
         }
     }
 
@@ -104,17 +104,17 @@ class HistoryViewModel(
             updateUiState { it.copy(contentState = ContentState.LOADING) }
         }
 
-        viewModelScope.launch {
-            try {
-                uiState.value.tempColorToDelete?.also { param ->
-                    updateUiState { it.copy(tempColorToDelete = null) }
-                    deleteSavedColor.invoke(param)
-                    trackerHelper.track(TrackerHelper.Action.DELETED_ITEM)
-                    loadDataSuspend()
-                }
-            } catch (t: Throwable) {
+        viewModelScope.launchCatching(
+            onError = { t ->
                 trackerHelper.track(TrackerHelper.Action.PERSISTENCE_EXCEPTION)
                 updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
+            }
+        ) {
+            uiState.value.tempColorToDelete?.also { param ->
+                updateUiState { it.copy(tempColorToDelete = null) }
+                deleteSavedColor.invoke(param)
+                trackerHelper.track(TrackerHelper.Action.DELETED_ITEM)
+                loadDataSuspend()
             }
         }
     }
@@ -131,15 +131,15 @@ class HistoryViewModel(
             }
         }
 
-        viewModelScope.launch {
-            try {
-                deleteAllSavedColors.invoke(Unit)
-                trackerHelper.track(TrackerHelper.Action.DELETED_ALL_ITEMS)
-                loadDataSuspend()
-            } catch (t: Throwable) {
+        viewModelScope.launchCatching(
+            onError = { t ->
                 trackerHelper.track(TrackerHelper.Action.PERSISTENCE_EXCEPTION)
                 updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
             }
+        ) {
+            deleteAllSavedColors.invoke(Unit)
+            trackerHelper.track(TrackerHelper.Action.DELETED_ALL_ITEMS)
+            loadDataSuspend()
         }
     }
 
@@ -154,7 +154,7 @@ class HistoryViewModel(
             updateUiState { it.copy(searchText = newText) }
         } else {
             // load the job after the defined delay
-            loadBouncer.bounce {
+            loadBouncer.bounce(scope = viewModelScope) {
                 updateUiState { it.copy(searchText = newText) }
             }
         }

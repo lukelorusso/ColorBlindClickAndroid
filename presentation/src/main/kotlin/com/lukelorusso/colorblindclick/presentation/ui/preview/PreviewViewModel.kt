@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import androidx.lifecycle.viewModelScope
 import com.lukelorusso.colorblindclick.domain.entity.ColorEntity
 import com.lukelorusso.colorblindclick.domain.usecase.GetStoreUrlUseCase
+import com.lukelorusso.colorblindclick.presentation.extensions.launchCatching
 import com.lukelorusso.colorblindclick.presentation.extensions.shareBitmap
 import com.lukelorusso.colorblindclick.presentation.extensions.shareText
 import com.lukelorusso.colorblindclick.presentation.helper.TrackerHelper
@@ -11,7 +12,6 @@ import com.lukelorusso.colorblindclick.presentation.ui.base.AppRouter
 import com.lukelorusso.colorblindclick.presentation.ui.base.AppViewModel
 import com.lukelorusso.colorblindclick.presentation.ui.base.ContentState
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
 class PreviewViewModel(
@@ -29,19 +29,19 @@ class PreviewViewModel(
             updateUiState { it.copy(contentState = ContentState.LOADING) }
         }
 
-        viewModelScope.launch {
-            try {
-                val color = serializedColor?.let { json.decodeFromString<ColorEntity>(it) }
-                val url = getStoreUrl.invoke(Unit)
-                updateUiState {
-                    it.copy(
-                        contentState = ContentState.CONTENT,
-                        color = color,
-                        storeUrl = url
-                    )
-                }
-            } catch (t: Throwable) {
+        viewModelScope.launchCatching(
+            onError = { t ->
                 updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
+            }
+        ) {
+            val color = serializedColor?.let { json.decodeFromString<ColorEntity>(it) }
+            val url = getStoreUrl.invoke(Unit)
+            updateUiState {
+                it.copy(
+                    contentState = ContentState.CONTENT,
+                    color = color,
+                    storeUrl = url
+                )
             }
         }
     }

@@ -6,11 +6,11 @@ import com.lukelorusso.colorblindclick.domain.usecase.GetAboutMeUrlUseCase
 import com.lukelorusso.colorblindclick.domain.usecase.GetApiHelpUrlUseCase
 import com.lukelorusso.colorblindclick.domain.usecase.GetApiHomeUrlUseCase
 import com.lukelorusso.colorblindclick.presentation.BuildConfig
+import com.lukelorusso.colorblindclick.presentation.extensions.launchCatching
 import com.lukelorusso.colorblindclick.presentation.helper.TrackerHelper
 import com.lukelorusso.colorblindclick.presentation.ui.base.AppViewModel
 import com.lukelorusso.colorblindclick.presentation.ui.base.ContentState
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.launch
 
 class InfoViewModel(
     private val trackerHelper: TrackerHelper,
@@ -39,53 +39,53 @@ class InfoViewModel(
 
     fun gotoAboutApp() {
         dismissError()
-        viewModelScope.launch {
-            try {
-                val url = getAboutAppUrl.invoke(Unit)
-                trackerHelper.track(TrackerHelper.Action.GOTO_ABOUT_APP_PAGE)
-                router.routeToBrowser(url)
-            } catch (t: Throwable) {
+        viewModelScope.launchCatching(
+            onError = { t ->
                 updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
             }
+        ) {
+            val url = getAboutAppUrl.invoke(Unit)
+            trackerHelper.track(TrackerHelper.Action.GOTO_ABOUT_APP_PAGE)
+            router.routeToBrowser(url)
         }
     }
 
     fun gotoApiHome() {
         dismissError()
-        viewModelScope.launch {
-            try {
-                val url = getApiHomeUrl.invoke(Unit)
-                trackerHelper.track(TrackerHelper.Action.GOTO_HOME_PAGE)
-                router.routeToBrowser(url)
-            } catch (t: Throwable) {
+        viewModelScope.launchCatching(
+            onError = { t ->
                 updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
             }
+        ) {
+            val url = getApiHomeUrl.invoke(Unit)
+            trackerHelper.track(TrackerHelper.Action.GOTO_HOME_PAGE)
+            router.routeToBrowser(url)
         }
     }
 
     fun gotoApiHelp() {
         dismissError()
-        viewModelScope.launch {
-            try {
-                val url = getApiHelpUrl.invoke(Unit)
-                trackerHelper.track(TrackerHelper.Action.GOTO_HELP_PAGE)
-                router.routeToBrowser(url)
-            } catch (t: Throwable) {
+        viewModelScope.launchCatching(
+            onError = { t ->
                 updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
             }
+        ) {
+            val url = getApiHelpUrl.invoke(Unit)
+            trackerHelper.track(TrackerHelper.Action.GOTO_HELP_PAGE)
+            router.routeToBrowser(url)
         }
     }
 
     fun gotoAboutMe() {
         dismissError()
-        viewModelScope.launch {
-            try {
-                val url = getAboutMeUrl.invoke(Unit)
-                trackerHelper.track(TrackerHelper.Action.GOTO_ABOUT_ME_PAGE)
-                router.routeToBrowser(url)
-            } catch (t: Throwable) {
+        viewModelScope.launchCatching(
+            onError = { t ->
                 updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
             }
+        ) {
+            val url = getAboutMeUrl.invoke(Unit)
+            trackerHelper.track(TrackerHelper.Action.GOTO_ABOUT_ME_PAGE)
+            router.routeToBrowser(url)
         }
     }
 

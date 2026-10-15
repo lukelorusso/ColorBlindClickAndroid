@@ -5,11 +5,11 @@ import com.lukelorusso.colorblindclick.domain.usecase.GetPixelNeighbourhoodUseCa
 import com.lukelorusso.colorblindclick.domain.usecase.GetSaveCameraOptionsUseCase
 import com.lukelorusso.colorblindclick.domain.usecase.SetPixelNeighbourhoodUseCase
 import com.lukelorusso.colorblindclick.domain.usecase.SetSaveCameraOptionsUseCase
+import com.lukelorusso.colorblindclick.presentation.extensions.launchCatching
 import com.lukelorusso.colorblindclick.presentation.ui.base.AppRouter
 import com.lukelorusso.colorblindclick.presentation.ui.base.AppViewModel
 import com.lukelorusso.colorblindclick.presentation.ui.base.ContentState
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.launch
 
 class SettingsViewModel(
     private val getPixelNeighbourhood: GetPixelNeighbourhoodUseCase,
@@ -31,13 +31,11 @@ class SettingsViewModel(
             updateUiState { it.copy(contentState = ContentState.LOADING) }
         }
 
-        viewModelScope.launch {
-            loadDataSuspend()
-        }
-    }
-
-    private suspend fun loadDataSuspend() {
-        try {
+        viewModelScope.launchCatching(
+            onError = { t ->
+                updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
+            }
+        ) {
             val pixelNeighbourhood = getPixelNeighbourhood.invoke(Unit)
             val saveCameraOptions = getSaveCameraOptions.invoke(Unit)
             updateUiState {
@@ -47,8 +45,6 @@ class SettingsViewModel(
                     saveCameraOptions = saveCameraOptions
                 )
             }
-        } catch (t: Throwable) {
-            updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
         }
     }
 
@@ -59,17 +55,17 @@ class SettingsViewModel(
             updateUiState { it.copy(contentState = ContentState.LOADING) }
         }
 
-        viewModelScope.launch {
-            try {
-                setPixelNeighbourhood.invoke(param)
-                updateUiState {
-                    it.copy(
-                        contentState = ContentState.CONTENT,
-                        pixelNeighbourhood = param
-                    )
-                }
-            } catch (t: Throwable) {
+        viewModelScope.launchCatching(
+            onError = { t ->
                 updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
+            }
+        ) {
+            setPixelNeighbourhood.invoke(param)
+            updateUiState {
+                it.copy(
+                    contentState = ContentState.CONTENT,
+                    pixelNeighbourhood = param
+                )
             }
         }
     }
@@ -81,17 +77,17 @@ class SettingsViewModel(
             updateUiState { it.copy(contentState = ContentState.LOADING) }
         }
 
-        viewModelScope.launch {
-            try {
-                setSaveCameraOptions.invoke(param)
-                updateUiState {
-                    it.copy(
-                        contentState = ContentState.CONTENT,
-                        saveCameraOptions = param
-                    )
-                }
-            } catch (t: Throwable) {
+        viewModelScope.launchCatching(
+            onError = { t ->
                 updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
+            }
+        ) {
+            setSaveCameraOptions.invoke(param)
+            updateUiState {
+                it.copy(
+                    contentState = ContentState.CONTENT,
+                    saveCameraOptions = param
+                )
             }
         }
     }

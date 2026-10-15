@@ -5,12 +5,12 @@ import androidx.lifecycle.viewModelScope
 import com.lukelorusso.colorblindclick.domain.entity.ColorEntity
 import com.lukelorusso.colorblindclick.domain.usecase.*
 import com.lukelorusso.colorblindclick.presentation.extensions.getDeviceUdid
+import com.lukelorusso.colorblindclick.presentation.extensions.launchCatching
 import com.lukelorusso.colorblindclick.presentation.helper.TrackerHelper
 import com.lukelorusso.colorblindclick.presentation.ui.base.AppViewModel
 import com.lukelorusso.colorblindclick.presentation.ui.base.Bouncer
 import com.lukelorusso.colorblindclick.presentation.ui.base.ContentState
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
 class CaptureViewModel(
@@ -38,21 +38,21 @@ class CaptureViewModel(
             updateUiState { it.copy(contentState = ContentState.LOADING) }
         }
 
-        viewModelScope.launch {
-            try {
-                val lastLensPosition = getLastLensPosition.invoke(Unit)
-                val lastZoomValue = getLastZoomValue.invoke(Unit)
-                val pixelNeighbourhood = getPixelNeighbourhood.invoke(Unit)
-                updateUiState {
-                    it.copy(
-                        contentState = ContentState.CONTENT,
-                        lastLensPosition = lastLensPosition,
-                        lastZoomValue = lastZoomValue,
-                        pixelNeighbourhood = pixelNeighbourhood
-                    )
-                }
-            } catch (t: Throwable) {
+        viewModelScope.launchCatching(
+            onError = { t ->
                 updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
+            }
+        ) {
+            val lastLensPosition = getLastLensPosition.invoke(Unit)
+            val lastZoomValue = getLastZoomValue.invoke(Unit)
+            val pixelNeighbourhood = getPixelNeighbourhood.invoke(Unit)
+            updateUiState {
+                it.copy(
+                    contentState = ContentState.CONTENT,
+                    lastLensPosition = lastLensPosition,
+                    lastZoomValue = lastZoomValue,
+                    pixelNeighbourhood = pixelNeighbourhood
+                )
             }
         }
     }
@@ -62,19 +62,19 @@ class CaptureViewModel(
             return
         }
 
-        viewModelScope.launch {
-            try {
-                lastLensPosition?.let { setLastLensPosition.invoke(it) }
-                lastZoomValue?.let { setLastZoomValue.invoke(it) }
-                val pixelNeighbourhood = getPixelNeighbourhood.invoke(Unit)
-                updateUiState {
-                    it.copy(
-                        contentState = ContentState.CONTENT,
-                        pixelNeighbourhood = pixelNeighbourhood
-                    )
-                }
-            } catch (t: Throwable) {
+        viewModelScope.launchCatching(
+            onError = { t ->
                 updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
+            }
+        ) {
+            lastLensPosition?.let { setLastLensPosition.invoke(it) }
+            lastZoomValue?.let { setLastZoomValue.invoke(it) }
+            val pixelNeighbourhood = getPixelNeighbourhood.invoke(Unit)
+            updateUiState {
+                it.copy(
+                    contentState = ContentState.CONTENT,
+                    pixelNeighbourhood = pixelNeighbourhood
+                )
             }
         }
     }
@@ -91,57 +91,56 @@ class CaptureViewModel(
             }
         }
 
-        viewModelScope.launch {
-            try {
-                val param = DecodeColorHexUseCase.Param(
-                    colorHex = pixelColorHex,
-                    deviceUdid = router.activity.getDeviceUdid()
-                )
-                val color = decodeColorHex.invoke(param)
-                updateUiState {
-                    it.copy(
-                        contentState = ContentState.CONTENT,
-                        color = color
-                    )
-                }
-            } catch (t: Throwable) {
+        viewModelScope.launchCatching(
+            onError = { t ->
                 trackerHelper.track(TrackerHelper.Action.PERSISTENCE_EXCEPTION)
                 updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
+            }
+        ) {
+            val param = DecodeColorHexUseCase.Param(
+                colorHex = pixelColorHex,
+                deviceUdid = router.activity.getDeviceUdid()
+            )
+            val color = decodeColorHex.invoke(param)
+            updateUiState {
+                it.copy(
+                    contentState = ContentState.CONTENT,
+                    color = color
+                )
             }
         }
     }
 
     fun setLastLensPosition(param: Int) {
-        viewModelScope.launch {
-            try {
-                if (uiState.value.contentState.isError) {
-                    updateUiState { it.copy(contentState = ContentState.CONTENT) }
-                }
-
-                setLastLensPosition.invoke(param)
-                updateUiState {
-                    it.copy(
-                        lastLensPosition = param,
-                        lastZoomValue = -1
-                    )
-                }
-            } catch (t: Throwable) {
+        viewModelScope.launchCatching(
+            onError = { t ->
                 updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
+            }
+        ) {
+            if (uiState.value.contentState.isError) {
+                updateUiState { it.copy(contentState = ContentState.CONTENT) }
+            }
+
+            setLastLensPosition.invoke(param)
+            updateUiState {
+                it.copy(
+                    lastLensPosition = param,
+                    lastZoomValue = -1
+                )
             }
         }
     }
 
     fun setLastZoomValue(param: Int) {
-        zoomValueBouncer.bounce {
-            viewModelScope.launch {
-                try {
-                    if (uiState.value.lastZoomValue != param) {
-                        setLastZoomValue.invoke(param)
-                        updateUiState { it.copy(lastZoomValue = param) }
-                    }
-                } catch (t: Throwable) {
-                    updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
-                }
+        zoomValueBouncer.bounce(
+            scope = viewModelScope,
+            onError = { t ->
+                updateUiState { it.copy(contentState = ContentState.ERROR(t)) }
+            }
+        ) {
+            if (uiState.value.lastZoomValue != param) {
+                setLastZoomValue.invoke(param)
+                updateUiState { it.copy(lastZoomValue = param) }
             }
         }
     }
