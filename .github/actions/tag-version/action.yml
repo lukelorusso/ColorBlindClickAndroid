@@ -21,8 +21,7 @@ runs:
       shell: bash
       run: |
         newVersion=${{ inputs.new-value }}
-        appName=${{ env.APP_NAME }}
-        tagName="${appName}-${newVersion}"
+        tagName="${newVersion}"
         if ${{ inputs.is-release }}; then
           git checkout tags/"${tagName}"
           tagName="${tagName}-release"
