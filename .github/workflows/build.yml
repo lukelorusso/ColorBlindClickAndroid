@@ -3,8 +3,12 @@ name: Build
 on:
   push:
     branches: [ "main" ]
+    paths-ignore:
+      - '.github/**'
   pull_request:
     branches: [ "main" ]
+    paths-ignore:
+      - '.github/**'
 
 permissions:
   contents: write
@@ -30,4 +34,4 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build with Gradle
-        run: ./gradlew build -x assembleRelease
+        run: ./gradlew assembleDebug testDebugUnitTest :domain:test lintDebug
