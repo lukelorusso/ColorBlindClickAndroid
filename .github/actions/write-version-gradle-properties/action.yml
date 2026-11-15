@@ -20,5 +20,5 @@ runs:
         newversion=${{ inputs.field-value }}
         sed -i "s/^${fieldname}=.*/${fieldname}=${newversion}/" gradle.properties
         git add gradle.properties
-        git commit -m "[ci] update ${fieldname} in gradle.properties" || echo "No changes to commit"
+        git commit -m "[skip ci] update ${fieldname} in gradle.properties" || echo "No changes to commit"
         git push origin

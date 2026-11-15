@@ -32,7 +32,6 @@ permissions:
   checks: write
 
 env:
-  APP_GROUP: com.lukelorusso.colorblindclick
   APP_LABEL: ColorBlindClick # used to upload APK
   PROJECT_MODULE: presentation # used to upload APK
   TARGET_BRANCH: ${{ github.event.inputs.TARGET_BRANCH != '' && github.event.inputs.TARGET_BRANCH || 'main' }}
@@ -47,7 +46,6 @@ jobs:
     environment: release
 
     outputs:
-      output_app_group: ${{ env.APP_GROUP }}
       output_version: ${{ steps.new-version.outputs.new-value }}
 
     steps:

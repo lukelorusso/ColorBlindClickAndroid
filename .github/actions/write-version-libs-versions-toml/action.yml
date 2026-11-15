@@ -20,5 +20,5 @@ runs:
         newversion=${{ inputs.field-value }}
         sed -i "s/^${fieldname}=.*/${fieldname}=${newversion}/" gradle/libs.versions.toml
         git add gradle/libs.versions.toml
-        git commit -m "[ci] update ${fieldname} in gradle/libs.versions.toml" || echo "No changes to commit"
+        git commit -m "[skip ci] update ${fieldname} in gradle/libs.versions.toml" || echo "No changes to commit"
         git push origin
